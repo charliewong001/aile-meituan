@@ -17,4 +17,7 @@ public class Constants {
 
     /** 美团店铺自动接单 redis缓存前缀 */
     public static final String mtRedisAutoConfirmOrderPrefix = "aile-meituan-autoConfirmOrder-";
+
+    /** 极光推送注册号 redis缓存前缀 */
+    public static final String mtRedisRegistrationidPrefix = "aile-meituan-registrationId-";
 }

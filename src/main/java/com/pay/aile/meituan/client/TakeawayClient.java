@@ -2,6 +2,7 @@ package com.pay.aile.meituan.client;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pay.aile.meituan.client.hystrix.TakeawayClientHystrix;
@@ -26,8 +27,11 @@ public interface TakeawayClient {
      * @author chao.wang
      */
     @RequestMapping(value = "/order/pushNewOrder")
-    public JSONObject pushNewOrder(String orderJson);
+    public JSONObject pushNewOrder(
+            @RequestParam(value = "registrationId") String registrationId,
+            @RequestParam(value = "orderJson") String orderJson);
 
     @RequestMapping(value = "/pushRefundOrder")
-    public JSONObject pushRefundOrder(String orderJson);
+    public JSONObject pushRefundOrder(
+            @RequestParam(value = "orderJson") String orderJson);
 }

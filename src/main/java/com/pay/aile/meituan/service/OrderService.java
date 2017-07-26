@@ -49,7 +49,8 @@ import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderRefundRej
 @Service
 public class OrderService {
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private static final SimpleDateFormat sdf = new SimpleDateFormat(
+            "yyyy-MM-dd hh:mm:ss");
     private static final String OK = "{\"data\":\"OK\"}";
     private Logger logger = LoggerFactory.getLogger(getClass());
     /** jpa项目order接口 */
@@ -67,7 +68,8 @@ public class OrderService {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public void cancelOrder(String shopId, Long orderId, String reasonCode, String reason) {
+    public void cancelOrder(String shopId, Long orderId, String reasonCode,
+            String reason) {
         // 通过shopId获取appAuthToken
         String appAuthToken = MeituanConfig.getAppAuthToken(shopId);
         RequestSysParams sysParams = new RequestSysParams();
@@ -83,7 +85,8 @@ public class OrderService {
             result = request.doRequest();
 
         } catch (Exception e) {
-            logger.error("cancelOrder error!orderId={},result={}", orderId, result, e);
+            logger.error("cancelOrder error!orderId={},result={}", orderId,
+                    result, e);
             throw new RuntimeException("调用美团取消订单失败!" + e.getMessage());
         }
         if (OK.equals(result)) {
@@ -95,11 +98,14 @@ public class OrderService {
                 jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
             } catch (Exception e) {
                 logger.error("修改订单状态失败!orderId={}", orderId, e);
-                throw new RuntimeException("美团取消订单成功,修改本地订单状态失败!" + e.getMessage());
+                throw new RuntimeException(
+                        "美团取消订单成功,修改本地订单状态失败!" + e.getMessage());
             }
         } else {
-            logger.info("cancelOrder fail!orderId={},result={}", orderId, result);
-            throw new RuntimeException(String.format("调用美团取消订单失败!result={%s}", result));
+            logger.info("cancelOrder fail!orderId={},result={}", orderId,
+                    result);
+            throw new RuntimeException(
+                    String.format("调用美团取消订单失败!result={%s}", result));
         }
 
     }
@@ -152,7 +158,8 @@ public class OrderService {
         try {
             result = request.doRequest();
         } catch (Exception e) {
-            logger.error("confirmOrder error!orderId={},result={}", orderId, result, e);
+            logger.error("confirmOrder error!orderId={},result={}", orderId,
+                    result, e);
             throw new RuntimeException("调用美团确认订单失败!" + e.getMessage());
         }
         if (OK.equals(result)) {
@@ -164,11 +171,14 @@ public class OrderService {
                 jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
             } catch (Exception e) {
                 logger.error("修改订单状态失败!orderId={}", orderId, e);
-                throw new RuntimeException("美团确认订单成功,修改本地订单状态失败!" + e.getMessage());
+                throw new RuntimeException(
+                        "美团确认订单成功,修改本地订单状态失败!" + e.getMessage());
             }
         } else {
-            logger.info("confirmOrder fail!orderId={},result={}", orderId, result);
-            throw new RuntimeException(String.format("调用美团确认订单失败!result={%s}", result));
+            logger.info("confirmOrder fail!orderId={},result={}", orderId,
+                    result);
+            throw new RuntimeException(
+                    String.format("调用美团确认订单失败!result={%s}", result));
         }
     }
 
@@ -196,7 +206,8 @@ public class OrderService {
     public void newOrderPush(String shopId, @Valid NewOrderBean newOrderBean) {
         // TODO 根据shopId获取门店是否设置了自动接单,若自动接单,则最后要调用美团接单接口
         boolean autoConfirm = MeituanConfig.isAutoConfirmOrder(shopId);
-        List<NewOrderDetailBean> newOrderDetaiList = newOrderBean.getDetail();
+        List<NewOrderDetailBean> newOrderDetaiList = newOrderBean
+                .getDetailList();
         PushNewOrder pushOrder = new PushNewOrder();
         List<PushNewOrderItem> pushOrderItemList = new ArrayList<PushNewOrderItem>();
         Order order = new Order();
@@ -205,9 +216,11 @@ public class OrderService {
             // 数据库entity
             BigDecimal price = new BigDecimal(detail.getPrice().toString());
             BigDecimal quantity = new BigDecimal(detail.getQuantity());
-            BigDecimal boxPrice = new BigDecimal(detail.getBox_price().toString());
+            BigDecimal boxPrice = new BigDecimal(
+                    detail.getBox_price().toString());
             BigDecimal boxNum = new BigDecimal(detail.getBox_num().toString());
-            BigDecimal totalAmount = price.multiply(quantity).add(boxPrice.multiply(boxNum));
+            BigDecimal totalAmount = price.multiply(quantity)
+                    .add(boxPrice.multiply(boxNum));
             OrderItem item = new OrderItem();
             item.setFoodName(detail.getFood_name());
             item.setOrder(order);
@@ -233,26 +246,33 @@ public class OrderService {
         pushOrder.setInvoiceTitle(newOrderBean.getInvoiceTitle());
         pushOrder.setMealsNumber("");// 订餐次数,无此字段
         pushOrder.setOnlinePaid(PayTypeEnum.onlinePay(newOrderBean.getPayType())
-                ? StatusEnum.ENABLE.getStatus().toString() : StatusEnum.DISENABLE.getStatus().toString());
+                ? StatusEnum.ENABLE.getStatus().toString()
+                : StatusEnum.DISENABLE.getStatus().toString());
         pushOrder.setOrderCreateTime(newOrderBean.getCtime().toString());
         pushOrder.setPhone(newOrderBean.getRecipientPhone());
         pushOrder.setOrderId(newOrderBean.getOrderId().toString());
         // 若自动下单,则推送的订单状态为商家已确认
-        pushOrder.setStatus(autoConfirm ? OrderStatusEnum.mt_business_confirmed.getCode()
-                : OrderStatusEnum.get(newOrderBean.getStatus().toString()).getText());
+        pushOrder.setStatus(
+                autoConfirm ? OrderStatusEnum.mt_business_confirmed.getCode()
+                        : OrderStatusEnum
+                                .get(newOrderBean.getStatus().toString())
+                                .getText());
         pushOrder.setTotalPrice(newOrderBean.getTotal().toString());
         pushOrder.setItemList(pushOrderItemList);
         String pushOrderJson = JsonFormatUtil.toJSONString(pushOrder);
         JSONObject pushResult = null;
         try {
+            String registrationId = MeituanConfig.getRegistrationId(shopId);
             logger.info("推送信息 pushOrder={}", pushOrderJson);
-            pushResult = takeawayClient.pushNewOrder(pushOrderJson);
+            pushResult = takeawayClient.pushNewOrder(registrationId,
+                    pushOrderJson);
         } catch (Exception e) {
             logger.error("pushSaveNewOrder 极光推送失败!pushOrder={}", pushOrder);
         }
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("pushSaveNewOrder 极光推送失败!msg={},pushOrder={}",
-                    pushResult == null ? "" : pushResult.getString("msg"), pushOrder);
+                    pushResult == null ? "" : pushResult.getString("msg"),
+                    pushOrder);
         }
         // 订单信息
         order.setOrderId(newOrderBean.getOrderId().toString());
@@ -260,7 +280,8 @@ public class OrderService {
         order.setConsignee(newOrderBean.getRecipientName());
         order.setDaySn(Long.valueOf(newOrderBean.getDaySeq()));
         order.setDeliverFee(
-                BigDecimal.valueOf(newOrderBean.getShippingFee() == null ? 0D : newOrderBean.getShippingFee()));
+                BigDecimal.valueOf(newOrderBean.getShippingFee() == null ? 0D
+                        : newOrderBean.getShippingFee()));
         order.setDeliverTime(newOrderBean.getDeliveryTime().toString());
         order.setDescription(newOrderBean.getCaution());
         order.setHasInvoiced(StatusEnum.get(newOrderBean.getHasInvoiced()));
@@ -269,14 +290,16 @@ public class OrderService {
         order.setItemList(itemList);
         order.setLatitude(newOrderBean.getLatitude());
         order.setLongitude(newOrderBean.getLongitude());
-        order.setOnlinePaid(
-                PayTypeEnum.onlinePay(newOrderBean.getPayType()) ? StatusEnum.ENABLE : StatusEnum.DISENABLE);
+        order.setOnlinePaid(PayTypeEnum.onlinePay(newOrderBean.getPayType())
+                ? StatusEnum.ENABLE : StatusEnum.DISENABLE);
         order.setOrderCreateTime(newOrderBean.getCtime().toString());
-        order.setOriginalPrice(BigDecimal.valueOf(newOrderBean.getOriginalPrice()));
+        order.setOriginalPrice(
+                BigDecimal.valueOf(newOrderBean.getOriginalPrice()));
         order.setPackageFee(BigDecimal.ZERO);// 美团没有餐盒费字段
         order.setPhone(newOrderBean.getRecipientPhone());
         order.setShop(new Shop(shopId));
-        order.setStatus(OrderStatusEnum.get(newOrderBean.getStatus().toString()));
+        order.setStatus(
+                OrderStatusEnum.get(newOrderBean.getStatus().toString()));
         order.setTotalPrice(BigDecimal.valueOf(newOrderBean.getTotal()));
         order.setUserId("");
 
@@ -314,7 +337,8 @@ public class OrderService {
         try {
             result = request.doRequest();
         } catch (Exception e) {
-            logger.error("refundOrderConfirm error!orderId={},result={}", orderId, result, e);
+            logger.error("refundOrderConfirm error!orderId={},result={}",
+                    orderId, result, e);
             throw new RuntimeException("调用美团确认退款失败!" + e.getMessage());
         }
         if (OK.equals(result)) {
@@ -326,12 +350,15 @@ public class OrderService {
                 jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
             } catch (Exception e) {
                 logger.error("修改订单状态失败!orderId={}", orderId, e);
-                throw new RuntimeException("美团确认退款成功,修改本地订单状态失败!" + e.getMessage());
+                throw new RuntimeException(
+                        "美团确认退款成功,修改本地订单状态失败!" + e.getMessage());
             }
             // TODO 调用jpa接口修改退款单状态
         } else {
-            logger.info("refundOrderConfirm fail!orderId={},result={}", orderId, result);
-            throw new RuntimeException(String.format("调用美团确认退款失败!result={%s}", result));
+            logger.info("refundOrderConfirm fail!orderId={},result={}", orderId,
+                    result);
+            throw new RuntimeException(
+                    String.format("调用美团确认退款失败!result={%s}", result));
         }
     }
 
@@ -355,13 +382,16 @@ public class OrderService {
         JSONObject pushResult = null;
         try {
             logger.info("推送信息 refundOrderPush={}", pushRefundOrder);
-            pushResult = takeawayClient.pushRefundOrder(JsonFormatUtil.toJSONString(pushRefundOrder));
+            pushResult = takeawayClient.pushRefundOrder(
+                    JsonFormatUtil.toJSONString(pushRefundOrder));
         } catch (Exception e) {
-            logger.error("refundOrderPush 极光推送失败!pushOrder={}", pushRefundOrder);
+            logger.error("refundOrderPush 极光推送失败!pushOrder={}",
+                    pushRefundOrder);
         }
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("refundOrderPush 极光推送失败!msg={},pushOrder={}",
-                    pushResult == null ? "" : pushResult.getString("msg"), pushRefundOrder);
+                    pushResult == null ? "" : pushResult.getString("msg"),
+                    pushRefundOrder);
         }
         // TODO 1.查询本地是否已有此退单记录,若有则更新,若无则保存
     }
@@ -387,15 +417,18 @@ public class OrderService {
         try {
             result = request.doRequest();
         } catch (Exception e) {
-            logger.error("refundOrderRefuse error!orderId={},result={}", orderId, result, e);
+            logger.error("refundOrderRefuse error!orderId={},result={}",
+                    orderId, result, e);
             throw new RuntimeException("调用美团拒绝退款失败!" + e.getMessage());
         }
         if (OK.equals(result)) {
             logger.info("refundOrderRefuse success!orderId={}", orderId);
             // TODO 修改退款单的状态为拒绝
         } else {
-            logger.info("refundOrderRefuse fail!orderId={},result={}", orderId, result);
-            throw new RuntimeException(String.format("调用美团拒绝退款失败!result={%s}", result));
+            logger.info("refundOrderRefuse fail!orderId={},result={}", orderId,
+                    result);
+            throw new RuntimeException(
+                    String.format("调用美团拒绝退款失败!result={%s}", result));
         }
     }
 }
