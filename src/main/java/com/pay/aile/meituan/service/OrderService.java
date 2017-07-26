@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.pay.aile.meituan.bean.jpa.Order;
 import com.pay.aile.meituan.bean.jpa.OrderItem;
 import com.pay.aile.meituan.bean.jpa.OrderStatusEnum;
+import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
 import com.pay.aile.meituan.bean.jpa.Shop;
 import com.pay.aile.meituan.bean.jpa.StatusEnum;
 import com.pay.aile.meituan.bean.platform.CancelOrderBean;
@@ -27,7 +28,6 @@ import com.pay.aile.meituan.bean.platform.PayTypeEnum;
 import com.pay.aile.meituan.bean.platform.RefundOrderBean;
 import com.pay.aile.meituan.bean.push.PushCancelOrder;
 import com.pay.aile.meituan.bean.push.PushNewOrder;
-import com.pay.aile.meituan.bean.push.PushNewOrderItem;
 import com.pay.aile.meituan.bean.push.PushRefundOrder;
 import com.pay.aile.meituan.client.JpaClient;
 import com.pay.aile.meituan.client.TakeawayClient;
@@ -209,7 +209,6 @@ public class OrderService {
         List<NewOrderDetailBean> newOrderDetaiList = newOrderBean
                 .getDetailList();
         PushNewOrder pushOrder = new PushNewOrder();
-        List<PushNewOrderItem> pushOrderItemList = new ArrayList<PushNewOrderItem>();
         Order order = new Order();
         List<OrderItem> itemList = new ArrayList<OrderItem>();
         for (NewOrderDetailBean detail : newOrderDetaiList) {
@@ -228,37 +227,22 @@ public class OrderService {
             item.setQuantity(quantity.intValue());
             item.setTotalAmount(totalAmount);
             itemList.add(item);
-            // 推送到POS的bean
-            PushNewOrderItem pushOrderItem = new PushNewOrderItem();
-            pushOrderItem.setFoodName(detail.getFood_name());
-            pushOrderItem.setPrice(detail.getPrice().toString());
-            pushOrderItem.setQuantity(detail.getQuantity());
-            pushOrderItem.setTotalAmount(totalAmount.toString());
-            pushOrderItemList.add(pushOrderItem);
         }
 
         // 推送到POS的订单信息
         pushOrder.setAddress(newOrderBean.getRecipientAddress());
         pushOrder.setConsignee(newOrderBean.getRecipientName());
-        pushOrder.setDaySn(newOrderBean.getDaySeq());
-        pushOrder.setDescription(newOrderBean.getCaution());
-        pushOrder.setHasInvoiced(newOrderBean.getHasInvoiced().toString());
-        pushOrder.setInvoiceTitle(newOrderBean.getInvoiceTitle());
-        pushOrder.setMealsNumber("");// 订餐次数,无此字段
         pushOrder.setOnlinePaid(PayTypeEnum.onlinePay(newOrderBean.getPayType())
-                ? StatusEnum.ENABLE.getStatus().toString()
-                : StatusEnum.DISENABLE.getStatus().toString());
-        pushOrder.setOrderCreateTime(newOrderBean.getCtime().toString());
+                ? StatusEnum.ENABLE.toString()
+                : StatusEnum.DISENABLE.toString());
+        pushOrder.setOrderCreateTime(
+                sdf.format(new Date(newOrderBean.getCtime())));
+        pushOrder.setDeliverTime(
+                sdf.format(new Date(newOrderBean.getDeliveryTime())));
         pushOrder.setPhone(newOrderBean.getRecipientPhone());
         pushOrder.setOrderId(newOrderBean.getOrderId().toString());
-        // 若自动下单,则推送的订单状态为商家已确认
-        pushOrder.setStatus(
-                autoConfirm ? OrderStatusEnum.mt_business_confirmed.getCode()
-                        : OrderStatusEnum
-                                .get(newOrderBean.getStatus().toString())
-                                .getText());
-        pushOrder.setTotalPrice(newOrderBean.getTotal().toString());
-        pushOrder.setItemList(pushOrderItemList);
+        pushOrder.setCode(PlatformCodeEnum.mt.getCode());
+
         String pushOrderJson = JsonFormatUtil.toJSONString(pushOrder);
         JSONObject pushResult = null;
         try {

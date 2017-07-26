@@ -88,6 +88,14 @@ public class MeituanNotifyController {
         try {
             NewOrderBean bean = JSONObject.parseObject(order,
                     NewOrderBean.class);
+            List<NewOrderDetailBean> detailList = JSONArray
+                    .parseArray(bean.getDetail(), NewOrderDetailBean.class);
+            List<NewOrderExtraBean> extrasList = JSONArray
+                    .parseArray(bean.getExtras(), NewOrderExtraBean.class);
+            bean.setDetailList(detailList);
+            bean.setExtrasList(extrasList);
+            bean.setDetail(null);
+            bean.setExtras(null);
             orderService.finishOrderPush(ePoiId, bean);
             return OK;
         } catch (Exception e) {
