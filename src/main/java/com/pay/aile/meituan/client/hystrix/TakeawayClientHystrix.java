@@ -34,7 +34,7 @@ public class TakeawayClientHystrix implements TakeawayClient {
     }
 
     @Override
-    public JSONObject pushRefundOrder(String orderJson) {
+    public JSONObject pushRefundOrder(String registrationId, String orderJson) {
         // TODO Auto-generated method stub
         return null;
     }

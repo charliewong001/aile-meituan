@@ -27,17 +27,49 @@ public interface TakeawayClient {
      * @author chao.wang
      */
     @RequestMapping(value = "/order/pushNewOrder")
-    public JSONObject pushNewOrder(@RequestParam String registrationId,
+    public JSONObject pushNewOrder(
+            @RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
+    /**
+     *
+     * @Description 推送取消订单
+     * @param registrationId
+     * @param orderJson
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
     @RequestMapping(value = "/order/pushOrderCancel")
-    public JSONObject pushOrderCancel(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
+    public JSONObject pushOrderCancel(
+            @RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
+    /**
+     *
+     * @Description 推送订单状态变化
+     * @param registrationId
+     * @param orderJson
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
     @RequestMapping(value = "/pushOrderChange")
-    public JSONObject pushOrderChange(@RequestParam String registrationId,
+    public JSONObject pushOrderChange(
+            @RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
+    /**
+     *
+     * @Description 推送退款订单
+     * @param registrationId
+     * @param orderJson
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
     @RequestMapping(value = "/pushRefundOrder")
-    public JSONObject pushRefundOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+    public JSONObject pushRefundOrder(
+            @RequestParam(value = "registrationId", defaultValue = "") String registrationId,
+            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 }
