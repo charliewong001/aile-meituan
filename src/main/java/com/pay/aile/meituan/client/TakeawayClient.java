@@ -14,7 +14,7 @@ import com.pay.aile.meituan.client.hystrix.TakeawayClientHystrix;
  * @version 2017年7月21日 下午3:03:30
  * @author chao.wang
  */
-@FeignClient(value = "aile-takeaway", fallback = TakeawayClientHystrix.class)
+@FeignClient(value = "takeaway", fallback = TakeawayClientHystrix.class)
 public interface TakeawayClient {
 
     /**
@@ -31,8 +31,10 @@ public interface TakeawayClient {
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     @RequestMapping(value = "/pushOrderChange")
-    public JSONObject pushOrderChange(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+    public JSONObject pushOrderChange(
+            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     @RequestMapping(value = "/pushRefundOrder")
-    public JSONObject pushRefundOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+    public JSONObject pushRefundOrder(
+            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 }
