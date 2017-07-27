@@ -19,6 +19,19 @@ public interface TakeawayClient {
 
     /**
      *
+     * @Description 推送配送状态
+     * @param registrationId
+     * @param orderJson
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    @RequestMapping(value = "/pushDistribution")
+    public JSONObject pushDistribution(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
+            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+
+    /**
+     *
      * @Description 新订单推送
      * @param platformCode
      * @param shopId
@@ -27,8 +40,7 @@ public interface TakeawayClient {
      * @author chao.wang
      */
     @RequestMapping(value = "/order/pushNewOrder")
-    public JSONObject pushNewOrder(
-            @RequestParam(value = "registrationId", defaultValue = "") String registrationId,
+    public JSONObject pushNewOrder(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     /**
@@ -41,8 +53,7 @@ public interface TakeawayClient {
      * @author chao.wang
      */
     @RequestMapping(value = "/order/pushOrderCancel")
-    public JSONObject pushOrderCancel(
-            @RequestParam(value = "registrationId", defaultValue = "") String registrationId,
+    public JSONObject pushOrderCancel(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     /**
@@ -55,8 +66,7 @@ public interface TakeawayClient {
      * @author chao.wang
      */
     @RequestMapping(value = "/pushOrderChange")
-    public JSONObject pushOrderChange(
-            @RequestParam(value = "registrationId", defaultValue = "") String registrationId,
+    public JSONObject pushOrderChange(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     /**
@@ -69,7 +79,6 @@ public interface TakeawayClient {
      * @author chao.wang
      */
     @RequestMapping(value = "/pushRefundOrder")
-    public JSONObject pushRefundOrder(
-            @RequestParam(value = "registrationId", defaultValue = "") String registrationId,
+    public JSONObject pushRefundOrder(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 }

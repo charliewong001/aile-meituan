@@ -16,6 +16,12 @@ import com.pay.aile.meituan.client.TakeawayClient;
 public class TakeawayClientHystrix implements TakeawayClient {
 
     @Override
+    public JSONObject pushDistribution(String registrationId, String orderJson) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public JSONObject pushNewOrder(String registrationId, String orderJson) {
         // TODO Auto-generated method stub
         return null;

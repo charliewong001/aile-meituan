@@ -65,8 +65,7 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public String delivering(String shopId, String orderId, String courierName,
-            String courierPhone) {
+    public String delivering(String shopId, String orderId, String courierName, String courierPhone) {
         // TODO
         return "";
     }
@@ -84,8 +83,7 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public String prepareZbDispatch(String orderId, String shippingFee,
-            String tipAmount) {
+    public String prepareZbDispatch(String orderId, String shippingFee, String tipAmount) {
         // TODO
         return "";
     }
