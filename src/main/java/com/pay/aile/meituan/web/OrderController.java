@@ -18,7 +18,8 @@ import com.pay.aile.meituan.util.JsonFormatUtil;
  * @version 2017年7月11日 下午3:46:10
  * @author chao.wang
  */
-@RestController("/order")
+@RestController
+@RequestMapping("/order")
 public class OrderController {
 
     /** 本地order服务 */
@@ -39,12 +40,14 @@ public class OrderController {
      * @author chao.wang
      */
     @RequestMapping(value = "/cancelOrder")
-    public String cancelOrder(String shopId, Long orderId, String reasonCode, String reason) {
+    public String cancelOrder(String shopId, Long orderId, String reasonCode,
+            String reason) {
         try {
             orderService.cancelOrder(shopId, orderId, reasonCode, reason);
             return JsonFormatUtil.getSuccessJson().toJSONString();
         } catch (Exception e) {
-            logger.error("cancelOrder error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("cancelOrder error!shopId={},orderId={}", shopId,
+                    orderId, e);
             return JsonFormatUtil.getFailureJson().toJSONString();
         }
     }
@@ -65,7 +68,8 @@ public class OrderController {
             orderService.confirmOrder(shopId, orderId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("confirmOrder error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("confirmOrder error!shopId={},orderId={}", shopId,
+                    orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -80,12 +84,14 @@ public class OrderController {
      * @author chao.wang
      */
     @RequestMapping(value = "/refundOrderConfirm")
-    public JSONObject refundOrderConfirm(String shopId, Long orderId, String reason) {
+    public JSONObject refundOrderConfirm(String shopId, Long orderId,
+            String reason) {
         try {
             orderService.refundOrderConfirm(shopId, orderId, reason);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("refundOrderConfirm error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("refundOrderConfirm error!shopId={},orderId={}",
+                    shopId, orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -100,12 +106,14 @@ public class OrderController {
      * @author chao.wang
      */
     @RequestMapping(value = "/refundOrderRefuse")
-    public JSONObject refundOrderRefuse(String shopId, Long orderId, String reason) {
+    public JSONObject refundOrderRefuse(String shopId, Long orderId,
+            String reason) {
         try {
             orderService.refundOrderRefuse(shopId, orderId, reason);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("refundOrderRefuse error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("refundOrderRefuse error!shopId={},orderId={}", shopId,
+                    orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }

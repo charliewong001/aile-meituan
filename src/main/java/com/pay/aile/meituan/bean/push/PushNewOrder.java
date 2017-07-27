@@ -2,6 +2,8 @@ package com.pay.aile.meituan.bean.push;
 
 import java.io.Serializable;
 
+import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
+
 /**
  *
  * @Description: 向POS端推送的bean
@@ -16,16 +18,14 @@ public class PushNewOrder implements Serializable {
      */
     private static final long serialVersionUID = 6842923146556312863L;
 
-    private String serialNumber;
     private String deliverTime;
     private String onlinePaid;
-    private String code;
+    private String code = PlatformCodeEnum.mt.getCode();
     private String consignee;
     private String address;
     private String phone;
     private String orderId;
     private String orderCreateTime;
-    private Long id;
     private Long updateTime;
 
     public String getAddress() {
@@ -44,10 +44,6 @@ public class PushNewOrder implements Serializable {
         return deliverTime;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getOnlinePaid() {
         return onlinePaid;
     }
@@ -62,10 +58,6 @@ public class PushNewOrder implements Serializable {
 
     public String getPhone() {
         return phone;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
     }
 
     public Long getUpdateTime() {
@@ -88,10 +80,6 @@ public class PushNewOrder implements Serializable {
         this.deliverTime = deliverTime;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setOnlinePaid(String onlinePaid) {
         this.onlinePaid = onlinePaid;
     }
@@ -108,20 +96,8 @@ public class PushNewOrder implements Serializable {
         this.phone = phone;
     }
 
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "PushNewOrder [serialNumber=" + serialNumber + ", deliverTime=" + deliverTime + ", onlinePaid="
-                + onlinePaid + ", code=" + code + ", consignee=" + consignee + ", address=" + address + ", phone="
-                + phone + ", orderId=" + orderId + ", orderCreateTime=" + orderCreateTime + ", id=" + id
-                + ", updateTime=" + updateTime + "]";
     }
 
 }

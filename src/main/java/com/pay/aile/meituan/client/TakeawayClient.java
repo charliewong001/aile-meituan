@@ -30,11 +30,14 @@ public interface TakeawayClient {
     public JSONObject pushNewOrder(@RequestParam String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
+    @RequestMapping(value = "/order/pushOrderCancel")
+    public JSONObject pushOrderCancel(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
+            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+
     @RequestMapping(value = "/pushOrderChange")
-    public JSONObject pushOrderChange(
+    public JSONObject pushOrderChange(@RequestParam String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     @RequestMapping(value = "/pushRefundOrder")
-    public JSONObject pushRefundOrder(
-            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+    public JSONObject pushRefundOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 }

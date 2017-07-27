@@ -22,22 +22,17 @@ import com.pay.aile.meituan.client.hystrix.JpaClientHystrix;
 public interface JpaClient {
 
     @RequestMapping(value = "/food/bathSaveOrUpdate")
-    public JSONObject bathSaveOrUpdate(
-            @RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
+    public JSONObject bathSaveOrUpdate(@RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
 
     @RequestMapping(value = "/food/findList")
-    public List<Food> findLst(
-            @RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
+    public List<Food> findLst(@RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
 
     @RequestMapping(value = "/order/findOrder")
-    public Order findOrder(
-            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+    public Order findOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     @RequestMapping(value = "/order/saveOrUpdateOrder")
-    public JSONObject saveOrUpdateOrder(
-            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+    public JSONObject saveOrUpdateOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     @RequestMapping(value = "/shop/saveOrUpdateShop")
-    public JSONObject saveOrUpdateShop(
-            @RequestParam(value = "shopJson", defaultValue = "{}") String shopJson);
+    public JSONObject saveOrUpdateShop(@RequestParam(value = "shopJson", defaultValue = "{}") String shopJson);
 }

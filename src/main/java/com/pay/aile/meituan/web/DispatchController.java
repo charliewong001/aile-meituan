@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pay.aile.meituan.service.DispatchService;
@@ -15,8 +16,8 @@ import com.pay.aile.meituan.service.DispatchService;
  * @version 2017年7月18日 下午2:00:51
  * @author chao.wang
  */
-
-@RestController("/dispatch")
+@RestController
+@RequestMapping("/dispatch")
 public class DispatchController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -64,7 +65,8 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public String delivering(String shopId, String orderId, String courierName, String courierPhone) {
+    public String delivering(String shopId, String orderId, String courierName,
+            String courierPhone) {
         // TODO
         return "";
     }
@@ -82,7 +84,8 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public String prepareZbDispatch(String orderId, String shippingFee, String tipAmount) {
+    public String prepareZbDispatch(String orderId, String shippingFee,
+            String tipAmount) {
         // TODO
         return "";
     }

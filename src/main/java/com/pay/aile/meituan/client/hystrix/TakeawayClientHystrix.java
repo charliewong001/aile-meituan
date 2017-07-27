@@ -22,7 +22,13 @@ public class TakeawayClientHystrix implements TakeawayClient {
     }
 
     @Override
-    public JSONObject pushOrderChange(String orderJson) {
+    public JSONObject pushOrderCancel(String registrationId, String orderJson) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONObject pushOrderChange(String registrationId, String orderJson) {
         // TODO Auto-generated method stub
         return null;
     }

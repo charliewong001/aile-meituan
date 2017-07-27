@@ -2,7 +2,7 @@ package com.pay.aile.meituan.bean.push;
 
 import java.io.Serializable;
 
-import com.pay.aile.meituan.bean.jpa.Shop;
+import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
 
 /**
  *
@@ -20,15 +20,15 @@ public class PushOrderStatusChange implements Serializable {
 
     private Long orderId;
     private String status;
-    private Shop shop;
+    private String code = PlatformCodeEnum.mt.getCode();
     private Long updateTime;
+
+    public String getCode() {
+        return code;
+    }
 
     public Long getOrderId() {
         return orderId;
-    }
-
-    public Shop getShop() {
-        return shop;
     }
 
     public String getStatus() {
@@ -39,12 +39,12 @@ public class PushOrderStatusChange implements Serializable {
         return updateTime;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public void setShop(Shop shop) {
-        this.shop = shop;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public void setStatus(String status) {
@@ -57,7 +57,7 @@ public class PushOrderStatusChange implements Serializable {
 
     @Override
     public String toString() {
-        return "PushOrderStatusChange [orderId=" + orderId + ", status=" + status + ", shop=" + shop + ", updateTime="
+        return "PushOrderStatusChange [orderId=" + orderId + ", status=" + status + ", code=" + code + ", updateTime="
                 + updateTime + "]";
     }
 

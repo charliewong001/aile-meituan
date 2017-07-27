@@ -202,6 +202,7 @@ public class MeituanNotifyController {
      * @param shippingStatus
      * @return
      * @see 需要参考的类或方法
+     *
      * @author chao.wang
      */
     @RequestMapping(value = "/shippingStatus")
