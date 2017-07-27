@@ -40,7 +40,7 @@ public class FoodController {
             foodService.toEstimate(shopId, foodId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("toEstimate error!,shopId={},foodId={}", shopId, foodId);
+            logger.error("toEstimate error!,shopId={},foodId={}", shopId, foodId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -57,7 +57,7 @@ public class FoodController {
             foodService.toFull(shopId, foodId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("toFull error!,shopId={},foodId={}", shopId, foodId);
+            logger.error("toFull error!,shopId={},foodId={}", shopId, foodId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }

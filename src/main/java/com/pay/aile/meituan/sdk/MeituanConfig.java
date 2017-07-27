@@ -68,7 +68,7 @@ public class MeituanConfig {
     public static String getRegistrationId(String shopId) {
         //        return RedisUtil
         //                .get(Constants.mtRedisRegistrationidPrefix.concat(shopId));
-        return "registration-meituan";
+        return "1104a897929dbc625f5";
     }
 
     public static String getSignkey() {

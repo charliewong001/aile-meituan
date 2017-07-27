@@ -13,10 +13,9 @@ public class PushCancelOrder implements Serializable {
     private String reason;// string 是 退单原因
     private String orderId;// number 是 订单id
     private String refundStatus;// string 是 状态
-    private String updateTime;// number 是 消息发送时间
+    private Long updateTime;// number 是 消息发送时间
     private String shopId;// number 是 店铺id
     private String platformCode = PlatformCodeEnum.mt.getCode();// string 是
-                                                                // 平台code
 
     public String getOrderId() {
         return orderId;
@@ -26,6 +25,7 @@ public class PushCancelOrder implements Serializable {
         return platformCode;
     }
 
+    // 平台code
     public String getReason() {
         return reason;
     }
@@ -38,7 +38,7 @@ public class PushCancelOrder implements Serializable {
         return shopId;
     }
 
-    public String getUpdateTime() {
+    public Long getUpdateTime() {
         return updateTime;
     }
 
@@ -62,7 +62,7 @@ public class PushCancelOrder implements Serializable {
         this.shopId = shopId;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
 

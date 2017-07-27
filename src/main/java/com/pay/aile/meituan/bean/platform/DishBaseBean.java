@@ -3,6 +3,13 @@ package com.pay.aile.meituan.bean.platform;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ *
+ * @Description: 这里用一句话描述这个类的作用
+ * @see: DishBaseBean 此处填写需要参考的类
+ * @version 2017年7月26日 下午5:49:17
+ * @author chao.wang
+ */
 public class DishBaseBean implements Serializable {
 
     /**

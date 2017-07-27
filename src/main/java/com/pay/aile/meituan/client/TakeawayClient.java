@@ -27,11 +27,12 @@ public interface TakeawayClient {
      * @author chao.wang
      */
     @RequestMapping(value = "/order/pushNewOrder")
-    public JSONObject pushNewOrder(
-            @RequestParam(value = "registrationId") String registrationId,
-            @RequestParam(value = "orderJson") String orderJson);
+    public JSONObject pushNewOrder(@RequestParam String registrationId,
+            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+
+    @RequestMapping(value = "/pushOrderChange")
+    public JSONObject pushOrderChange(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     @RequestMapping(value = "/pushRefundOrder")
-    public JSONObject pushRefundOrder(
-            @RequestParam(value = "orderJson") String orderJson);
+    public JSONObject pushRefundOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 }

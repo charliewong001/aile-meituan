@@ -26,6 +26,7 @@ public class PushNewOrder implements Serializable {
     private String orderId;
     private String orderCreateTime;
     private Long id;
+    private Long updateTime;
 
     public String getAddress() {
         return address;
@@ -65,6 +66,10 @@ public class PushNewOrder implements Serializable {
 
     public String getSerialNumber() {
         return serialNumber;
+    }
+
+    public Long getUpdateTime() {
+        return updateTime;
     }
 
     public void setAddress(String address) {
@@ -107,13 +112,16 @@ public class PushNewOrder implements Serializable {
         this.serialNumber = serialNumber;
     }
 
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public String toString() {
-        return "PushNewOrder [serialNumber=" + serialNumber + ", deliverTime="
-                + deliverTime + ", onlinePaid=" + onlinePaid + ", code=" + code
-                + ", consignee=" + consignee + ", address=" + address
-                + ", phone=" + phone + ", orderId=" + orderId
-                + ", orderCreateTime=" + orderCreateTime + ", id=" + id + "]";
+        return "PushNewOrder [serialNumber=" + serialNumber + ", deliverTime=" + deliverTime + ", onlinePaid="
+                + onlinePaid + ", code=" + code + ", consignee=" + consignee + ", address=" + address + ", phone="
+                + phone + ", orderId=" + orderId + ", orderCreateTime=" + orderCreateTime + ", id=" + id
+                + ", updateTime=" + updateTime + "]";
     }
 
 }

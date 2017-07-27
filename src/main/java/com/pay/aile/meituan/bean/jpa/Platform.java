@@ -8,12 +8,25 @@ public class Platform implements Serializable {
      * @author chao.wang
      */
     private static final long serialVersionUID = -3099940054791013119L;
+
+    public static Platform getInstance() {
+        return new Platform(PlatformCodeEnum.mt);
+    }
+
     // 平台名称
     private String name;
+
     // 状态
     private StatusEnum status;
 
     private PlatformCodeEnum code;
+
+    public Platform() {
+    }
+
+    public Platform(PlatformCodeEnum code) {
+        this.code = code;
+    }
 
     public PlatformCodeEnum getCode() {
         return code;

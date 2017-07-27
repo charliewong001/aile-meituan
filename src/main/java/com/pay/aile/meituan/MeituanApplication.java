@@ -15,12 +15,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class MeituanApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(MeituanApplication.class, args);
-
     }
 
     @Override
-    protected SpringApplicationBuilder configure(
-            SpringApplicationBuilder application) {
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(MeituanApplication.class);
     }
 }

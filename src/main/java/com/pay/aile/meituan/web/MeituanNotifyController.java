@@ -54,18 +54,45 @@ public class MeituanNotifyController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "cancelOrder")
-    public String cancelOrder(@RequestParam String developerId,
-            @RequestParam String ePoiId, @RequestParam String sign,
+    @RequestMapping(value = "/cancelOrder")
+    public String cancelOrder(@RequestParam String developerId, @RequestParam String ePoiId, @RequestParam String sign,
             @RequestParam String orderCancel) {
         try {
-            CancelOrderBean bean = JSONObject.parseObject(orderCancel,
-                    CancelOrderBean.class);
+            CancelOrderBean bean = JSONObject.parseObject(orderCancel, CancelOrderBean.class);
             orderService.cancelOrderPush(ePoiId, bean);
             return OK;
         } catch (Exception e) {
-            logger.error("cancelOrder error!已取消订单推送处理失败,data={}", orderCancel,
-                    e);
+            logger.error("cancelOrder error!已取消订单推送处理失败,data={}", orderCancel, e);
+            return NOT_OK;
+        }
+    }
+
+    /**
+     *
+     * @Description 推送商家已确认的订单
+     * @param developerId
+     * @param ePoiId
+     * @param sign
+     * @param order
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    @RequestMapping("/confirmOrder")
+    public String confirmOrder(@RequestParam String developerId, @RequestParam String ePoiId, @RequestParam String sign,
+            String order) {
+        try {
+            NewOrderBean bean = JSONObject.parseObject(order, NewOrderBean.class);
+            List<NewOrderDetailBean> detailList = JSONArray.parseArray(bean.getDetail(), NewOrderDetailBean.class);
+            List<NewOrderExtraBean> extrasList = JSONArray.parseArray(bean.getExtras(), NewOrderExtraBean.class);
+            bean.setDetailList(detailList);
+            bean.setExtrasList(extrasList);
+            bean.setDetail(null);
+            bean.setExtras(null);
+            orderService.confirmOrderPush(ePoiId, bean);
+            return OK;
+        } catch (Exception e) {
+            logger.error("confirmOrder error!已确认订单推送处理失败,data={}", order, e);
             return NOT_OK;
         }
     }
@@ -81,17 +108,13 @@ public class MeituanNotifyController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "finishOrder")
-    public String finishOrder(@RequestParam String developerId,
-            @RequestParam String ePoiId, @RequestParam String sign,
+    @RequestMapping(value = "/finishOrder")
+    public String finishOrder(@RequestParam String developerId, @RequestParam String ePoiId, @RequestParam String sign,
             @RequestParam String order) {
         try {
-            NewOrderBean bean = JSONObject.parseObject(order,
-                    NewOrderBean.class);
-            List<NewOrderDetailBean> detailList = JSONArray
-                    .parseArray(bean.getDetail(), NewOrderDetailBean.class);
-            List<NewOrderExtraBean> extrasList = JSONArray
-                    .parseArray(bean.getExtras(), NewOrderExtraBean.class);
+            NewOrderBean bean = JSONObject.parseObject(order, NewOrderBean.class);
+            List<NewOrderDetailBean> detailList = JSONArray.parseArray(bean.getDetail(), NewOrderDetailBean.class);
+            List<NewOrderExtraBean> extrasList = JSONArray.parseArray(bean.getExtras(), NewOrderExtraBean.class);
             bean.setDetailList(detailList);
             bean.setExtrasList(extrasList);
             bean.setDetail(null);
@@ -128,16 +151,12 @@ public class MeituanNotifyController {
      * @author chao.wang
      */
     @RequestMapping("/newOrder")
-    public String newOrder(@RequestParam String developerId,
-            @RequestParam String ePoiId, @RequestParam String sign,
+    public String newOrder(@RequestParam String developerId, @RequestParam String ePoiId, @RequestParam String sign,
             String order) {
         try {
-            NewOrderBean bean = JSONObject.parseObject(order,
-                    NewOrderBean.class);
-            List<NewOrderDetailBean> detailList = JSONArray
-                    .parseArray(bean.getDetail(), NewOrderDetailBean.class);
-            List<NewOrderExtraBean> extrasList = JSONArray
-                    .parseArray(bean.getExtras(), NewOrderExtraBean.class);
+            NewOrderBean bean = JSONObject.parseObject(order, NewOrderBean.class);
+            List<NewOrderDetailBean> detailList = JSONArray.parseArray(bean.getDetail(), NewOrderDetailBean.class);
+            List<NewOrderExtraBean> extrasList = JSONArray.parseArray(bean.getExtras(), NewOrderExtraBean.class);
             bean.setDetailList(detailList);
             bean.setExtrasList(extrasList);
             bean.setDetail(null);
@@ -161,18 +180,15 @@ public class MeituanNotifyController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "refundOrder")
-    public String refundOrder(@RequestParam String developerId,
-            @RequestParam String ePoiId, @RequestParam String sign,
+    @RequestMapping(value = "/refundOrder")
+    public String refundOrder(@RequestParam String developerId, @RequestParam String ePoiId, @RequestParam String sign,
             @RequestParam String orderRefund) {
         try {
-            RefundOrderBean bean = JSONObject.parseObject(orderRefund,
-                    RefundOrderBean.class);
+            RefundOrderBean bean = JSONObject.parseObject(orderRefund, RefundOrderBean.class);
             orderService.refundOrderPush(ePoiId, bean);
             return OK;
         } catch (Exception e) {
-            logger.error("refundOrder error!退款订单推送处理失败,data={}", orderRefund,
-                    e);
+            logger.error("refundOrder error!退款订单推送处理失败,data={}", orderRefund, e);
             return NOT_OK;
         }
     }
@@ -188,18 +204,15 @@ public class MeituanNotifyController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "shippingStatus")
-    public String shippingStatus(@RequestParam String developerId,
-            @RequestParam String ePoiId, @RequestParam String sign,
-            @RequestParam String shippingStatus) {
+    @RequestMapping(value = "/shippingStatus")
+    public String shippingStatus(@RequestParam String developerId, @RequestParam String ePoiId,
+            @RequestParam String sign, @RequestParam String shippingStatus) {
         try {
-            ShippingOrderBean bean = JSONObject.parseObject(shippingStatus,
-                    ShippingOrderBean.class);
+            ShippingOrderBean bean = JSONObject.parseObject(shippingStatus, ShippingOrderBean.class);
             dispatchService.dispatchStatusPush(ePoiId, bean);
             return OK;
         } catch (Exception e) {
-            logger.error("shippingStatus error!推送配送状态处理失败,data={}",
-                    shippingStatus, e);
+            logger.error("shippingStatus error!推送配送状态处理失败,data={}", shippingStatus, e);
             return NOT_OK;
         }
     }

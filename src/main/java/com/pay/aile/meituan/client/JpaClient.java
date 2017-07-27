@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pay.aile.meituan.bean.jpa.Food;
@@ -21,17 +22,17 @@ import com.pay.aile.meituan.client.hystrix.JpaClientHystrix;
 public interface JpaClient {
 
     @RequestMapping(value = "/food/bathSaveOrUpdate")
-    public JSONObject bathSaveOrUpdate(String foodJson);
+    public JSONObject bathSaveOrUpdate(@RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
 
-    @RequestMapping(value = "/food/findLst")
-    public List<Food> findLst(String foodJson);
+    @RequestMapping(value = "/food/findList")
+    public List<Food> findLst(@RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
 
     @RequestMapping(value = "/order/findOrder")
-    public Order findOrder(String orderJson);
+    public Order findOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     @RequestMapping(value = "/order/saveOrUpdateOrder")
-    public JSONObject saveOrUpdateOrder(String orderJson);
+    public JSONObject saveOrUpdateOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
     @RequestMapping(value = "/shop/saveOrUpdateShop")
-    public JSONObject saveOrUpdateShop(String shopJson);
+    public JSONObject saveOrUpdateShop(@RequestParam(value = "shopJson", defaultValue = "{}") String shopJson);
 }

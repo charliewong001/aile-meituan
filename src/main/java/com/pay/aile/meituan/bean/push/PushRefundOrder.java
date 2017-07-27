@@ -2,7 +2,8 @@ package com.pay.aile.meituan.bean.push;
 
 import java.io.Serializable;
 
-import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
+import com.pay.aile.meituan.bean.jpa.OrderRefundStatusEnum;
+import com.pay.aile.meituan.bean.jpa.Shop;
 
 public class PushRefundOrder implements Serializable {
 
@@ -12,33 +13,27 @@ public class PushRefundOrder implements Serializable {
     private static final long serialVersionUID = 8838708578777464399L;
     private String reason;// string 是 退单原因
     private String orderId;// number 是 订单id
-    private String refundStatus;// string 是 状态
-    private String updateTime;// number 是 消息发送时间
-    private String shopId;// number 是 店铺id
-    private String platformCode = PlatformCodeEnum.mt.getCode();// string 是
-                                                                // 平台code
+    private OrderRefundStatusEnum RefundStatus;// string 是 状态
+    private Long updateTime;// number 是 消息发送时间
+    private Shop shop;
 
     public String getOrderId() {
         return orderId;
-    }
-
-    public String getPlatformCode() {
-        return platformCode;
     }
 
     public String getReason() {
         return reason;
     }
 
-    public String getRefundStatus() {
-        return refundStatus;
+    public OrderRefundStatusEnum getRefundStatus() {
+        return RefundStatus;
     }
 
-    public String getShopId() {
-        return shopId;
+    public Shop getShop() {
+        return shop;
     }
 
-    public String getUpdateTime() {
+    public Long getUpdateTime() {
         return updateTime;
     }
 
@@ -46,29 +41,26 @@ public class PushRefundOrder implements Serializable {
         this.orderId = orderId;
     }
 
-    public void setPlatformCode(String platformCode) {
-        this.platformCode = platformCode;
-    }
-
     public void setReason(String reason) {
         this.reason = reason;
     }
 
-    public void setRefundStatus(String refundStatus) {
-        this.refundStatus = refundStatus;
+    public void setRefundStatus(OrderRefundStatusEnum refundStatus) {
+        RefundStatus = refundStatus;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
 
     @Override
     public String toString() {
-        return "PushRefundOrder [reason=" + reason + ", orderId=" + orderId + ", refundStatus=" + refundStatus
-                + ", updateTime=" + updateTime + ", shopId=" + shopId + ", platformCode=" + platformCode + "]";
+        return "PushRefundOrder [reason=" + reason + ", orderId=" + orderId + ", RefundStatus=" + RefundStatus
+                + ", updateTime=" + updateTime + ", shop=" + shop + "]";
     }
+
 }

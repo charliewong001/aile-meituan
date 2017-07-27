@@ -60,8 +60,12 @@ public class Shop implements Serializable {
     }
 
     public Shop(String shopId) {
-        super();
         this.shopId = shopId;
+    }
+
+    public Shop(String shopId, Platform platform) {
+        this.shopId = shopId;
+        this.platform = platform;
     }
 
     public String getAddress() {

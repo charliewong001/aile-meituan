@@ -69,299 +69,292 @@ public class NewOrderBean implements Serializable {
     private String detail;
     private String extras;
 
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public Long getOrderIdView() {
-        return orderIdView;
-    }
-
-    public void setOrderIdView(Long orderIdView) {
-        this.orderIdView = orderIdView;
-    }
-
     public String getCaution() {
         return caution;
-    }
-
-    public void setCaution(String caution) {
-        this.caution = caution;
     }
 
     public Long getCityId() {
         return cityId;
     }
 
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
-    }
-
     public Long getCtime() {
         return ctime;
-    }
-
-    public void setCtime(Long ctime) {
-        this.ctime = ctime;
-    }
-
-    public Long getUtime() {
-        return utime;
-    }
-
-    public void setUtime(Long utime) {
-        this.utime = utime;
     }
 
     public String getDaySeq() {
         return daySeq;
     }
 
-    public void setDaySeq(String daySeq) {
-        this.daySeq = daySeq;
-    }
-
     public Long getDeliveryTime() {
         return deliveryTime;
-    }
-
-    public void setDeliveryTime(Long deliveryTime) {
-        this.deliveryTime = deliveryTime;
-    }
-
-    public String getePoiId() {
-        return ePoiId;
-    }
-
-    public void setePoiId(String ePoiId) {
-        this.ePoiId = ePoiId;
-    }
-
-    public Integer getHasInvoiced() {
-        return hasInvoiced;
-    }
-
-    public void setHasInvoiced(Integer hasInvoiced) {
-        this.hasInvoiced = hasInvoiced;
-    }
-
-    public String getInvoiceTitle() {
-        return invoiceTitle;
-    }
-
-    public void setInvoiceTitle(String invoiceTitle) {
-        this.invoiceTitle = invoiceTitle;
-    }
-
-    public Boolean getIsFavorites() {
-        return isFavorites;
-    }
-
-    public void setIsFavorites(Boolean isFavorites) {
-        this.isFavorites = isFavorites;
-    }
-
-    public Boolean getIsPoiFirstOrder() {
-        return isPoiFirstOrder;
-    }
-
-    public void setIsPoiFirstOrder(Boolean isPoiFirstOrder) {
-        this.isPoiFirstOrder = isPoiFirstOrder;
-    }
-
-    public Integer getIsThirdShipping() {
-        return isThirdShipping;
-    }
-
-    public void setIsThirdShipping(Integer isThirdShipping) {
-        this.isThirdShipping = isThirdShipping;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Integer getLogisticsCode() {
-        return logisticsCode;
-    }
-
-    public void setLogisticsCode(Integer logisticsCode) {
-        this.logisticsCode = logisticsCode;
-    }
-
-    public Double getOriginalPrice() {
-        return originalPrice;
-    }
-
-    public void setOriginalPrice(Double originalPrice) {
-        this.originalPrice = originalPrice;
-    }
-
-    public Integer getPayType() {
-        return payType;
-    }
-
-    public void setPayType(Integer payType) {
-        this.payType = payType;
-    }
-
-    public String getPoiAddress() {
-        return poiAddress;
-    }
-
-    public void setPoiAddress(String poiAddress) {
-        this.poiAddress = poiAddress;
-    }
-
-    public String getPoiName() {
-        return poiName;
-    }
-
-    public void setPoiName(String poiName) {
-        this.poiName = poiName;
-    }
-
-    public String getPoiPhone() {
-        return poiPhone;
-    }
-
-    public void setPoiPhone(String poiPhone) {
-        this.poiPhone = poiPhone;
-    }
-
-    public String getPoiReceiveDetail() {
-        return poiReceiveDetail;
-    }
-
-    public void setPoiReceiveDetail(String poiReceiveDetail) {
-        this.poiReceiveDetail = poiReceiveDetail;
-    }
-
-    public String getRecipientAddress() {
-        return recipientAddress;
-    }
-
-    public void setRecipientAddress(String recipientAddress) {
-        this.recipientAddress = recipientAddress;
-    }
-
-    public String getRecipientName() {
-        return recipientName;
-    }
-
-    public void setRecipientName(String recipientName) {
-        this.recipientName = recipientName;
-    }
-
-    public String getRecipientPhone() {
-        return recipientPhone;
-    }
-
-    public void setRecipientPhone(String recipientPhone) {
-        this.recipientPhone = recipientPhone;
-    }
-
-    public String getShipperPhone() {
-        return shipperPhone;
-    }
-
-    public void setShipperPhone(String shipperPhone) {
-        this.shipperPhone = shipperPhone;
-    }
-
-    public Double getShippingFee() {
-        return shippingFee;
-    }
-
-    public void setShippingFee(Double shippingFee) {
-        this.shippingFee = shippingFee;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Double getTotal() {
-        return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
-    }
-
-    public List<NewOrderDetailBean> getDetailList() {
-        return detailList;
-    }
-
-    public void setDetailList(List<NewOrderDetailBean> detailList) {
-        this.detailList = detailList;
-    }
-
-    public List<NewOrderExtraBean> getExtrasList() {
-        return extrasList;
-    }
-
-    public void setExtrasList(List<NewOrderExtraBean> extrasList) {
-        this.extrasList = extrasList;
     }
 
     public String getDetail() {
         return detail;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
+    public List<NewOrderDetailBean> getDetailList() {
+        return detailList;
+    }
+
+    public String getePoiId() {
+        return ePoiId;
     }
 
     public String getExtras() {
         return extras;
     }
 
+    public List<NewOrderExtraBean> getExtrasList() {
+        return extrasList;
+    }
+
+    public Integer getHasInvoiced() {
+        return hasInvoiced;
+    }
+
+    public String getInvoiceTitle() {
+        return invoiceTitle;
+    }
+
+    public Boolean getIsFavorites() {
+        return isFavorites;
+    }
+
+    public Boolean getIsPoiFirstOrder() {
+        return isPoiFirstOrder;
+    }
+
+    public Integer getIsThirdShipping() {
+        return isThirdShipping;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Integer getLogisticsCode() {
+        return logisticsCode;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public Long getOrderIdView() {
+        return orderIdView;
+    }
+
+    public Double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public String getPoiAddress() {
+        return poiAddress;
+    }
+
+    public String getPoiName() {
+        return poiName;
+    }
+
+    public String getPoiPhone() {
+        return poiPhone;
+    }
+
+    public String getPoiReceiveDetail() {
+        return poiReceiveDetail;
+    }
+
+    public String getRecipientAddress() {
+        return recipientAddress;
+    }
+
+    public String getRecipientName() {
+        return recipientName;
+    }
+
+    public String getRecipientPhone() {
+        return recipientPhone;
+    }
+
+    public String getShipperPhone() {
+        return shipperPhone;
+    }
+
+    public Double getShippingFee() {
+        return shippingFee;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public Long getUtime() {
+        return utime;
+    }
+
+    public void setCaution(String caution) {
+        this.caution = caution;
+    }
+
+    public void setCityId(Long cityId) {
+        this.cityId = cityId;
+    }
+
+    public void setCtime(Long ctime) {
+        this.ctime = ctime;
+    }
+
+    public void setDaySeq(String daySeq) {
+        this.daySeq = daySeq;
+    }
+
+    public void setDeliveryTime(Long deliveryTime) {
+        this.deliveryTime = deliveryTime;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public void setDetailList(List<NewOrderDetailBean> detailList) {
+        this.detailList = detailList;
+    }
+
+    public void setePoiId(String ePoiId) {
+        this.ePoiId = ePoiId;
+    }
+
     public void setExtras(String extras) {
         this.extras = extras;
     }
 
+    public void setExtrasList(List<NewOrderExtraBean> extrasList) {
+        this.extrasList = extrasList;
+    }
+
+    public void setHasInvoiced(Integer hasInvoiced) {
+        this.hasInvoiced = hasInvoiced;
+    }
+
+    public void setInvoiceTitle(String invoiceTitle) {
+        this.invoiceTitle = invoiceTitle;
+    }
+
+    public void setIsFavorites(Boolean isFavorites) {
+        this.isFavorites = isFavorites;
+    }
+
+    public void setIsPoiFirstOrder(Boolean isPoiFirstOrder) {
+        this.isPoiFirstOrder = isPoiFirstOrder;
+    }
+
+    public void setIsThirdShipping(Integer isThirdShipping) {
+        this.isThirdShipping = isThirdShipping;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLogisticsCode(Integer logisticsCode) {
+        this.logisticsCode = logisticsCode;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setOrderIdView(Long orderIdView) {
+        this.orderIdView = orderIdView;
+    }
+
+    public void setOriginalPrice(Double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
+    }
+
+    public void setPoiAddress(String poiAddress) {
+        this.poiAddress = poiAddress;
+    }
+
+    public void setPoiName(String poiName) {
+        this.poiName = poiName;
+    }
+
+    public void setPoiPhone(String poiPhone) {
+        this.poiPhone = poiPhone;
+    }
+
+    public void setPoiReceiveDetail(String poiReceiveDetail) {
+        this.poiReceiveDetail = poiReceiveDetail;
+    }
+
+    public void setRecipientAddress(String recipientAddress) {
+        this.recipientAddress = recipientAddress;
+    }
+
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
+
+    public void setRecipientPhone(String recipientPhone) {
+        this.recipientPhone = recipientPhone;
+    }
+
+    public void setShipperPhone(String shipperPhone) {
+        this.shipperPhone = shipperPhone;
+    }
+
+    public void setShippingFee(Double shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    public void setUtime(Long utime) {
+        this.utime = utime;
+    }
+
     @Override
     public String toString() {
-        return "NewOrderBean [orderId=" + orderId + ", orderIdView="
-                + orderIdView + ", caution=" + caution + ", cityId=" + cityId
-                + ", ctime=" + ctime + ", utime=" + utime + ", daySeq=" + daySeq
-                + ", deliveryTime=" + deliveryTime + ", ePoiId=" + ePoiId
-                + ", hasInvoiced=" + hasInvoiced + ", invoiceTitle="
-                + invoiceTitle + ", isFavorites=" + isFavorites
-                + ", isPoiFirstOrder=" + isPoiFirstOrder + ", isThirdShipping="
-                + isThirdShipping + ", latitude=" + latitude + ", longitude="
-                + longitude + ", logisticsCode=" + logisticsCode
-                + ", originalPrice=" + originalPrice + ", payType=" + payType
-                + ", poiAddress=" + poiAddress + ", poiName=" + poiName
-                + ", poiPhone=" + poiPhone + ", poiReceiveDetail="
-                + poiReceiveDetail + ", recipientAddress=" + recipientAddress
-                + ", recipientName=" + recipientName + ", recipientPhone="
-                + recipientPhone + ", shipperPhone=" + shipperPhone
-                + ", shippingFee=" + shippingFee + ", status=" + status
-                + ", total=" + total + ", detailList=" + detailList
-                + ", extrasList=" + extrasList + ", detail=" + detail
-                + ", extras=" + extras + "]";
+        return "NewOrderBean [orderId=" + orderId + ", orderIdView=" + orderIdView + ", caution=" + caution
+                + ", cityId=" + cityId + ", ctime=" + ctime + ", utime=" + utime + ", daySeq=" + daySeq
+                + ", deliveryTime=" + deliveryTime + ", ePoiId=" + ePoiId + ", hasInvoiced=" + hasInvoiced
+                + ", invoiceTitle=" + invoiceTitle + ", isFavorites=" + isFavorites + ", isPoiFirstOrder="
+                + isPoiFirstOrder + ", isThirdShipping=" + isThirdShipping + ", latitude=" + latitude + ", longitude="
+                + longitude + ", logisticsCode=" + logisticsCode + ", originalPrice=" + originalPrice + ", payType="
+                + payType + ", poiAddress=" + poiAddress + ", poiName=" + poiName + ", poiPhone=" + poiPhone
+                + ", poiReceiveDetail=" + poiReceiveDetail + ", recipientAddress=" + recipientAddress
+                + ", recipientName=" + recipientName + ", recipientPhone=" + recipientPhone + ", shipperPhone="
+                + shipperPhone + ", shippingFee=" + shippingFee + ", status=" + status + ", total=" + total
+                + ", detailList=" + detailList + ", extrasList=" + extrasList + ", detail=" + detail + ", extras="
+                + extras + "]";
     }
 
 }

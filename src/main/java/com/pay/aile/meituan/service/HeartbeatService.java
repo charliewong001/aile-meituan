@@ -161,8 +161,10 @@ public class HeartbeatService {
         // 创建签名
         String sign = SignUtil.createSign(MeituanConfig.getSignkey(), data);
         data.put("sign", sign);
+
         String result = "";
         try {
+            logger.info("halfSecReport requestData={}", data);
             result = HttpClientUtil.sendRequestMap(HttpMethod.POST, heartbeatUrl, "http", data, "utf-8");
         } catch (Exception e) {
             logger.error("halfSecReport error!time={},result={}", new Date(), result, e);

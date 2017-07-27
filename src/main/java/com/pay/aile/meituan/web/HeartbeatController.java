@@ -35,6 +35,7 @@ public class HeartbeatController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
+    @RequestMapping(value = "/halfSecReport")
     public JSONObject halfSecReport(String[] shopIds) {
         try {
             heartbeatService.halfSecReport(shopIds);

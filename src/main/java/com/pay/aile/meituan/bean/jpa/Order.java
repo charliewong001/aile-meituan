@@ -9,14 +9,14 @@ public class Order implements Serializable {
     /**
      * @author chao.wang
      */
-    private static final long serialVersionUID = -9045301502245658870L;
+    private static final long serialVersionUID = -7297686304207471885L;
     // 店铺id
     private Shop shop;
-
     // 对应订单id
     private String orderId;
     // 顾客送餐地址
     private String address;
+
     // 用户下单时间
     private String orderCreateTime;
     // 配送费
@@ -29,6 +29,7 @@ public class Order implements Serializable {
     private StatusEnum hasInvoiced;
     // 发票抬头
     private String invoiceTitle;
+
     // 是否在线支付
     private StatusEnum onlinePaid;
     // 电话号码可以多个
@@ -44,9 +45,9 @@ public class Order implements Serializable {
     // 收件人姓名
     private String consignee;
     // 维度
-    private double latitude;
+    private Double latitude;
     // 经度
-    private double longitude;
+    private Double longitude;
     // 店铺实收
     private BigDecimal income;
     // 订单状态
@@ -54,16 +55,37 @@ public class Order implements Serializable {
     // 餐盒费(饿了么)
     private BigDecimal packageFee;
     private List<OrderItem> itemList;
+    // 订单状态
+    private OrderRefundStatusEnum RefundStatus;
+
+    // 催单
+    private ReminderOrder reminderOrder;
+    // 退单
+    private RefundOrder refundOrder;
+
+    // 配送信息
+    private Distribution distribution;
+    // 取消原因
+    private String cancelReason;
+    // 订单状态变更时间
+    private Long updateTime;
 
     public Order() {
+        super();
+        // TODO Auto-generated constructor stub
     }
 
     public Order(String orderId) {
+        super();
         this.orderId = orderId;
     }
 
     public String getAddress() {
         return address;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
     }
 
     public String getConsignee() {
@@ -86,6 +108,10 @@ public class Order implements Serializable {
         return description;
     }
 
+    public Distribution getDistribution() {
+        return distribution;
+    }
+
     public StatusEnum getHasInvoiced() {
         return hasInvoiced;
     }
@@ -102,11 +128,11 @@ public class Order implements Serializable {
         return itemList;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
@@ -134,6 +160,18 @@ public class Order implements Serializable {
         return phone;
     }
 
+    public RefundOrder getRefundOrder() {
+        return refundOrder;
+    }
+
+    public OrderRefundStatusEnum getRefundStatus() {
+        return RefundStatus;
+    }
+
+    public ReminderOrder getReminderOrder() {
+        return reminderOrder;
+    }
+
     public Shop getShop() {
         return shop;
     }
@@ -146,12 +184,20 @@ public class Order implements Serializable {
         return totalPrice;
     }
 
+    public Long getUpdateTime() {
+        return updateTime;
+    }
+
     public String getUserId() {
         return userId;
     }
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
     }
 
     public void setConsignee(String consignee) {
@@ -174,6 +220,10 @@ public class Order implements Serializable {
         this.description = description;
     }
 
+    public void setDistribution(Distribution distribution) {
+        this.distribution = distribution;
+    }
+
     public void setHasInvoiced(StatusEnum hasInvoiced) {
         this.hasInvoiced = hasInvoiced;
     }
@@ -190,11 +240,11 @@ public class Order implements Serializable {
         this.itemList = itemList;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
@@ -222,6 +272,18 @@ public class Order implements Serializable {
         this.phone = phone;
     }
 
+    public void setRefundOrder(RefundOrder refundOrder) {
+        this.refundOrder = refundOrder;
+    }
+
+    public void setRefundStatus(OrderRefundStatusEnum refundStatus) {
+        RefundStatus = refundStatus;
+    }
+
+    public void setReminderOrder(ReminderOrder reminderOrder) {
+        this.reminderOrder = reminderOrder;
+    }
+
     public void setShop(Shop shop) {
         this.shop = shop;
     }
@@ -234,8 +296,25 @@ public class Order implements Serializable {
         this.totalPrice = totalPrice;
     }
 
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "Order [shop=" + shop + ", orderId=" + orderId + ", address=" + address + ", orderCreateTime="
+                + orderCreateTime + ", deliverFee=" + deliverFee + ", deliverTime=" + deliverTime + ", description="
+                + description + ", hasInvoiced=" + hasInvoiced + ", invoiceTitle=" + invoiceTitle + ", onlinePaid="
+                + onlinePaid + ", phone=" + phone + ", daySn=" + daySn + ", userId=" + userId + ", totalPrice="
+                + totalPrice + ", originalPrice=" + originalPrice + ", consignee=" + consignee + ", latitude="
+                + latitude + ", longitude=" + longitude + ", income=" + income + ", status=" + status + ", packageFee="
+                + packageFee + ", itemList=" + itemList + ", RefundStatus=" + RefundStatus + ", reminderOrder="
+                + reminderOrder + ", refundOrder=" + refundOrder + ", distribution=" + distribution + ", cancelReason="
+                + cancelReason + ", updateTime=" + updateTime + "]";
     }
 
 }
