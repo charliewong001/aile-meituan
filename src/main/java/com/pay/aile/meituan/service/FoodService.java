@@ -56,6 +56,7 @@ public class FoodService {
      * @author chao.wang
      */
     public void batchSaveFoodInfo(String shopId, List<Food> foods) {
+        logger.info("batchSaveFoodInfo foods={}", foods);
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("foodList", foods);
@@ -63,7 +64,8 @@ public class FoodService {
         try {
             result = jpaClient.bathSaveOrUpdate(json.toJSONString());
         } catch (Exception e) {
-            logger.error("调用jpa接口批量新增菜品失败,shopId={},foods={}", shopId, foods, e);
+            logger.error("调用jpa接口批量新增菜品失败,shopId={},foods={}", shopId, foods,
+                    e);
             throw new RuntimeException("批量新增菜品失败");
         }
         if (result == null || !"0".equals(result.getString("code"))) {
@@ -89,11 +91,14 @@ public class FoodService {
         dishes.forEach((dish) -> {
             List<DishSkuBean> skus = dish.getWaiMaiDishSkuBases();
             if (skus == null || skus.isEmpty()) {
-                logger.error("mapFoodToDish 美团返回菜品信息错误,sku信息为空!shopId={},dish={}", shopId, dish);
+                logger.error(
+                        "mapFoodToDish 美团返回菜品信息错误,sku信息为空!shopId={},dish={}",
+                        shopId, dish);
                 throw new RuntimeException("菜品映射失败!美团返回菜品信息错误");
             }
             // 映射外层 dish bean
-            DishMapping dishMapping = new DishMapping(dish.getDishId(), dish.getDishId().toString());
+            DishMapping dishMapping = new DishMapping(dish.getDishId(),
+                    dish.getDishId().toString());
             // skuMappings
             List<DishSkuMapping> skuMappings = new ArrayList<DishSkuMapping>();
             skus.forEach((sku) -> {
@@ -102,12 +107,14 @@ public class FoodService {
                 food.setCategoryId(dish.getDishId());// 将dishId即类别ID存入
                 food.setDescription(sku.getDescription());
                 food.setName(sku.getDishSkuName());
-                food.setFoodId(sku.getDishSkuName());
+                food.setFoodId(sku.getDishSkuId().toString());
                 food.setIsValid(StatusEnum.ENABLE);
-                food.setPrice(new BigDecimal(sku.getPrice() == null ? "0" : sku.getPrice().toString()));
+                food.setPrice(new BigDecimal(sku.getPrice() == null ? "0"
+                        : sku.getPrice().toString()));
                 foods.add(food);
                 // 组装映射数据内存sku bean
-                DishSkuMapping skuMapping = new DishSkuMapping(sku.getDishSkuId().toString(),
+                DishSkuMapping skuMapping = new DishSkuMapping(
+                        sku.getDishSkuId().toString(),
                         sku.getDishSkuId().toString());
                 skuMappings.add(skuMapping);
             });
@@ -125,18 +132,22 @@ public class FoodService {
         request.setePoiId(shopId);
         request.setRequestSysParams(sysParams);
         // 设置映射数据
-        logger.info("mapFoodToDish dishMappings = {}", JSON.toJSONString(dishMappings));
         request.setDishMappings(JSON.toJSONString(dishMappings));
         String result = "";
         try {
+            logger.info("mapFoodToDish dishMappings = {}",
+                    JSON.toJSONString(dishMappings));
             result = request.doRequest();
+            logger.info("mapFoodToDish request result = {}", result);
         } catch (Exception e) {
             logger.error("mapFoodToDish 调用美团接口进行菜品映射失败!shopId={}", shopId, e);
             throw new RuntimeException("调用美团接口进行菜品映射失败,shopId=".concat(shopId));
         }
         if (!OK.equals(result)) {
-            logger.error("mapFoodToDish 调用美团接口进行菜品映射失败!shopId={},result={}", shopId, result);
-            throw new RuntimeException("调用美团接口进行菜品映射失败,shopId=".concat(shopId).concat(",result=").concat(result));
+            logger.error("mapFoodToDish 调用美团接口进行菜品映射失败!shopId={},result={}",
+                    shopId, result);
+            throw new RuntimeException("调用美团接口进行菜品映射失败,shopId=".concat(shopId)
+                    .concat(",result=").concat(result));
         }
         logger.info("mapFoodToDish 菜品映射成功");
     }
@@ -161,7 +172,8 @@ public class FoodService {
             result = request.doRequest();
             logger.info("queryAllFoodsFromPlatform result={}", result);
         } catch (Exception e) {
-            logger.error("queryAllFoodsFromPlatform error!shopId={},result={}", shopId, result, e);
+            logger.error("queryAllFoodsFromPlatform error!shopId={},result={}",
+                    shopId, result, e);
             throw new RuntimeException("查询店铺在美团的所有菜品失败!" + e.getMessage());
         }
         if (!StringUtils.hasText(result)) {
@@ -169,13 +181,16 @@ public class FoodService {
         }
         List<DishBean> dishes = null;
         try {
-            dishes = JSONObject.parseObject(result, DishBaseBean.class).getData();
+            dishes = JSONObject.parseObject(result, DishBaseBean.class)
+                    .getData();
         } catch (Exception e) {
-            logger.error("queryAllFoodsFromPlatform error!返回值错误!result={}", result, e);
+            logger.error("queryAllFoodsFromPlatform error!返回值错误!result={}",
+                    result, e);
             throw new RuntimeException("查询店铺在美团的所有菜品失败!返回值错误!");
         }
         if (dishes == null || dishes.isEmpty()) {
-            logger.error("queryAllFoodsFromPlatform error!返回值为空,result={}", result);
+            logger.error("queryAllFoodsFromPlatform error!返回值为空,result={}",
+                    result);
             throw new RuntimeException("查询店铺在美团的所有菜品失败!返回值为空!");
         }
         return dishes;
@@ -212,7 +227,8 @@ public class FoodService {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public void updateFoodStock(String shopId, Long categoryId, String foodId, int stockNum) {
+    public void updateFoodStock(String shopId, Long categoryId, String foodId,
+            int stockNum) {
 
         List<DishStock> dishes = new ArrayList<DishStock>();
         DishStock stock = new DishStock();
@@ -240,7 +256,8 @@ public class FoodService {
             throw new RuntimeException("调用美团估清菜品失败");
         }
         if (!OK.equals(result)) {
-            logger.error("updateFoodStock call meituan error! 调用美团更改菜品库存失败,shopId={},foodId={},stockNum={},result={}",
+            logger.error(
+                    "updateFoodStock call meituan error! 调用美团更改菜品库存失败,shopId={},foodId={},stockNum={},result={}",
                     shopId, foodId, stockNum, result);
             throw new RuntimeException("调用美团更改菜品库存失败,result=".concat(result));
         } else {
@@ -248,17 +265,21 @@ public class FoodService {
             food.setFoodId(foodId);
             food.setShop(new Shop(shopId, Platform.getInstance()));
             food.setCategoryId(categoryId);
-            food.setIsValid(stockNum == 0 ? StatusEnum.DISENABLE : StatusEnum.ENABLE);
+            food.setIsValid(
+                    stockNum == 0 ? StatusEnum.DISENABLE : StatusEnum.ENABLE);
             JSONObject saveResult = null;
             try {
                 logger.info("updateFoodStock 修改菜品状态 bean = {}", food);
-                saveResult = jpaClient.saveOrUpdate(JsonFormatUtil.toJSONString(food));
+                saveResult = jpaClient
+                        .saveOrUpdate(JsonFormatUtil.toJSONString(food));
                 logger.info("updateFoodStock 修改菜品状态返回值={}", saveResult);
             } catch (Exception e) {
-                logger.error("updateFoodStock 修改菜品状态错误,foodId={},categoryId={}", foodId, categoryId);
+                logger.error("updateFoodStock 修改菜品状态错误,foodId={},categoryId={}",
+                        foodId, categoryId);
                 throw new RuntimeException("修改菜品状态错误");
             }
         }
-        logger.info("toEstimate 调用美团更改菜品库存成功!shopId={},foodId={},stockNum={}", shopId, foodId, stockNum);
+        logger.info("toEstimate 调用美团更改菜品库存成功!shopId={},foodId={},stockNum={}",
+                shopId, foodId, stockNum);
     }
 }
