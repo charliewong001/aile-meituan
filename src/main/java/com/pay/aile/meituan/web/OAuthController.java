@@ -55,14 +55,18 @@ public class OAuthController {
      * @author chao.wang
      */
     @RequestMapping("/authCallback")
-    public String authCallback(@RequestParam String ePoiId, @RequestParam String appAuthToken) {
+    public String authCallback(@RequestParam String ePoiId,
+            @RequestParam String appAuthToken) {
         // 将appAuthToken存入redis
-        MeituanConfig.setAppAuthToken(Constants.mtRedisAuthTokenPrefix.concat(ePoiId), appAuthToken);
+        MeituanConfig.setAppAuthToken(
+                Constants.mtRedisAuthTokenPrefix.concat(ePoiId), appAuthToken);
         // 进行菜品映射
         try {
             foodService.mapFoodToDish(ePoiId);
         } catch (Exception e) {
-            logger.error("authCallback->mapFoodToDish error!授权回调后进行菜品映射失败,shopId={}", ePoiId, e);
+            logger.error(
+                    "authCallback->mapFoodToDish error!授权回调后进行菜品映射失败,shopId={}",
+                    ePoiId, e);
         }
         return ret_success;
     }
@@ -77,8 +81,9 @@ public class OAuthController {
      * @author chao.wang
      */
     @RequestMapping("/getAuthUrl")
-    public String getAuthUrl(@RequestParam String shopId, @RequestParam String deviceNo,
-            @RequestParam String customerNo, @RequestParam String registrationId) {
+    public String getAuthUrl(@RequestParam String shopId,
+            @RequestParam String deviceNo, @RequestParam String customerNo,
+            @RequestParam String registrationId) {
         // 将deviceNo存入缓存,或者在其他地方进行授权之前就存入缓存
         MeituanConfig.setDeviceNo(shopId, deviceNo);
         MeituanConfig.setRegistrationId(shopId, registrationId);// 将极光推送注册号保存到缓存
@@ -88,9 +93,11 @@ public class OAuthController {
         try {
             callbackUrl = URLEncoder.encode(authCallbackUrl, "UTF-8");
         } catch (Exception e) {
-            logger.error("authCallbackUrl encode error!,authCallbackUrl={}", authCallbackUrl, e);
+            logger.error("authCallbackUrl encode error!,authCallbackUrl={}",
+                    authCallbackUrl, e);
         }
-        String url = authUrl + "?developerId=" + developerId + "&businessId=2&ePoiId=" + shopId + "&signKey=" + signKey
+        String url = authUrl + "?developerId=" + developerId
+                + "&businessId=2&ePoiId=" + shopId + "&signKey=" + signKey
                 + "&callbackUrl=" + callbackUrl;
         return url;
     }
@@ -107,7 +114,8 @@ public class OAuthController {
     public String getUnbindUrl(@RequestParam String shopId) {
         String appAuthToken = MeituanConfig.getAppAuthToken(shopId);
         String signKey = MeituanConfig.getSignkey();
-        String url = unbindUrl + "?signKey=" + signKey + "&businessId=1&appAuthToken=" + appAuthToken;
+        String url = unbindUrl + "?signKey=" + signKey
+                + "&businessId=1&appAuthToken=" + appAuthToken;
         return url;
     }
 
@@ -122,8 +130,10 @@ public class OAuthController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public String unbindCallback(@RequestParam String bussinessId, @RequestParam String developerId,
-            @RequestParam String epoiId, @RequestParam String timestamp) {
+    @RequestMapping("/unbindCallback")
+    public String unbindCallback(@RequestParam String bussinessId,
+            @RequestParam String developerId, @RequestParam String epoiId,
+            @RequestParam String timestamp) {
         String localDeveloperId = MeituanConfig.getDeveloperId();
         if (!"2".equals(bussinessId)) {
             return "{data:\"bussinessId not correct!\"}";

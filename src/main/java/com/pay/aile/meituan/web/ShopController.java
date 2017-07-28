@@ -28,6 +28,7 @@ public class ShopController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
+    @RequestMapping("/autoConfirm")
     public JSONObject autoConfirm(@RequestParam String shopId) {
         try {
             shopService.autoConfirmOrder(shopId);
@@ -84,6 +85,7 @@ public class ShopController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
+    @RequestMapping("/unAutoConfirm")
     public JSONObject unAutoConfirm(@RequestParam String shopId) {
         try {
             shopService.unAutoConfirmOrder(shopId);

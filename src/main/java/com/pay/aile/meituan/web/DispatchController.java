@@ -40,12 +40,14 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
+    @RequestMapping("/selfDelivered")
     public JSONObject selfDelivered(String shopId, Long orderId) {
         try {
             dispatchService.selfDelivered(shopId, orderId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("selfDelivered error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("selfDelivered error!shopId={},orderId={}", shopId,
+                    orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -63,12 +65,15 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public JSONObject selfDelivering(String shopId, Long orderId, String name, String phone) {
+    @RequestMapping("/selfDelivering")
+    public JSONObject selfDelivering(String shopId, Long orderId, String name,
+            String phone) {
         try {
             dispatchService.selfDelivering(shopId, orderId, name, phone);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("selfDelivering error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("selfDelivering error!shopId={},orderId={}", shopId,
+                    orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -82,12 +87,15 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public JSONObject zbDispatchConfirm(String shopId, Long orderId, Double tipAmount) {
+    @RequestMapping("/zbDispatchConfirm")
+    public JSONObject zbDispatchConfirm(String shopId, Long orderId,
+            Double tipAmount) {
         try {
             dispatchService.zbDispatchConfirm(shopId, orderId, tipAmount);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("zbDispatchConfirm error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("zbDispatchConfirm error!shopId={},orderId={}", shopId,
+                    orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -105,16 +113,20 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public JSONObject zbDispatchPrepare(String shopId, Long orderId, Double shippingFee, Double tipAmount) {
+    @RequestMapping("/zbDispatchPrepare")
+    public JSONObject zbDispatchPrepare(String shopId, Long orderId,
+            Double shippingFee, Double tipAmount) {
         try {
-            String result = dispatchService.zbDispatchPrepare(shopId, orderId, shippingFee, tipAmount);
+            String result = dispatchService.zbDispatchPrepare(shopId, orderId,
+                    shippingFee, tipAmount);
             if (Constants.OK.equals(result)) {
                 return JsonFormatUtil.getSuccessJson(result);
             } else {
                 return JsonFormatUtil.getFailureJson(result);
             }
         } catch (Exception e) {
-            logger.error("zbDispatchPrepare error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("zbDispatchPrepare error!shopId={},orderId={}", shopId,
+                    orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -130,12 +142,15 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public JSONObject zbDispatchTipUpdate(String shopId, Long orderId, Double tipAmount) {
+    @RequestMapping("/zbDispatchTipUpdate")
+    public JSONObject zbDispatchTipUpdate(String shopId, Long orderId,
+            Double tipAmount) {
         try {
             dispatchService.zbDispatchTipUpdate(shopId, orderId, tipAmount);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("zbDispatchTipUpdate error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("zbDispatchTipUpdate error!shopId={},orderId={}",
+                    shopId, orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -148,12 +163,15 @@ public class DispatchController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
+    @RequestMapping("/zbShippingFeeQuery")
     public JSONObject zbShippingFeeQuery(String shopId, String orderId) {
         try {
-            List<ZbShippingFeeBean> list = dispatchService.zbShippingFeeQuery(shopId, orderId);
+            List<ZbShippingFeeBean> list = dispatchService
+                    .zbShippingFeeQuery(shopId, orderId);
             return JsonFormatUtil.getSuccessJson(list);
         } catch (Exception e) {
-            logger.error("zbShippingFeeQuery error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("zbShippingFeeQuery error!shopId={},orderId={}",
+                    shopId, orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
