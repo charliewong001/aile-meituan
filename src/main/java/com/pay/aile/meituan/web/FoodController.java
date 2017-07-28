@@ -35,13 +35,16 @@ public class FoodController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public JSONObject toEstimate(@RequestParam("shopId") String shopId, @RequestParam("categoryId") Long categoryId,
+    @RequestMapping("/toEstimate")
+    public JSONObject toEstimate(@RequestParam("shopId") String shopId,
+            @RequestParam("categoryId") Long categoryId,
             @RequestParam("foodId") String foodId) {
         try {
             foodService.toEstimate(shopId, categoryId, foodId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("toEstimate error!,shopId={},foodId={}", shopId, foodId, e);
+            logger.error("toEstimate error!,shopId={},foodId={}", shopId,
+                    foodId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -53,13 +56,16 @@ public class FoodController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public JSONObject toFull(@RequestParam("shopId") String shopId, @RequestParam("categoryId") Long categoryId,
+    @RequestMapping("/toFull")
+    public JSONObject toFull(@RequestParam("shopId") String shopId,
+            @RequestParam("categoryId") Long categoryId,
             @RequestParam("foodId") String foodId) {
         try {
             foodService.toFull(shopId, categoryId, foodId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("toFull error!,shopId={},foodId={}", shopId, foodId, e);
+            logger.error("toFull error!,shopId={},foodId={}", shopId, foodId,
+                    e);
             return JsonFormatUtil.getFailureJson();
         }
     }
