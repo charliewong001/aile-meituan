@@ -84,23 +84,9 @@ public class RefundOrder implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("RefundOrder [order=");
-        builder.append(order);
-        builder.append(", refundStatus=");
-        builder.append(refundStatus);
-        builder.append(", reason=");
-        builder.append(reason);
-        builder.append(", refundType=");
-        builder.append(refundType);
-        builder.append(", totalPrice=");
-        builder.append(totalPrice);
-        builder.append(", updateTime=");
-        builder.append(updateTime);
-        builder.append(", itemList=");
-        builder.append(itemList);
-        builder.append("]");
-        return builder.toString();
+        return "RefundOrder [order=" + order + ", refundStatus=" + refundStatus + ", reason=" + reason + ", refundType="
+                + refundType + ", totalPrice=" + totalPrice + ", updateTime=" + updateTime + ", itemList=" + itemList
+                + "]";
     }
 
 }

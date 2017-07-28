@@ -65,17 +65,8 @@ public class CancelOrderBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("CancelOrderBaseBean [developerId=");
-        builder.append(developerId);
-        builder.append(", ePoiId=");
-        builder.append(ePoiId);
-        builder.append(", sign=");
-        builder.append(sign);
-        builder.append(", orderCancel=");
-        builder.append(orderCancel);
-        builder.append("]");
-        return builder.toString();
+        return "CancelOrderBaseBean [developerId=" + developerId + ", ePoiId=" + ePoiId + ", sign=" + sign
+                + ", orderCancel=" + orderCancel + "]";
     }
 
 }

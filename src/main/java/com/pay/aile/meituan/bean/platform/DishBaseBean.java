@@ -29,11 +29,7 @@ public class DishBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("DishBaseBean [data=");
-        builder.append(data);
-        builder.append("]");
-        return builder.toString();
+        return "DishBaseBean [data=" + data + "]";
     }
 
 }

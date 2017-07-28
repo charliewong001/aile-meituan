@@ -63,19 +63,8 @@ public class PushRefundOrder extends PushBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("PushRefundOrder [orderId=");
-        builder.append(orderId);
-        builder.append(", refundStatus=");
-        builder.append(refundStatus);
-        builder.append(", updateTime=");
-        builder.append(updateTime);
-        builder.append(", code=");
-        builder.append(code);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        return "PushRefundOrder [orderId=" + orderId + ", refundStatus=" + refundStatus + ", updateTime=" + updateTime
+                + ", code=" + code + ", id=" + id + "]";
     }
 
 }

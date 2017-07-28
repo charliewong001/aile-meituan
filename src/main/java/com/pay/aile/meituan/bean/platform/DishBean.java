@@ -64,19 +64,8 @@ public class DishBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("DishBean [eDishCode=");
-        builder.append(eDishCode);
-        builder.append(", dishId=");
-        builder.append(dishId);
-        builder.append(", dishName=");
-        builder.append(dishName);
-        builder.append(", categoryName=");
-        builder.append(categoryName);
-        builder.append(", waiMaiDishSkuBases=");
-        builder.append(waiMaiDishSkuBases);
-        builder.append("]");
-        return builder.toString();
+        return "DishBean [eDishCode=" + eDishCode + ", dishId=" + dishId + ", dishName=" + dishName + ", categoryName="
+                + categoryName + ", waiMaiDishSkuBases=" + waiMaiDishSkuBases + "]";
     }
 
 }

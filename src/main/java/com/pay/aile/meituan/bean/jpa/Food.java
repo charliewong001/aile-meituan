@@ -103,27 +103,9 @@ public class Food implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Food [foodId=");
-        builder.append(foodId);
-        builder.append(", shop=");
-        builder.append(shop);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", description=");
-        builder.append(description);
-        builder.append(", picture=");
-        builder.append(picture);
-        builder.append(", price=");
-        builder.append(price);
-        builder.append(", isValid=");
-        builder.append(isValid);
-        builder.append(", specIds=");
-        builder.append(specIds);
-        builder.append(", categoryId=");
-        builder.append(categoryId);
-        builder.append("]");
-        return builder.toString();
+        return "Food [foodId=" + foodId + ", shop=" + shop + ", name=" + name + ", description=" + description
+                + ", picture=" + picture + ", price=" + price + ", isValid=" + isValid + ", specIds=" + specIds
+                + ", categoryId=" + categoryId + "]";
     }
 
 }

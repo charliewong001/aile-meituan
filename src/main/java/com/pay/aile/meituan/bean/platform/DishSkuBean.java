@@ -73,21 +73,8 @@ public class DishSkuBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("DishSkuBean [dishSkuId=");
-        builder.append(dishSkuId);
-        builder.append(", dishSkuName=");
-        builder.append(dishSkuName);
-        builder.append(", eDishSkuCode=");
-        builder.append(eDishSkuCode);
-        builder.append(", spec=");
-        builder.append(spec);
-        builder.append(", description=");
-        builder.append(description);
-        builder.append(", price=");
-        builder.append(price);
-        builder.append("]");
-        return builder.toString();
+        return "DishSkuBean [dishSkuId=" + dishSkuId + ", dishSkuName=" + dishSkuName + ", eDishSkuCode=" + eDishSkuCode
+                + ", spec=" + spec + ", description=" + description + ", price=" + price + "]";
     }
 
 }

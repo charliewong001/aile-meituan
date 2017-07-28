@@ -64,17 +64,8 @@ public class NewOrderBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("NewOrderBaseBean [developerId=");
-        builder.append(developerId);
-        builder.append(", ePoiId=");
-        builder.append(ePoiId);
-        builder.append(", sign=");
-        builder.append(sign);
-        builder.append(", order=");
-        builder.append(order);
-        builder.append("]");
-        return builder.toString();
+        return "NewOrderBaseBean [developerId=" + developerId + ", ePoiId=" + ePoiId + ", sign=" + sign + ", order="
+                + order + "]";
     }
 
 }

@@ -63,17 +63,8 @@ public class RefundOrderBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("RefundOrderBaseBean [developerId=");
-        builder.append(developerId);
-        builder.append(", ePoiId=");
-        builder.append(ePoiId);
-        builder.append(", sign=");
-        builder.append(sign);
-        builder.append(", orderRefund=");
-        builder.append(orderRefund);
-        builder.append("]");
-        return builder.toString();
+        return "RefundOrderBaseBean [developerId=" + developerId + ", ePoiId=" + ePoiId + ", sign=" + sign
+                + ", orderRefund=" + orderRefund + "]";
     }
 
 }

@@ -97,23 +97,8 @@ public class Distribution implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Distribution [order=");
-        builder.append(order);
-        builder.append(", shop=");
-        builder.append(shop);
-        builder.append(", status=");
-        builder.append(status);
-        builder.append(", subStatus=");
-        builder.append(subStatus);
-        builder.append(", distributionName=");
-        builder.append(distributionName);
-        builder.append(", phone=");
-        builder.append(phone);
-        builder.append(", updateAt=");
-        builder.append(updateAt);
-        builder.append("]");
-        return builder.toString();
+        return "Distribution [order=" + order + ", shop=" + shop + ", status=" + status + ", subStatus=" + subStatus
+                + ", distributionName=" + distributionName + ", phone=" + phone + ", updateAt=" + updateAt + "]";
     }
 
 }

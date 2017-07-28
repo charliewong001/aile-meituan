@@ -124,31 +124,10 @@ public class NewOrderDetailBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("NewOrderDetailBean [app_food_code=");
-        builder.append(app_food_code);
-        builder.append(", box_num=");
-        builder.append(box_num);
-        builder.append(", box_price=");
-        builder.append(box_price);
-        builder.append(", food_name=");
-        builder.append(food_name);
-        builder.append(", price=");
-        builder.append(price);
-        builder.append(", sku_id=");
-        builder.append(sku_id);
-        builder.append(", quantity=");
-        builder.append(quantity);
-        builder.append(", unit=");
-        builder.append(unit);
-        builder.append(", food_discount=");
-        builder.append(food_discount);
-        builder.append(", food_property=");
-        builder.append(food_property);
-        builder.append(", cart_id=");
-        builder.append(cart_id);
-        builder.append("]");
-        return builder.toString();
+        return "NewOrderDetailBean [app_food_code=" + app_food_code + ", box_num=" + box_num + ", box_price="
+                + box_price + ", food_name=" + food_name + ", price=" + price + ", sku_id=" + sku_id + ", quantity="
+                + quantity + ", unit=" + unit + ", food_discount=" + food_discount + ", food_property=" + food_property
+                + ", cart_id=" + cart_id + "]";
     }
 
 }

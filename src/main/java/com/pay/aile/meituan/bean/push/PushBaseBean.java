@@ -27,11 +27,7 @@ public class PushBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("PushBaseBean [id=");
-        builder.append(id);
-        builder.append("]");
-        return builder.toString();
+        return "PushBaseBean [id=" + id + "]";
     }
 
 }

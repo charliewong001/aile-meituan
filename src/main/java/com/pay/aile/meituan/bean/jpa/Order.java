@@ -306,65 +306,15 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Order [shop=");
-        builder.append(shop);
-        builder.append(", orderId=");
-        builder.append(orderId);
-        builder.append(", address=");
-        builder.append(address);
-        builder.append(", orderCreateTime=");
-        builder.append(orderCreateTime);
-        builder.append(", deliverFee=");
-        builder.append(deliverFee);
-        builder.append(", deliverTime=");
-        builder.append(deliverTime);
-        builder.append(", description=");
-        builder.append(description);
-        builder.append(", hasInvoiced=");
-        builder.append(hasInvoiced);
-        builder.append(", invoiceTitle=");
-        builder.append(invoiceTitle);
-        builder.append(", onlinePaid=");
-        builder.append(onlinePaid);
-        builder.append(", phone=");
-        builder.append(phone);
-        builder.append(", daySn=");
-        builder.append(daySn);
-        builder.append(", userId=");
-        builder.append(userId);
-        builder.append(", totalPrice=");
-        builder.append(totalPrice);
-        builder.append(", originalPrice=");
-        builder.append(originalPrice);
-        builder.append(", consignee=");
-        builder.append(consignee);
-        builder.append(", latitude=");
-        builder.append(latitude);
-        builder.append(", longitude=");
-        builder.append(longitude);
-        builder.append(", income=");
-        builder.append(income);
-        builder.append(", status=");
-        builder.append(status);
-        builder.append(", packageFee=");
-        builder.append(packageFee);
-        builder.append(", itemList=");
-        builder.append(itemList);
-        builder.append(", RefundStatus=");
-        builder.append(RefundStatus);
-        builder.append(", reminderOrder=");
-        builder.append(reminderOrder);
-        builder.append(", refundOrder=");
-        builder.append(refundOrder);
-        builder.append(", distribution=");
-        builder.append(distribution);
-        builder.append(", cancelReason=");
-        builder.append(cancelReason);
-        builder.append(", updateTime=");
-        builder.append(updateTime);
-        builder.append("]");
-        return builder.toString();
+        return "Order [shop=" + shop + ", orderId=" + orderId + ", address=" + address + ", orderCreateTime="
+                + orderCreateTime + ", deliverFee=" + deliverFee + ", deliverTime=" + deliverTime + ", description="
+                + description + ", hasInvoiced=" + hasInvoiced + ", invoiceTitle=" + invoiceTitle + ", onlinePaid="
+                + onlinePaid + ", phone=" + phone + ", daySn=" + daySn + ", userId=" + userId + ", totalPrice="
+                + totalPrice + ", originalPrice=" + originalPrice + ", consignee=" + consignee + ", latitude="
+                + latitude + ", longitude=" + longitude + ", income=" + income + ", status=" + status + ", packageFee="
+                + packageFee + ", itemList=" + itemList + ", RefundStatus=" + RefundStatus + ", reminderOrder="
+                + reminderOrder + ", refundOrder=" + refundOrder + ", distribution=" + distribution + ", cancelReason="
+                + cancelReason + ", updateTime=" + updateTime + "]";
     }
 
 }

@@ -54,15 +54,7 @@ public class Platform implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Platform [name=");
-        builder.append(name);
-        builder.append(", status=");
-        builder.append(status);
-        builder.append(", code=");
-        builder.append(code);
-        builder.append("]");
-        return builder.toString();
+        return "Platform [name=" + name + ", status=" + status + ", code=" + code + "]";
     }
 
 }
