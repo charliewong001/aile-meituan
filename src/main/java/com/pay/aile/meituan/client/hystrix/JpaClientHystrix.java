@@ -31,7 +31,19 @@ public class JpaClientHystrix implements JpaClient {
     }
 
     @Override
+    public JSONObject saveOrUpdateDistribution(String distributionJson) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public JSONObject saveOrUpdateOrder(String orderJson) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONObject saveOrUpdateRefundOrder(String refundOrderJson) {
         // TODO Auto-generated method stub
         return null;
     }
