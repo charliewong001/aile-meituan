@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
 
-public class PushCancelOrder implements Serializable {
+public class PushCancelOrder extends PushBaseBean implements Serializable {
 
     /**
      * @author chao.wang
@@ -13,6 +13,13 @@ public class PushCancelOrder implements Serializable {
     private String orderId;// number 是 订单id
     private Long updateTime;// number 是 消息发送时间
     private String code = PlatformCodeEnum.mt.getCode();
+
+    public PushCancelOrder() {
+    }
+
+    public PushCancelOrder(Long id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;
@@ -40,7 +47,8 @@ public class PushCancelOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "PushCancelOrder [orderId=" + orderId + ", updateTime=" + updateTime + ", code=" + code + "]";
+        return "PushCancelOrder [orderId=" + orderId + ", updateTime=" + updateTime + ", code=" + code + ", id=" + id
+                + "]";
     }
 
 }

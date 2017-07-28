@@ -26,7 +26,7 @@ public interface TakeawayClient {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "/pushDistribution")
+    @RequestMapping(value = "/order/pushDistribution")
     public JSONObject pushDistribution(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
@@ -65,7 +65,7 @@ public interface TakeawayClient {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "/pushOrderChange")
+    @RequestMapping(value = "/order/pushOrderChange")
     public JSONObject pushOrderChange(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
@@ -78,7 +78,7 @@ public interface TakeawayClient {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "/pushRefundOrder")
+    @RequestMapping(value = "/order/pushRefundOrder")
     public JSONObject pushRefundOrder(@RequestParam(value = "registrationId", defaultValue = "") String registrationId,
             @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 }

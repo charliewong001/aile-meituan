@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
@@ -21,7 +22,6 @@ import com.pay.aile.meituan.bean.jpa.OrderItem;
 import com.pay.aile.meituan.bean.jpa.OrderRefundStatusEnum;
 import com.pay.aile.meituan.bean.jpa.OrderStatusEnum;
 import com.pay.aile.meituan.bean.jpa.Platform;
-import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
 import com.pay.aile.meituan.bean.jpa.Shop;
 import com.pay.aile.meituan.bean.jpa.StatusEnum;
 import com.pay.aile.meituan.bean.platform.CancelOrderBean;
@@ -120,8 +120,24 @@ public class OrderService {
     public void cancelOrderPush(String shopId, @Valid CancelOrderBean bean) {
         long time = System.currentTimeMillis();
         Long orderId = bean.getOrderId();
+        // 保存订单
+        JSONObject result = null;
+        try {
+            Order order = new Order();
+            order.setOrderId(orderId.toString());
+            order.setStatus(OrderStatusEnum.invalid);
+            order.setUpdateTime(time);
+            fillShop(shopId, order);
+            logger.info("cancelOrderPush 修改订单状态,order={}", JsonFormatUtil.toJSONString(order));
+            result = jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
+            logger.info("cancelOrderPush 修改订单状态返回={}", result);
+        } catch (Exception e) {
+            logger.error("cancelOrderPush修改订单状态失败!orderId={}", orderId, e);
+            throw new RuntimeException("美团取消订单成功,修改本地订单状态失败!" + e.getMessage());
+        }
+        Long id = getPrimaryKeyFromOrder(result);
         // 向POS推送取消订单信息
-        PushCancelOrder pushCancelOrder = new PushCancelOrder();
+        PushCancelOrder pushCancelOrder = new PushCancelOrder(id);
         pushCancelOrder.setOrderId(orderId.toString());
         // pushCancelOrder.setReason(bean.getReason());
         pushCancelOrder.setUpdateTime(time);
@@ -137,20 +153,6 @@ public class OrderService {
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("cancelOrderPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), bean);
-        }
-        JSONObject result = null;
-        try {
-            Order order = new Order();
-            order.setOrderId(orderId.toString());
-            order.setStatus(OrderStatusEnum.invalid);
-            order.setUpdateTime(time);
-            fillShop(shopId, order);
-            logger.info("cancelOrderPush 修改订单状态,order={}", JsonFormatUtil.toJSONString(order));
-            result = jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
-            logger.info("cancelOrderPush 修改订单状态返回={}", result);
-        } catch (Exception e) {
-            logger.error("cancelOrderPush修改订单状态失败!orderId={}", orderId, e);
-            throw new RuntimeException("美团取消订单成功,修改本地订单状态失败!" + e.getMessage());
         }
     }
 
@@ -195,27 +197,6 @@ public class OrderService {
     @RequestMapping("/confirmOrderPush")
     public void confirmOrderPush(String shopId, @Valid NewOrderBean newOrderBean) {
         long updateTime = System.currentTimeMillis();
-        // 推送订单状态变化
-        Shop shop = new Shop();
-        shop.setRegistrationId(MeituanConfig.getRegistrationId(shopId));
-
-        PushOrderStatusChange bean = new PushOrderStatusChange();
-        bean.setOrderId(newOrderBean.getOrderId());
-        bean.setStatus(OrderStatusEnum.confirmed.getCode());
-        bean.setUpdateTime(updateTime);
-        JSONObject pushResult = null;
-        try {
-            logger.info("confirmOrderPush 推送的消息={}", bean);
-            pushResult = takeawayClient.pushOrderChange(MeituanConfig.getRegistrationId(shopId),
-                    JsonFormatUtil.toJSONString(bean));
-            logger.info("confirmOrderPush 推送结果={}", pushResult);
-        } catch (Exception e) {
-            logger.error("confirmOrderPush 推送商家已确认订单失败！orderId={}", bean.getOrderId());
-        }
-        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
-            logger.error("confirmOrderPush 极光推送失败!msg={},pushBean={}",
-                    pushResult == null ? "" : pushResult.getString("msg"), bean);
-        }
         // 修改订单状态
         Long orderId = newOrderBean.getOrderId();
         JSONObject result = null;
@@ -232,6 +213,25 @@ public class OrderService {
             logger.error("confirmOrderPush 修改订单状态失败!orderId={}", orderId, e);
             throw new RuntimeException("美团确认订单成功,修改本地订单状态失败!" + e.getMessage());
         }
+        Long id = getPrimaryKeyFromOrder(result);
+        // 推送订单状态变化
+        PushOrderStatusChange bean = new PushOrderStatusChange(id);
+        bean.setOrderId(newOrderBean.getOrderId());
+        bean.setStatus(OrderStatusEnum.confirmed.getCode());
+        bean.setUpdateTime(updateTime);
+        JSONObject pushResult = null;
+        try {
+            logger.info("confirmOrderPush 推送的消息={}", bean);
+            pushResult = takeawayClient.pushOrderChange(MeituanConfig.getRegistrationId(shopId),
+                    JsonFormatUtil.toJSONString(bean));
+            logger.info("confirmOrderPush 推送结果={}", pushResult);
+        } catch (Exception e) {
+            logger.error("confirmOrderPush 推送商家已确认订单失败！orderId={}", bean.getOrderId());
+        }
+        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
+            logger.error("confirmOrderPush 极光推送失败!msg={},pushBean={}",
+                    pushResult == null ? "" : pushResult.getString("msg"), bean);
+        }
     }
 
     /**
@@ -243,11 +243,24 @@ public class OrderService {
      */
     public void finishOrderPush(String shopId, @Valid NewOrderBean bean) {
         long updateTime = System.currentTimeMillis();
+        // 修改本地库中订单状态
+        Long orderId = bean.getOrderId();
+        JSONObject result = null;
+        try {
+            Order order = new Order(bean.getOrderId().toString());
+            order.setStatus(OrderStatusEnum.completed);
+            order.setUpdateTime(updateTime);
+            fillShop(shopId, order);
+            logger.info("finishOrderPush 修改订单状态,order={}", JsonFormatUtil.toJSONString(order));
+            result = jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
+            logger.info("finishOrderPush 修改订单状态返回={}", result);
+        } catch (Exception e) {
+            logger.error("finishOrderPush 修改订单状态失败!orderId={}", orderId, e);
+            throw new RuntimeException("处理推送的已完成订单成功,修改本地订单状态失败!" + e.getMessage());
+        }
+        Long id = getPrimaryKeyFromOrder(result);
         // 推送订单状态变化
-        Shop shop = new Shop();
-        shop.setRegistrationId(MeituanConfig.getRegistrationId(shopId));
-
-        PushOrderStatusChange changeBean = new PushOrderStatusChange();
+        PushOrderStatusChange changeBean = new PushOrderStatusChange(id);
         changeBean.setOrderId(bean.getOrderId());
         changeBean.setStatus(OrderStatusEnum.confirmed.getCode());
         changeBean.setUpdateTime(updateTime);
@@ -264,21 +277,6 @@ public class OrderService {
             logger.error("finishOrderPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), bean);
         }
-        // 修改本地库中订单状态
-        Long orderId = bean.getOrderId();
-        JSONObject result = null;
-        try {
-            Order order = new Order(bean.getOrderId().toString());
-            order.setStatus(OrderStatusEnum.completed);
-            order.setUpdateTime(updateTime);
-            fillShop(shopId, order);
-            logger.info("finishOrderPush 修改订单状态,order={}", JsonFormatUtil.toJSONString(order));
-            result = jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
-            logger.info("finishOrderPush 修改订单状态返回={}", result);
-        } catch (Exception e) {
-            logger.error("finishOrderPush 修改订单状态失败!orderId={}", orderId, e);
-            throw new RuntimeException("处理推送的已完成订单成功,修改本地订单状态失败!" + e.getMessage());
-        }
     }
 
     /**
@@ -290,10 +288,9 @@ public class OrderService {
      */
     public void newOrderPush(String shopId, @Valid NewOrderBean newOrderBean) {
         // 根据shopId获取门店是否设置了自动接单,若自动接单,则最后要调用美团接单接口
-        boolean autoConfirm = MeituanConfig.isAutoConfirmOrder(shopId);
         long time = System.currentTimeMillis();
         List<NewOrderDetailBean> newOrderDetaiList = newOrderBean.getDetailList();
-        PushNewOrder pushOrder = new PushNewOrder();
+
         Order order = new Order();
         List<OrderItem> itemList = new ArrayList<OrderItem>();
         for (NewOrderDetailBean detail : newOrderDetaiList) {
@@ -312,39 +309,14 @@ public class OrderService {
             itemList.add(item);
         }
 
-        // 推送到POS的订单信息
-        pushOrder.setAddress(newOrderBean.getRecipientAddress());
-        pushOrder.setConsignee(newOrderBean.getRecipientName());
-        pushOrder.setOnlinePaid(PayTypeEnum.onlinePay(newOrderBean.getPayType()) ? StatusEnum.ENABLE.toString()
-                : StatusEnum.DISENABLE.toString());
-        pushOrder.setOrderCreateTime(sdf.format(new Date(newOrderBean.getCtime())));
-        pushOrder.setDeliverTime(sdf.format(new Date(newOrderBean.getDeliveryTime())));
-        pushOrder.setPhone(newOrderBean.getRecipientPhone());
-        pushOrder.setOrderId(newOrderBean.getOrderId().toString());
-        pushOrder.setCode(PlatformCodeEnum.mt.getCode());
-
-        String pushOrderJson = JsonFormatUtil.toJSONString(pushOrder);
-        JSONObject pushResult = null;
-        try {
-            String registrationId = MeituanConfig.getRegistrationId(shopId);
-            logger.info("newOrderPush 推送信息 pushOrder={}", pushOrderJson);
-            pushResult = takeawayClient.pushNewOrder(registrationId, pushOrderJson);
-            logger.info("newOrderPush 推送返回：{}", pushResult);
-        } catch (Exception e) {
-            logger.error("pushSaveNewOrder 极光推送失败!pushOrder={}", pushOrder);
-        }
-        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
-            logger.error("pushSaveNewOrder 极光推送失败!msg={},pushOrder={}",
-                    pushResult == null ? "" : pushResult.getString("msg"), pushOrder);
-        }
-        // 订单信息
+        // 保存订单信息
         order.setOrderId(newOrderBean.getOrderId().toString());
         order.setAddress(newOrderBean.getRecipientAddress());
         order.setConsignee(newOrderBean.getRecipientName());
         order.setDaySn(Long.valueOf(newOrderBean.getDaySeq()));
         order.setDeliverFee(
                 BigDecimal.valueOf(newOrderBean.getShippingFee() == null ? 0D : newOrderBean.getShippingFee()));
-        order.setDeliverTime(sdf.format(new Date(newOrderBean.getDeliveryTime())));
+        order.setDeliverTime(sdf.format(new Date(newOrderBean.getDeliveryTime() * 1000)));
         order.setDescription(newOrderBean.getCaution());
         order.setHasInvoiced(StatusEnum.get(newOrderBean.getHasInvoiced()));
         order.setIncome(BigDecimal.valueOf(newOrderBean.getTotal()));// 商铺实收
@@ -354,7 +326,7 @@ public class OrderService {
         order.setLongitude(newOrderBean.getLongitude());
         order.setOnlinePaid(
                 PayTypeEnum.onlinePay(newOrderBean.getPayType()) ? StatusEnum.ENABLE : StatusEnum.DISENABLE);
-        order.setOrderCreateTime(sdf.format(new Date(newOrderBean.getCtime())));
+        order.setOrderCreateTime(sdf.format(new Date(newOrderBean.getCtime() * 1000)));
         order.setOriginalPrice(BigDecimal.valueOf(newOrderBean.getOriginalPrice()));
         order.setPackageFee(BigDecimal.ZERO);// 美团没有餐盒费字段
         order.setPhone(newOrderBean.getRecipientPhone());
@@ -372,14 +344,32 @@ public class OrderService {
             logger.error("pushSaveNewOrder saveOrder error!orderId={}", orderId, e);
             throw new RuntimeException("调用jpa接口保存订单失败!" + e.getMessage());
         }
-        // 若自动接单,则调用接单接口
-        if (autoConfirm) {
-            try {
-                confirmOrder(shopId, orderId);
-            } catch (Exception e) {
-                logger.error("pushSaveNewOrder 自动接单失败,orderId={}", orderId, e);
-                // TODO 异常补偿措施
-            }
+        Long id = getPrimaryKeyFromOrder(result);
+
+        // 推送到POS的订单信息
+        PushNewOrder pushOrder = new PushNewOrder(id);
+        pushOrder.setAddress(newOrderBean.getRecipientAddress());
+        pushOrder.setConsignee(newOrderBean.getRecipientName());
+        pushOrder.setOnlinePaid(PayTypeEnum.onlinePay(newOrderBean.getPayType()) ? StatusEnum.ENABLE.toString()
+                : StatusEnum.DISENABLE.toString());
+        pushOrder.setOrderCreateTime(sdf.format(new Date(newOrderBean.getCtime())));
+        pushOrder.setDeliverTime(sdf.format(new Date(newOrderBean.getDeliveryTime())));
+        pushOrder.setPhone(newOrderBean.getRecipientPhone());
+        pushOrder.setOrderId(newOrderBean.getOrderId().toString());
+
+        String pushOrderJson = JsonFormatUtil.toJSONString(pushOrder);
+        JSONObject pushResult = null;
+        try {
+            String registrationId = MeituanConfig.getRegistrationId(shopId);
+            logger.info("newOrderPush 推送信息 pushOrder={}", pushOrderJson);
+            pushResult = takeawayClient.pushNewOrder(registrationId, pushOrderJson);
+            logger.info("newOrderPush 推送返回：{}", pushResult);
+        } catch (Exception e) {
+            logger.error("pushSaveNewOrder 极光推送失败!pushOrder={}", pushOrder);
+        }
+        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
+            logger.error("pushSaveNewOrder 极光推送失败!msg={},pushOrder={}",
+                    pushResult == null ? "" : pushResult.getString("msg"), pushOrder);
         }
     }
 
@@ -409,18 +399,6 @@ public class OrderService {
         }
         if (OK.equals(result)) {
             logger.info("refundOrderConfirm success!orderId={}", orderId);
-            // 在订单退款类回调中处理订单状态
-            // try {
-            // Order order = new Order();
-            // order.setOrderId(orderId.toString());
-            // order.setStatus(OrderStatusEnum.refunding);
-            // jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
-            // } catch (Exception e) {
-            // logger.error("refundOrderConfirm修改订单状态失败!orderId={}", orderId,
-            // e);
-            // throw new RuntimeException("美团确认退款成功,修改本地订单状态失败!" +
-            // e.getMessage());
-            // }
         } else {
             logger.info("refundOrderConfirm fail!orderId={},result={}", orderId, result);
             throw new RuntimeException(String.format("调用美团确认退款失败!result={%s}", result));
@@ -472,6 +450,20 @@ public class OrderService {
         default:
             break;
         }
+
+        // 修改订单状态和退款单状态
+        JSONObject result = null;
+        try {
+            logger.info("refundOrderPush 修改订单状态,order={}", JsonFormatUtil.toJSONString(order));
+            result = jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
+            logger.info("refundOrderPush 修改订单状态返回={}", result);
+        } catch (Exception e) {
+            logger.error("refundOrderPush 修改订单状态失败!orderId={}", bean.getOrderId(), e);
+            throw new RuntimeException("处理美团退款状态推送失败" + e.getMessage());
+        }
+        Long id = getPrimaryKeyFromOrder(result);
+        pushRefundOrder.setId(id);
+        // TODO 1.查询本地是否已有此退单记录,若有则更新,若无则保存
         // 推送
         JSONObject pushResult = null;
         try {
@@ -486,16 +478,6 @@ public class OrderService {
             logger.error("refundOrderPush 极光推送失败!msg={},pushOrder={}",
                     pushResult == null ? "" : pushResult.getString("msg"), pushRefundOrder);
         }
-        JSONObject result = null;
-        try {
-            logger.info("refundOrderPush 修改订单状态,order={}", JsonFormatUtil.toJSONString(order));
-            result = jpaClient.saveOrUpdateOrder(JSON.toJSONString(order));
-            logger.info("refundOrderPush 修改订单状态返回={}", result);
-        } catch (Exception e) {
-            logger.error("refundOrderPush 修改订单状态失败!orderId={}", bean.getOrderId(), e);
-            throw new RuntimeException("处理美团退款状态推送失败" + e.getMessage());
-        }
-        // TODO 1.查询本地是否已有此退单记录,若有则更新,若无则保存
     }
 
     /**
@@ -540,5 +522,23 @@ public class OrderService {
      */
     private void fillShop(String shopId, Order order) {
         order.setShop(new Shop(shopId, Platform.getInstance()));
+    }
+
+    /**
+     *
+     * @Description 获取保存或修改订单的返回值
+     * @param jsonobject
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    private long getPrimaryKeyFromOrder(JSONObject jsonobject) {
+        Assert.notNull(jsonobject, "保存或修改订单失败,返回值为空");
+        Long id = jsonobject.getLong("id");
+        if (id == null) {
+            throw new IllegalArgumentException("保存或修改订单失败,返回id为空");
+        }
+        return id;
+
     }
 }

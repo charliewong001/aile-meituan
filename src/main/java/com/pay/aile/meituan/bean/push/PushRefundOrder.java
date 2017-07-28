@@ -11,7 +11,7 @@ import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
  * @version 2017年7月27日 下午5:08:44
  * @author chao.wang
  */
-public class PushRefundOrder implements Serializable {
+public class PushRefundOrder extends PushBaseBean implements Serializable {
 
     /**
      * @author chao.wang
@@ -21,6 +21,13 @@ public class PushRefundOrder implements Serializable {
     private String refundStatus;// string 是 状态
     private Long updateTime;// number 是 消息发送时间
     private String code = PlatformCodeEnum.mt.getCode();
+
+    public PushRefundOrder() {
+    }
+
+    public PushRefundOrder(Long id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;
@@ -57,7 +64,7 @@ public class PushRefundOrder implements Serializable {
     @Override
     public String toString() {
         return "PushRefundOrder [orderId=" + orderId + ", refundStatus=" + refundStatus + ", updateTime=" + updateTime
-                + ", code=" + code + "]";
+                + ", code=" + code + ", id=" + id + "]";
     }
 
 }

@@ -11,7 +11,7 @@ import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
  * @version 2017年7月19日 下午4:34:07
  * @author chao.wang
  */
-public class PushNewOrder implements Serializable {
+public class PushNewOrder extends PushBaseBean implements Serializable {
 
     /**
      * @author chao.wang
@@ -23,10 +23,18 @@ public class PushNewOrder implements Serializable {
     private String code = PlatformCodeEnum.mt.getCode();
     private String consignee;
     private String address;
+
     private String phone;
     private String orderId;
     private String orderCreateTime;
     private Long updateTime;
+
+    public PushNewOrder() {
+    }
+
+    public PushNewOrder(Long id) {
+        this.id = id;
+    }
 
     public String getAddress() {
         return address;
@@ -98,6 +106,13 @@ public class PushNewOrder implements Serializable {
 
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "PushNewOrder [deliverTime=" + deliverTime + ", onlinePaid=" + onlinePaid + ", code=" + code
+                + ", consignee=" + consignee + ", address=" + address + ", phone=" + phone + ", orderId=" + orderId
+                + ", orderCreateTime=" + orderCreateTime + ", updateTime=" + updateTime + ", id=" + id + "]";
     }
 
 }
