@@ -22,30 +22,28 @@ import com.pay.aile.meituan.client.hystrix.JpaClientHystrix;
 public interface JpaClient {
 
     @RequestMapping(value = "/food/bathSaveOrUpdate")
-    public JSONObject bathSaveOrUpdate(
-            @RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
+    public JSONObject bathSaveOrUpdate(@RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
 
     @RequestMapping(value = "/food/findList")
-    public List<Food> findLst(
-            @RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
+    public List<Food> findLst(@RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
 
     @RequestMapping(value = "/order/findOrder")
-    public Order findOrder(
-            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+    public Order findOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
-    @RequestMapping(value = "/saveOrUpdateDistribution")
+    @RequestMapping(value = "/food/saveOrUpdate")
+    public JSONObject saveOrUpdate(@RequestParam(value = "foodJson", defaultValue = "{}") String foodJson);
+
+    @RequestMapping(value = "/order/saveOrUpdateDistribution")
     public JSONObject saveOrUpdateDistribution(
             @RequestParam(value = "distributionJson", defaultValue = "{}") String distributionJson);
 
     @RequestMapping(value = "/order/saveOrUpdateOrder")
-    public JSONObject saveOrUpdateOrder(
-            @RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
+    public JSONObject saveOrUpdateOrder(@RequestParam(value = "orderJson", defaultValue = "{}") String orderJson);
 
-    @RequestMapping(value = "/saveOrUpdateRefundOrder")
+    @RequestMapping(value = "/order/saveOrUpdateRefundOrder")
     public JSONObject saveOrUpdateRefundOrder(
             @RequestParam(value = "refundOrderJson", defaultValue = "{}") String refundOrderJson);
 
     @RequestMapping(value = "/shop/saveOrUpdateShop")
-    public JSONObject saveOrUpdateShop(
-            @RequestParam(value = "shopJson", defaultValue = "{}") String shopJson);
+    public JSONObject saveOrUpdateShop(@RequestParam(value = "shopJson", defaultValue = "{}") String shopJson);
 }

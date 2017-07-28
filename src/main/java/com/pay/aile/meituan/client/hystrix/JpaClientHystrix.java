@@ -31,6 +31,12 @@ public class JpaClientHystrix implements JpaClient {
     }
 
     @Override
+    public JSONObject saveOrUpdate(String foodJson) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public JSONObject saveOrUpdateDistribution(String distributionJson) {
         // TODO Auto-generated method stub
         return null;

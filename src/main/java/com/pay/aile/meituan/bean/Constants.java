@@ -20,4 +20,7 @@ public class Constants {
 
     /** 极光推送注册号 redis缓存前缀 */
     public static final String mtRedisRegistrationidPrefix = "aile-meituan-registrationId-";
+
+    /** 美团返回正确 */
+    public static final String OK = "{\"data\":\"ok\"}";
 }

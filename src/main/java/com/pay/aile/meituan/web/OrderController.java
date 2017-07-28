@@ -40,13 +40,13 @@ public class OrderController {
      * @author chao.wang
      */
     @RequestMapping(value = "/cancelOrder")
-    public String cancelOrder(String shopId, Long orderId, String reasonCode, String reason) {
+    public JSONObject cancelOrder(String shopId, Long orderId, String reasonCode, String reason) {
         try {
             orderService.cancelOrder(shopId, orderId, reasonCode, reason);
-            return JsonFormatUtil.getSuccessJson().toJSONString();
+            return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("cancelOrder error!shopId={},orderId={}", shopId, orderId, e);
-            return JsonFormatUtil.getFailureJson().toJSONString();
+            return JsonFormatUtil.getFailureJson();
         }
     }
 

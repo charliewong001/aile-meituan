@@ -25,6 +25,14 @@ public class Food implements Serializable {
     // 状态
     private StatusEnum isValid;
 
+    private String specIds;
+
+    private Long categoryId;// 存放菜品类别ID
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -51,6 +59,14 @@ public class Food implements Serializable {
 
     public Shop getShop() {
         return shop;
+    }
+
+    public String getSpecIds() {
+        return specIds;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void setDescription(String description) {
@@ -81,10 +97,33 @@ public class Food implements Serializable {
         this.shop = shop;
     }
 
+    public void setSpecIds(String specIds) {
+        this.specIds = specIds;
+    }
+
     @Override
     public String toString() {
-        return "Food [foodId=" + foodId + ", shop=" + shop + ", name=" + name + ", description=" + description
-                + ", picture=" + picture + ", price=" + price + ", isValid=" + isValid + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Food [foodId=");
+        builder.append(foodId);
+        builder.append(", shop=");
+        builder.append(shop);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", picture=");
+        builder.append(picture);
+        builder.append(", price=");
+        builder.append(price);
+        builder.append(", isValid=");
+        builder.append(isValid);
+        builder.append(", specIds=");
+        builder.append(specIds);
+        builder.append(", categoryId=");
+        builder.append(categoryId);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

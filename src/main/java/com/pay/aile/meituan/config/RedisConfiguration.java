@@ -6,11 +6,12 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
 
-//@Configuration
+@Configuration
 public class RedisConfiguration {
     @Value("${redis.host}")
     private String host;
@@ -43,8 +44,8 @@ public class RedisConfiguration {
         Set<String> sentinels = new HashSet<String>();
         sentinels.addAll(Arrays.asList(host.split(";")));
 
-        JedisSentinelPool jedisSentinelPool = new JedisSentinelPool(masterName,
-                sentinels, jedisPoolConfig, timeout, password, dbindex);
+        JedisSentinelPool jedisSentinelPool = new JedisSentinelPool(masterName, sentinels, jedisPoolConfig, timeout,
+                password, dbindex);
         return jedisSentinelPool;
     }
 }

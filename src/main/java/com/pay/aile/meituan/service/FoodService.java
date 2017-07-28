@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pay.aile.meituan.bean.jpa.Food;
+import com.pay.aile.meituan.bean.jpa.Platform;
 import com.pay.aile.meituan.bean.jpa.Shop;
 import com.pay.aile.meituan.bean.jpa.StatusEnum;
 import com.pay.aile.meituan.bean.platform.DishBaseBean;
@@ -25,6 +26,7 @@ import com.pay.aile.meituan.bean.platform.DishSkuBean;
 import com.pay.aile.meituan.bean.platform.DishStock;
 import com.pay.aile.meituan.client.JpaClient;
 import com.pay.aile.meituan.sdk.MeituanConfig;
+import com.pay.aile.meituan.util.JsonFormatUtil;
 import com.sankuai.sjst.platform.developer.domain.RequestSysParams;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutDishBaseQueryByEPoiIdRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutDishMapRequest;
@@ -40,7 +42,7 @@ import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutDishStockUpdat
 @Service
 public class FoodService {
 
-    private static final String OK = "{\"data\":\"OK\"}";
+    private static final String OK = "{\"data\":\"ok\"}";
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
@@ -97,7 +99,8 @@ public class FoodService {
             skus.forEach((sku) -> {
                 // 组装本地保存的菜品entity
                 Food food = new Food();
-                food.setDescription(dish.getDishId().toString());// 将dishId即类别ID存入description
+                food.setCategoryId(dish.getDishId());// 将dishId即类别ID存入
+                food.setDescription(sku.getDescription());
                 food.setName(sku.getDishSkuName());
                 food.setFoodId(sku.getDishSkuName());
                 food.setIsValid(StatusEnum.ENABLE);
@@ -185,8 +188,8 @@ public class FoodService {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public void toEstimate(String shopId, String foodId) {
-        updateFoodStock(shopId, foodId, 0);
+    public void toEstimate(String shopId, Long categoryId, String foodId) {
+        updateFoodStock(shopId, categoryId, foodId, 0);
     }
 
     /**
@@ -196,8 +199,8 @@ public class FoodService {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public void toFull(String shopId, String foodId) {
-        updateFoodStock(shopId, foodId, 9999);
+    public void toFull(String shopId, Long categoryId, String foodId) {
+        updateFoodStock(shopId, categoryId, foodId, 9999);
     }
 
     /**
@@ -209,27 +212,16 @@ public class FoodService {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public void updateFoodStock(String shopId, String foodId, int stockNum) {
-        Food food = new Food();
-        Shop shop = new Shop();
-        shop.setShopId(shopId);
-        food.setFoodId(foodId);
-        food.setShop(shop);
-        List<Food> foods = jpaClient.findLst(JSON.toJSONString(food));
-        if (foods == null || foods.isEmpty()) {
-            logger.error("未查询到菜品信息!,shopId={},foodId={}", shopId, foodId);
-            throw new IllegalArgumentException("菜品Id或店铺Id错误");
-        }
+    public void updateFoodStock(String shopId, Long categoryId, String foodId, int stockNum) {
+
         List<DishStock> dishes = new ArrayList<DishStock>();
-        foods.forEach((f) -> {
-            DishStock stock = new DishStock();
-            stock.seteDishCode(f.getDescription());
-            DishStock.SkuStock sku = new DishStock.SkuStock();
-            sku.setSkuId(f.getFoodId());
-            sku.setStock(stockNum);
-            stock.setSkus(Arrays.asList(sku));
-            dishes.add(stock);
-        });
+        DishStock stock = new DishStock();
+        stock.seteDishCode(categoryId.toString());
+        DishStock.SkuStock sku = new DishStock.SkuStock();
+        sku.setSkuId(foodId);
+        sku.setStock(stockNum);
+        stock.setSkus(Arrays.asList(sku));
+
         logger.info("method updateFoodStock dishes={}", dishes);
         CipCaterTakeoutDishStockUpdateRequest request = new CipCaterTakeoutDishStockUpdateRequest();
         RequestSysParams sysParams = new RequestSysParams();
@@ -251,6 +243,21 @@ public class FoodService {
             logger.error("updateFoodStock call meituan error! 调用美团更改菜品库存失败,shopId={},foodId={},stockNum={},result={}",
                     shopId, foodId, stockNum, result);
             throw new RuntimeException("调用美团更改菜品库存失败,result=".concat(result));
+        } else {
+            Food food = new Food();
+            food.setFoodId(foodId);
+            food.setShop(new Shop(shopId, Platform.getInstance()));
+            food.setCategoryId(categoryId);
+            food.setIsValid(stockNum == 0 ? StatusEnum.DISENABLE : StatusEnum.ENABLE);
+            JSONObject saveResult = null;
+            try {
+                logger.info("updateFoodStock 修改菜品状态 bean = {}", food);
+                saveResult = jpaClient.saveOrUpdate(JsonFormatUtil.toJSONString(food));
+                logger.info("updateFoodStock 修改菜品状态返回值={}", saveResult);
+            } catch (Exception e) {
+                logger.error("updateFoodStock 修改菜品状态错误,foodId={},categoryId={}", foodId, categoryId);
+                throw new RuntimeException("修改菜品状态错误");
+            }
         }
         logger.info("toEstimate 调用美团更改菜品库存成功!shopId={},foodId={},stockNum={}", shopId, foodId, stockNum);
     }

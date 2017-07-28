@@ -35,9 +35,10 @@ public class FoodController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public JSONObject toEstimate(@RequestParam("shopId") String shopId, @RequestParam("foodId") String foodId) {
+    public JSONObject toEstimate(@RequestParam("shopId") String shopId, @RequestParam("categoryId") Long categoryId,
+            @RequestParam("foodId") String foodId) {
         try {
-            foodService.toEstimate(shopId, foodId);
+            foodService.toEstimate(shopId, categoryId, foodId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("toEstimate error!,shopId={},foodId={}", shopId, foodId, e);
@@ -52,9 +53,10 @@ public class FoodController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public JSONObject toFull(@RequestParam("shopId") String shopId, @RequestParam("foodId") String foodId) {
+    public JSONObject toFull(@RequestParam("shopId") String shopId, @RequestParam("categoryId") Long categoryId,
+            @RequestParam("foodId") String foodId) {
         try {
-            foodService.toFull(shopId, foodId);
+            foodService.toFull(shopId, categoryId, foodId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("toFull error!,shopId={},foodId={}", shopId, foodId, e);
