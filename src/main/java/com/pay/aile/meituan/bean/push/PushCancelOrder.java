@@ -47,8 +47,17 @@ public class PushCancelOrder extends PushBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        return "PushCancelOrder [orderId=" + orderId + ", updateTime=" + updateTime + ", code=" + code + ", id=" + id
-                + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("PushCancelOrder [orderId=");
+        builder.append(orderId);
+        builder.append(", updateTime=");
+        builder.append(updateTime);
+        builder.append(", code=");
+        builder.append(code);
+        builder.append(", id=");
+        builder.append(id);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

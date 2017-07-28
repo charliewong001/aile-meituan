@@ -68,8 +68,19 @@ public class ShippingOrderBean implements Serializable {
 
     @Override
     public String toString() {
-        return "ShippingOrderBean [orderId=" + orderId + ", shippingStatus=" + shippingStatus + ", time=" + time
-                + ", dispatcherName=" + dispatcherName + ", dispatcherMobile=" + dispatcherMobile + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("ShippingOrderBean [orderId=");
+        builder.append(orderId);
+        builder.append(", shippingStatus=");
+        builder.append(shippingStatus);
+        builder.append(", time=");
+        builder.append(time);
+        builder.append(", dispatcherName=");
+        builder.append(dispatcherName);
+        builder.append(", dispatcherMobile=");
+        builder.append(dispatcherMobile);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

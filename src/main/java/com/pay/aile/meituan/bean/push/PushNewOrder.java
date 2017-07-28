@@ -110,9 +110,29 @@ public class PushNewOrder extends PushBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        return "PushNewOrder [deliverTime=" + deliverTime + ", onlinePaid=" + onlinePaid + ", code=" + code
-                + ", consignee=" + consignee + ", address=" + address + ", phone=" + phone + ", orderId=" + orderId
-                + ", orderCreateTime=" + orderCreateTime + ", updateTime=" + updateTime + ", id=" + id + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("PushNewOrder [deliverTime=");
+        builder.append(deliverTime);
+        builder.append(", onlinePaid=");
+        builder.append(onlinePaid);
+        builder.append(", code=");
+        builder.append(code);
+        builder.append(", consignee=");
+        builder.append(consignee);
+        builder.append(", address=");
+        builder.append(address);
+        builder.append(", phone=");
+        builder.append(phone);
+        builder.append(", orderId=");
+        builder.append(orderId);
+        builder.append(", orderCreateTime=");
+        builder.append(orderCreateTime);
+        builder.append(", updateTime=");
+        builder.append(updateTime);
+        builder.append(", id=");
+        builder.append(id);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

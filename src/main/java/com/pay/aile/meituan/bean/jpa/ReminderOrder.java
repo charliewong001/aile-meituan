@@ -53,8 +53,17 @@ public class ReminderOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "ReminderOrder [reminderId=" + reminderId + ", order=" + order + ", reminderTime=" + reminderTime
-                + ", reminderCount=" + reminderCount + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("ReminderOrder [reminderId=");
+        builder.append(reminderId);
+        builder.append(", order=");
+        builder.append(order);
+        builder.append(", reminderTime=");
+        builder.append(reminderTime);
+        builder.append(", reminderCount=");
+        builder.append(reminderCount);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

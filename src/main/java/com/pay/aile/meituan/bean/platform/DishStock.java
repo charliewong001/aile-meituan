@@ -39,7 +39,13 @@ public class DishStock implements Serializable {
 
         @Override
         public String toString() {
-            return "Sku [stock=" + stock + ", skuId=" + skuId + "]";
+            StringBuilder builder = new StringBuilder();
+            builder.append("SkuStock [stock=");
+            builder.append(stock);
+            builder.append(", skuId=");
+            builder.append(skuId);
+            builder.append("]");
+            return builder.toString();
         }
 
     }
@@ -69,6 +75,12 @@ public class DishStock implements Serializable {
 
     @Override
     public String toString() {
-        return "DishSkuStock [eDishCode=" + eDishCode + ", skus=" + skus + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("DishStock [eDishCode=");
+        builder.append(eDishCode);
+        builder.append(", skus=");
+        builder.append(skus);
+        builder.append("]");
+        return builder.toString();
     }
 }

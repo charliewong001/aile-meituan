@@ -36,15 +36,13 @@ public class FoodController {
      * @author chao.wang
      */
     @RequestMapping("/toEstimate")
-    public JSONObject toEstimate(@RequestParam("shopId") String shopId,
-            @RequestParam("categoryId") Long categoryId,
+    public JSONObject toEstimate(@RequestParam("shopId") String shopId, @RequestParam("categoryId") Long categoryId,
             @RequestParam("foodId") String foodId) {
         try {
             foodService.toEstimate(shopId, categoryId, foodId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("toEstimate error!,shopId={},foodId={}", shopId,
-                    foodId, e);
+            logger.error("toEstimate error!,shopId={},foodId={}", shopId, foodId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -57,15 +55,13 @@ public class FoodController {
      * @author chao.wang
      */
     @RequestMapping("/toFull")
-    public JSONObject toFull(@RequestParam("shopId") String shopId,
-            @RequestParam("categoryId") Long categoryId,
+    public JSONObject toFull(@RequestParam("shopId") String shopId, @RequestParam("categoryId") Long categoryId,
             @RequestParam("foodId") String foodId) {
         try {
             foodService.toFull(shopId, categoryId, foodId);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("toFull error!,shopId={},foodId={}", shopId, foodId,
-                    e);
+            logger.error("toFull error!,shopId={},foodId={}", shopId, foodId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }

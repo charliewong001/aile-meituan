@@ -54,8 +54,17 @@ public class RefundItem implements Serializable {
 
     @Override
     public String toString() {
-        return "RefundItem [refundOrder=" + refundOrder + ", name=" + name + ", quantity=" + quantity + ", price="
-                + price + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("RefundItem [refundOrder=");
+        builder.append(refundOrder);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", quantity=");
+        builder.append(quantity);
+        builder.append(", price=");
+        builder.append(price);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

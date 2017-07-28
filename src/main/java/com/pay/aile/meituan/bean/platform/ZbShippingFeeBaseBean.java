@@ -28,7 +28,11 @@ public class ZbShippingFeeBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        return "ZbShippingFeeBaseBean [data=" + data + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("ZbShippingFeeBaseBean [data=");
+        builder.append(data);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

@@ -52,4 +52,17 @@ public class Platform implements Serializable {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Platform [name=");
+        builder.append(name);
+        builder.append(", status=");
+        builder.append(status);
+        builder.append(", code=");
+        builder.append(code);
+        builder.append("]");
+        return builder.toString();
+    }
+
 }

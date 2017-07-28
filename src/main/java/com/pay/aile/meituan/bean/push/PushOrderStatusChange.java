@@ -64,8 +64,19 @@ public class PushOrderStatusChange extends PushBaseBean implements Serializable 
 
     @Override
     public String toString() {
-        return "PushOrderStatusChange [orderId=" + orderId + ", status=" + status + ", code=" + code + ", updateTime="
-                + updateTime + ", id=" + id + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("PushOrderStatusChange [orderId=");
+        builder.append(orderId);
+        builder.append(", status=");
+        builder.append(status);
+        builder.append(", code=");
+        builder.append(code);
+        builder.append(", updateTime=");
+        builder.append(updateTime);
+        builder.append(", id=");
+        builder.append(id);
+        builder.append("]");
+        return builder.toString();
     }
 
 }
