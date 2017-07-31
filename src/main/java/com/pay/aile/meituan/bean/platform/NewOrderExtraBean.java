@@ -56,8 +56,19 @@ public class NewOrderExtraBean implements Serializable {
 
     @Override
     public String toString() {
-        return "NewOrderExtraBean [mt_charge=" + mt_charge + ", poi_charge=" + poi_charge + ", reduce_fee=" + reduce_fee
-                + ", remark=" + remark + ", type=" + type + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("NewOrderExtraBean [mt_charge=");
+        builder.append(mt_charge);
+        builder.append(", poi_charge=");
+        builder.append(poi_charge);
+        builder.append(", reduce_fee=");
+        builder.append(reduce_fee);
+        builder.append(", remark=");
+        builder.append(remark);
+        builder.append(", type=");
+        builder.append(type);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

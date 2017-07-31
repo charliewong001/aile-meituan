@@ -62,8 +62,17 @@ public class OrderItem implements Serializable {
 
     @Override
     public String toString() {
-        return "OrderItem [foodName=" + foodName + ", quantity=" + quantity + ", totalAmount=" + totalAmount
-                + ", price=" + price + ", order=" + order + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("OrderItem [foodName=");
+        builder.append(foodName);
+        builder.append(", quantity=");
+        builder.append(quantity);
+        builder.append(", totalAmount=");
+        builder.append(totalAmount);
+        builder.append(", price=");
+        builder.append(price);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

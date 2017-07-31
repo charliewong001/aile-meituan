@@ -82,8 +82,23 @@ public class PushOrderShipping extends PushBaseBean implements Serializable {
 
     @Override
     public String toString() {
-        return "PushOrderShipping [code=" + code + ", phone=" + phone + ", orderId=" + orderId + ", name=" + name
-                + ", distributionStatus=" + distributionStatus + ", updateTime=" + updateTime + ", id=" + id + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("PushOrderShipping [code=");
+        builder.append(code);
+        builder.append(", phone=");
+        builder.append(phone);
+        builder.append(", orderId=");
+        builder.append(orderId);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", distributionStatus=");
+        builder.append(distributionStatus);
+        builder.append(", updateTime=");
+        builder.append(updateTime);
+        builder.append(", id=");
+        builder.append(id);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

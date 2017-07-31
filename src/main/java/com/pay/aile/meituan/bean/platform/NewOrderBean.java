@@ -343,18 +343,77 @@ public class NewOrderBean implements Serializable {
 
     @Override
     public String toString() {
-        return "NewOrderBean [orderId=" + orderId + ", orderIdView=" + orderIdView + ", caution=" + caution
-                + ", cityId=" + cityId + ", ctime=" + ctime + ", utime=" + utime + ", daySeq=" + daySeq
-                + ", deliveryTime=" + deliveryTime + ", ePoiId=" + ePoiId + ", hasInvoiced=" + hasInvoiced
-                + ", invoiceTitle=" + invoiceTitle + ", isFavorites=" + isFavorites + ", isPoiFirstOrder="
-                + isPoiFirstOrder + ", isThirdShipping=" + isThirdShipping + ", latitude=" + latitude + ", longitude="
-                + longitude + ", logisticsCode=" + logisticsCode + ", originalPrice=" + originalPrice + ", payType="
-                + payType + ", poiAddress=" + poiAddress + ", poiName=" + poiName + ", poiPhone=" + poiPhone
-                + ", poiReceiveDetail=" + poiReceiveDetail + ", recipientAddress=" + recipientAddress
-                + ", recipientName=" + recipientName + ", recipientPhone=" + recipientPhone + ", shipperPhone="
-                + shipperPhone + ", shippingFee=" + shippingFee + ", status=" + status + ", total=" + total
-                + ", detailList=" + detailList + ", extrasList=" + extrasList + ", detail=" + detail + ", extras="
-                + extras + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("NewOrderBean [orderId=");
+        builder.append(orderId);
+        builder.append(", orderIdView=");
+        builder.append(orderIdView);
+        builder.append(", caution=");
+        builder.append(caution);
+        builder.append(", cityId=");
+        builder.append(cityId);
+        builder.append(", ctime=");
+        builder.append(ctime);
+        builder.append(", utime=");
+        builder.append(utime);
+        builder.append(", daySeq=");
+        builder.append(daySeq);
+        builder.append(", deliveryTime=");
+        builder.append(deliveryTime);
+        builder.append(", ePoiId=");
+        builder.append(ePoiId);
+        builder.append(", hasInvoiced=");
+        builder.append(hasInvoiced);
+        builder.append(", invoiceTitle=");
+        builder.append(invoiceTitle);
+        builder.append(", isFavorites=");
+        builder.append(isFavorites);
+        builder.append(", isPoiFirstOrder=");
+        builder.append(isPoiFirstOrder);
+        builder.append(", isThirdShipping=");
+        builder.append(isThirdShipping);
+        builder.append(", latitude=");
+        builder.append(latitude);
+        builder.append(", longitude=");
+        builder.append(longitude);
+        builder.append(", logisticsCode=");
+        builder.append(logisticsCode);
+        builder.append(", originalPrice=");
+        builder.append(originalPrice);
+        builder.append(", payType=");
+        builder.append(payType);
+        builder.append(", poiAddress=");
+        builder.append(poiAddress);
+        builder.append(", poiName=");
+        builder.append(poiName);
+        builder.append(", poiPhone=");
+        builder.append(poiPhone);
+        builder.append(", poiReceiveDetail=");
+        builder.append(poiReceiveDetail);
+        builder.append(", recipientAddress=");
+        builder.append(recipientAddress);
+        builder.append(", recipientName=");
+        builder.append(recipientName);
+        builder.append(", recipientPhone=");
+        builder.append(recipientPhone);
+        builder.append(", shipperPhone=");
+        builder.append(shipperPhone);
+        builder.append(", shippingFee=");
+        builder.append(shippingFee);
+        builder.append(", status=");
+        builder.append(status);
+        builder.append(", total=");
+        builder.append(total);
+        builder.append(", detailList=");
+        builder.append(detailList);
+        builder.append(", extrasList=");
+        builder.append(extrasList);
+        builder.append(", detail=");
+        builder.append(detail);
+        builder.append(", extras=");
+        builder.append(extras);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

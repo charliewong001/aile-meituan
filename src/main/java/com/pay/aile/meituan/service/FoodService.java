@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pay.aile.meituan.bean.jpa.Food;
 import com.pay.aile.meituan.bean.jpa.Platform;
+import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
 import com.pay.aile.meituan.bean.jpa.Shop;
 import com.pay.aile.meituan.bean.jpa.StatusEnum;
 import com.pay.aile.meituan.bean.platform.DishBaseBean;
@@ -42,7 +43,7 @@ import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutDishStockUpdat
 @Service
 public class FoodService {
 
-    private static final String OK = "{\"data\":\"ok\"}";
+    private static final String OK = "{\"data\":\"OK\"}";
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
@@ -60,6 +61,7 @@ public class FoodService {
         JSONObject json = new JSONObject();
         json.put("shopId", shopId);
         json.put("foodList", foods);
+        json.put("platformCode", PlatformCodeEnum.mt.getCode());
         JSONObject result = null;
         try {
             result = jpaClient.bathSaveOrUpdate(json.toJSONString());

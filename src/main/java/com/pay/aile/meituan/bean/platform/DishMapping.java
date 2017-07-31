@@ -49,7 +49,13 @@ public class DishMapping implements Serializable {
 
         @Override
         public String toString() {
-            return "DishSkuMapping [eDishSkuCode=" + eDishSkuCode + ", dishSkuId=" + dishSkuId + "]";
+            StringBuilder builder = new StringBuilder();
+            builder.append("DishSkuMapping [eDishSkuCode=");
+            builder.append(eDishSkuCode);
+            builder.append(", dishSkuId=");
+            builder.append(dishSkuId);
+            builder.append("]");
+            return builder.toString();
         }
 
     }

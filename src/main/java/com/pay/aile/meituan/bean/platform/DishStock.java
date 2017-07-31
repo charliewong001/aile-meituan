@@ -39,7 +39,13 @@ public class DishStock implements Serializable {
 
         @Override
         public String toString() {
-            return "SkuStock [stock=" + stock + ", skuId=" + skuId + "]";
+            StringBuilder builder = new StringBuilder();
+            builder.append("SkuStock [stock=");
+            builder.append(stock);
+            builder.append(", skuId=");
+            builder.append(skuId);
+            builder.append("]");
+            return builder.toString();
         }
 
     }

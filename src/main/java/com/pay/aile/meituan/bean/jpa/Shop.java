@@ -238,13 +238,51 @@ public class Shop implements Serializable {
 
     @Override
     public String toString() {
-        return "Shop [shopId=" + shopId + ", shopName=" + shopName + ", address=" + address + ", latitude=" + latitude
-                + ", longitude=" + longitude + ", phone=" + phone + ", shippingFee=" + shippingFee + ", businessHours="
-                + businessHours + ", openLevel=" + openLevel + ", isOnline=" + isOnline + ", invoiceSupport="
-                + invoiceSupport + ", invoiceMinAmount=" + invoiceMinAmount + ", openId=" + openId + ", preBook="
-                + preBook + ", platform=" + platform + ", deliverGeoJson=" + deliverGeoJson + ", deviceNo=" + deviceNo
-                + ", customerNo=" + customerNo + ", agents=" + agents + ", automaticStatus=" + automaticStatus
-                + ", registrationId=" + registrationId + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Shop [shopId=");
+        builder.append(shopId);
+        builder.append(", shopName=");
+        builder.append(shopName);
+        builder.append(", address=");
+        builder.append(address);
+        builder.append(", latitude=");
+        builder.append(latitude);
+        builder.append(", longitude=");
+        builder.append(longitude);
+        builder.append(", phone=");
+        builder.append(phone);
+        builder.append(", shippingFee=");
+        builder.append(shippingFee);
+        builder.append(", businessHours=");
+        builder.append(businessHours);
+        builder.append(", openLevel=");
+        builder.append(openLevel);
+        builder.append(", isOnline=");
+        builder.append(isOnline);
+        builder.append(", invoiceSupport=");
+        builder.append(invoiceSupport);
+        builder.append(", invoiceMinAmount=");
+        builder.append(invoiceMinAmount);
+        builder.append(", openId=");
+        builder.append(openId);
+        builder.append(", preBook=");
+        builder.append(preBook);
+        builder.append(", platform=");
+        builder.append(platform);
+        builder.append(", deliverGeoJson=");
+        builder.append(deliverGeoJson);
+        builder.append(", deviceNo=");
+        builder.append(deviceNo);
+        builder.append(", customerNo=");
+        builder.append(customerNo);
+        builder.append(", agents=");
+        builder.append(agents);
+        builder.append(", automaticStatus=");
+        builder.append(automaticStatus);
+        builder.append(", registrationId=");
+        builder.append(registrationId);
+        builder.append("]");
+        return builder.toString();
     }
 
 }
