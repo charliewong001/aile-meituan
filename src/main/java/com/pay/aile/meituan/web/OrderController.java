@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
@@ -30,28 +31,6 @@ public class OrderController {
 
     /**
      *
-     * @Description 商户取消订单
-     * @param platformId
-     * @param shopId
-     * @param orderId
-     * @param reason
-     * @return
-     * @see 需要参考的类或方法
-     * @author chao.wang
-     */
-    @RequestMapping(value = "/cancelOrder")
-    public JSONObject cancelOrder(String shopId, Long orderId, String reasonCode, String reason) {
-        try {
-            orderService.cancelOrder(shopId, orderId, reasonCode, reason);
-            return JsonFormatUtil.getSuccessJson();
-        } catch (Exception e) {
-            logger.error("cancelOrder error!shopId={},orderId={}", shopId, orderId, e);
-            return JsonFormatUtil.getFailureJson();
-        }
-    }
-
-    /**
-     *
      * @Description 确认订单
      * @param platformId
      * @param shopId
@@ -60,13 +39,13 @@ public class OrderController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "/confirmOrder")
-    public JSONObject confirmOrder(String shopId, Long orderId) {
+    @RequestMapping(value = "/acceptOrder")
+    public JSONObject acceptOrder(@RequestParam String shopId, @RequestParam String orderId) {
         try {
-            orderService.confirmOrder(shopId, orderId);
+            orderService.confirmOrder(shopId, Long.valueOf(orderId));
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("confirmOrder error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("acceptOrder error!shopId={},orderId={}", shopId, orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -80,13 +59,32 @@ public class OrderController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "/refundOrderConfirm")
-    public JSONObject refundOrderConfirm(String shopId, Long orderId, String reason) {
+    @RequestMapping(value = "/acceptRefunds")
+    public JSONObject acceptRefunds(@RequestParam String shopId, @RequestParam String orderId,
+            @RequestParam String reason) {
         try {
-            orderService.refundOrderConfirm(shopId, orderId, reason);
+            orderService.refundOrderConfirm(shopId, Long.valueOf(orderId), reason);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
-            logger.error("refundOrderConfirm error!shopId={},orderId={}", shopId, orderId, e);
+            logger.error("acceptRefunds error!shopId={},orderId={}", shopId, orderId, e);
+            return JsonFormatUtil.getFailureJson();
+        }
+    }
+
+    /**
+     *
+     * @Description 商户取消订单
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    public JSONObject cancelOrder(@RequestParam String shopId, @RequestParam String orderId,
+            @RequestParam String reasonCode, @RequestParam(name = "reasonCode", required = false) String reason) {
+        try {
+            orderService.cancelOrder(shopId, Long.valueOf(orderId), reasonCode, reason);
+            return JsonFormatUtil.getSuccessJson();
+        } catch (Exception e) {
+            logger.error("cancelOrder error!shopId={},orderId={}", shopId, orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
@@ -100,10 +98,11 @@ public class OrderController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "/refundOrderRefuse")
-    public JSONObject refundOrderRefuse(String shopId, Long orderId, String reason) {
+    @RequestMapping(value = "/refuseRefunds")
+    public JSONObject refuseRefunds(@RequestParam String shopId, @RequestParam String orderId,
+            @RequestParam String reason) {
         try {
-            orderService.refundOrderRefuse(shopId, orderId, reason);
+            orderService.refundOrderRefuse(shopId, Long.valueOf(orderId), reason);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("refundOrderRefuse error!shopId={},orderId={}", shopId, orderId, e);

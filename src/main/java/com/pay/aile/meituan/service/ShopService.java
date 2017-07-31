@@ -56,13 +56,11 @@ public class ShopService {
         request.setRequestSysParams(sysParams);
         String result = "";
         try {
-            logger.info("close 设置门店为休息,request={}",
-                    JsonFormatUtil.toJSONString(request));
+            logger.info("close 设置门店为休息,request={}", JsonFormatUtil.toJSONString(request));
             result = request.doRequest();
             logger.info("close 设置门店为休息,返回值={}", result);
         } catch (Exception e) {
-            logger.error("meituan shop close error!,shopId={},result={}",
-                    shopId, result, e);
+            logger.error("meituan shop close error!,shopId={},result={}", shopId, result, e);
             throw new RuntimeException("close error!" + e.getMessage());
         }
         if (Constants.ok.equals(result)) {
@@ -71,8 +69,7 @@ public class ShopService {
             JSONObject saveResult = null;
             try {
                 logger.info("close 修改门店状态bean={}", shop);
-                saveResult = jpaClient
-                        .saveOrUpdateShop(JsonFormatUtil.toJSONString(shop));
+                saveResult = jpaClient.saveOrUpdateShop(JsonFormatUtil.toJSONString(shop));
                 logger.info("close 修改门店状态，返回值={}", saveResult);
             } catch (Exception e) {
                 logger.error("close 修改门店状态失败,shopId={}", shopId, e);
@@ -102,13 +99,11 @@ public class ShopService {
         request.setRequestSysParams(sysParams);
         String result = "";
         try {
-            logger.info("open 设置门店为营业,request={}",
-                    JsonFormatUtil.toJSONString(request));
+            logger.info("open 设置门店为营业,request={}", JsonFormatUtil.toJSONString(request));
             result = request.doRequest();
             logger.info("open 设置门店为营业,返回值={}", result);
         } catch (Exception e) {
-            logger.error("meituan shop open error!,shopId={},result={}", shopId,
-                    result, e);
+            logger.error("meituan shop open error!,shopId={},result={}", shopId, result, e);
             throw new RuntimeException("设置门店为营业!" + e.getMessage());
         }
         if (Constants.ok.equals(result)) {
@@ -117,8 +112,7 @@ public class ShopService {
             JSONObject saveResult = null;
             try {
                 logger.info("open 修改门店状态bean={}", shop);
-                saveResult = jpaClient
-                        .saveOrUpdateShop(JsonFormatUtil.toJSONString(shop));
+                saveResult = jpaClient.saveOrUpdateShop(JsonFormatUtil.toJSONString(shop));
                 logger.info("open 修改门店状态，返回值={}", saveResult);
             } catch (Exception e) {
                 logger.error("close 修改门店状态失败,shopId={}", shopId, e);

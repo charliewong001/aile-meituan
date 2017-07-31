@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
@@ -41,9 +42,9 @@ public class DispatchController {
      * @author chao.wang
      */
     @RequestMapping("/selfDelivered")
-    public JSONObject selfDelivered(String shopId, Long orderId) {
+    public JSONObject selfDelivered(@RequestParam String shopId, @RequestParam String orderId) {
         try {
-            dispatchService.selfDelivered(shopId, orderId);
+            dispatchService.selfDelivered(shopId, Long.valueOf(orderId));
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("selfDelivered error!shopId={},orderId={}", shopId, orderId, e);
@@ -65,9 +66,10 @@ public class DispatchController {
      * @author chao.wang
      */
     @RequestMapping("/selfDelivering")
-    public JSONObject selfDelivering(String shopId, Long orderId, String name, String phone) {
+    public JSONObject selfDelivering(@RequestParam String shopId, @RequestParam String orderId,
+            @RequestParam String name, @RequestParam String phone) {
         try {
-            dispatchService.selfDelivering(shopId, orderId, name, phone);
+            dispatchService.selfDelivering(shopId, Long.valueOf(orderId), name, phone);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("selfDelivering error!shopId={},orderId={}", shopId, orderId, e);
@@ -85,9 +87,10 @@ public class DispatchController {
      * @author chao.wang
      */
     @RequestMapping("/zbDispatchConfirm")
-    public JSONObject zbDispatchConfirm(String shopId, Long orderId, Double tipAmount) {
+    public JSONObject zbDispatchConfirm(@RequestParam String shopId, @RequestParam String orderId,
+            @RequestParam Double tipAmount) {
         try {
-            dispatchService.zbDispatchConfirm(shopId, orderId, tipAmount);
+            dispatchService.zbDispatchConfirm(shopId, Long.valueOf(orderId), tipAmount);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("zbDispatchConfirm error!shopId={},orderId={}", shopId, orderId, e);
@@ -109,9 +112,10 @@ public class DispatchController {
      * @author chao.wang
      */
     @RequestMapping("/zbDispatchPrepare")
-    public JSONObject zbDispatchPrepare(String shopId, Long orderId, Double shippingFee, Double tipAmount) {
+    public JSONObject zbDispatchPrepare(@RequestParam String shopId, @RequestParam String orderId,
+            @RequestParam Double shippingFee, @RequestParam Double tipAmount) {
         try {
-            String result = dispatchService.zbDispatchPrepare(shopId, orderId, shippingFee, tipAmount);
+            String result = dispatchService.zbDispatchPrepare(shopId, Long.valueOf(orderId), shippingFee, tipAmount);
             if (Constants.OK.equals(result)) {
                 return JsonFormatUtil.getSuccessJson(result);
             } else {
@@ -135,9 +139,10 @@ public class DispatchController {
      * @author chao.wang
      */
     @RequestMapping("/zbDispatchTipUpdate")
-    public JSONObject zbDispatchTipUpdate(String shopId, Long orderId, Double tipAmount) {
+    public JSONObject zbDispatchTipUpdate(@RequestParam String shopId, @RequestParam String orderId,
+            @RequestParam Double tipAmount) {
         try {
-            dispatchService.zbDispatchTipUpdate(shopId, orderId, tipAmount);
+            dispatchService.zbDispatchTipUpdate(shopId, Long.valueOf(orderId), tipAmount);
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("zbDispatchTipUpdate error!shopId={},orderId={}", shopId, orderId, e);
@@ -154,7 +159,7 @@ public class DispatchController {
      * @author chao.wang
      */
     @RequestMapping("/zbShippingFeeQuery")
-    public JSONObject zbShippingFeeQuery(String shopId, String orderId) {
+    public JSONObject zbShippingFeeQuery(@RequestParam String shopId, @RequestParam String orderId) {
         try {
             List<ZbShippingFeeBean> list = dispatchService.zbShippingFeeQuery(shopId, orderId);
             return JsonFormatUtil.getSuccessJson(list);
