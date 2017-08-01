@@ -29,6 +29,7 @@ public class PushNewOrder extends PushBaseBean implements Serializable {
     private String orderId;
     private String orderCreateTime;
     private Long updateTime;
+    private String shopId;
 
     public PushNewOrder() {
     }
@@ -70,6 +71,10 @@ public class PushNewOrder extends PushBaseBean implements Serializable {
         return phone;
     }
 
+    public String getShopId() {
+        return shopId;
+    }
+
     public Long getUpdateTime() {
         return updateTime;
     }
@@ -106,6 +111,10 @@ public class PushNewOrder extends PushBaseBean implements Serializable {
         this.phone = phone;
     }
 
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
@@ -131,8 +140,12 @@ public class PushNewOrder extends PushBaseBean implements Serializable {
         builder.append(orderCreateTime);
         builder.append(", updateTime=");
         builder.append(updateTime);
+        builder.append(", shopId=");
+        builder.append(shopId);
         builder.append(", id=");
         builder.append(id);
+        builder.append(", status=");
+        builder.append(status);
         builder.append("]");
         return builder.toString();
     }
