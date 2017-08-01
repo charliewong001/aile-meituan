@@ -15,16 +15,15 @@ public class HystrixAspect {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Pointcut("execution(public * com.pay.aile.meituan.client.hystrix..*.*(..))")
-    public void hystrixLog() {
-    }
-
     @Before("hystrixLog()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
         MethodSignature ms = (MethodSignature) joinPoint.getSignature();
-        logger.info("*****HystrixAspect start CLASS:{},METHOD:{},PARAMS:{}",
-                joinPoint.getTarget().getClass().getName(),
+        logger.info("*****HystrixAspect start CLASS:{},METHOD:{},PARAMS:{}", joinPoint.getTarget().getClass().getName(),
                 ms.getMethod().getName(), joinPoint.getArgs());
 
+    }
+
+    @Pointcut("execution(public * com.pay.aile.meituan.client.hystrix..*.*(..))")
+    public void hystrixLog() {
     }
 }

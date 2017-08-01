@@ -59,7 +59,7 @@ import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderRefundRej
 @Service
 public class OrderService {
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private Logger logger = LoggerFactory.getLogger(getClass());
     /** jpa项目order接口 */
     @Resource
@@ -171,7 +171,6 @@ public class OrderService {
         // 向POS推送取消订单信息
         PushCancelOrder pushCancelOrder = new PushCancelOrder(id);
         pushCancelOrder.setOrderId(orderId.toString());
-        // pushCancelOrder.setReason(bean.getReason());
         pushCancelOrder.setUpdateTime(time);
         JSONObject pushResult = null;
         try {
@@ -294,7 +293,7 @@ public class OrderService {
         // 推送订单状态变化
         PushOrderStatusChange changeBean = new PushOrderStatusChange(id);
         changeBean.setOrderId(bean.getOrderId());
-        changeBean.setStatus(OrderStatusEnum.confirmed.getCode());
+        changeBean.setStatus(OrderStatusEnum.completed.getCode());
         changeBean.setUpdateTime(updateTime);
         JSONObject pushResult = null;
         try {
@@ -471,26 +470,31 @@ public class OrderService {
             // 订单状态为退款处理中
             order.setStatus(OrderStatusEnum.refunding);
             pushRefundOrder.setRefundStatus(OrderRefundStatusEnum.applied.getCode());
+            pushRefundOrder.setStatus(OrderStatusEnum.refunding.getCode());
             refund.setRefundStatus(OrderRefundStatusEnum.applied);
             break;
         case agree:// 商家同意退款
             order.setStatus(OrderStatusEnum.refunded);
             pushRefundOrder.setRefundStatus(OrderRefundStatusEnum.successful.getCode());
+            pushRefundOrder.setStatus(OrderStatusEnum.refunded.getCode());
             refund.setRefundStatus(OrderRefundStatusEnum.successful);
             break;
         case cancelRefund:// 用户取消退款申请
             order.setStatus(OrderStatusEnum.valid);
             pushRefundOrder.setRefundStatus(OrderRefundStatusEnum.failed.getCode());
+            pushRefundOrder.setStatus(OrderStatusEnum.valid.getCode());
             refund.setRefundStatus(OrderRefundStatusEnum.failed);
             break;
         case cancelRefundComplaint:// 取消退款申诉
             order.setStatus(OrderStatusEnum.valid);
             pushRefundOrder.setRefundStatus(OrderRefundStatusEnum.failed.getCode());
+            pushRefundOrder.setStatus(OrderStatusEnum.valid.getCode());
             refund.setRefundStatus(OrderRefundStatusEnum.failed);
             break;
         case reject:// 商家驳回退款
             order.setStatus(OrderStatusEnum.valid);
             pushRefundOrder.setRefundStatus(OrderRefundStatusEnum.rejected.getCode());
+            pushRefundOrder.setStatus(OrderStatusEnum.valid.getCode());
             refund.setRefundStatus(OrderRefundStatusEnum.rejected);
             break;
         default:

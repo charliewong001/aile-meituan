@@ -2,6 +2,7 @@ package com.pay.aile.meituan.bean.push;
 
 import java.io.Serializable;
 
+import com.pay.aile.meituan.bean.jpa.OrderStatusEnum;
 import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
 
 /**
@@ -34,6 +35,7 @@ public class PushNewOrder extends PushBaseBean implements Serializable {
 
     public PushNewOrder(Long id) {
         this.id = id;
+        status = OrderStatusEnum.unprocessed.getCode();
     }
 
     public String getAddress() {

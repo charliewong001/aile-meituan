@@ -49,6 +49,14 @@ public class DispatchService {
     @Resource
     private TakeawayClient takeawayClient;
 
+    /**
+     *
+     * @Description 美团配送状态变化回调
+     * @param shopId
+     * @param bean
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
     public void dispatchStatusPush(String shopId, @Valid ShippingOrderBean bean) {
 
         long updateTime = System.currentTimeMillis();
@@ -106,7 +114,7 @@ public class DispatchService {
         JSONObject pushResult = null;
         try {
             logger.info("dispatchStatusPush 推送的消息={}", pushShipping);
-            pushResult = takeawayClient.pushOrderCancel(MeituanConfig.getRegistrationId(shopId),
+            pushResult = takeawayClient.pushDistribution(MeituanConfig.getRegistrationId(shopId),
                     JsonFormatUtil.toJSONString(pushShipping));
             logger.info("dispatchStatusPush 推送结果={}", pushResult);
         } catch (Exception e) {

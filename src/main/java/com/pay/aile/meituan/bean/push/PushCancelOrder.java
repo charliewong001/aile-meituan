@@ -2,6 +2,7 @@ package com.pay.aile.meituan.bean.push;
 
 import java.io.Serializable;
 
+import com.pay.aile.meituan.bean.jpa.OrderStatusEnum;
 import com.pay.aile.meituan.bean.jpa.PlatformCodeEnum;
 
 public class PushCancelOrder extends PushBaseBean implements Serializable {
@@ -19,6 +20,7 @@ public class PushCancelOrder extends PushBaseBean implements Serializable {
 
     public PushCancelOrder(Long id) {
         this.id = id;
+        status = OrderStatusEnum.cancelled.getCode();
     }
 
     public String getCode() {
@@ -56,6 +58,8 @@ public class PushCancelOrder extends PushBaseBean implements Serializable {
         builder.append(code);
         builder.append(", id=");
         builder.append(id);
+        builder.append(", status=");
+        builder.append(status);
         builder.append("]");
         return builder.toString();
     }

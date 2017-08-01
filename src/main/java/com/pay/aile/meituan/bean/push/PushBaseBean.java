@@ -16,13 +16,22 @@ public class PushBaseBean implements Serializable {
      */
     private static final long serialVersionUID = -1860128306684393923L;
     protected Long id;
+    protected String status;
 
     public Long getId() {
         return id;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -30,6 +39,8 @@ public class PushBaseBean implements Serializable {
         StringBuilder builder = new StringBuilder();
         builder.append("PushBaseBean [id=");
         builder.append(id);
+        builder.append(", status=");
+        builder.append(status);
         builder.append("]");
         return builder.toString();
     }
