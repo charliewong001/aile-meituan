@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.pay.aile.meituan.bean.platform.NewOrderBean;
 import com.pay.aile.meituan.service.OrderService;
 import com.pay.aile.meituan.util.JsonFormatUtil;
 
@@ -85,6 +86,35 @@ public class OrderController {
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("cancelOrder error!shopId={},orderId={}", shopId, orderId, e);
+            return JsonFormatUtil.getFailureJson();
+        }
+    }
+
+    /**
+     *
+     * @Description 测试,异常订单状态同步
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    @RequestMapping(value = "/exceptionOrderProcess")
+    public JSONObject exceptionOrderProcess() {
+        try {
+            orderService.exceptionOrderSync();
+            return JsonFormatUtil.getSuccessJson();
+        } catch (Exception e) {
+            logger.error("exceptionOrderProcess error!", e);
+            return JsonFormatUtil.getFailureJson();
+        }
+    }
+
+    @RequestMapping(value = "/queryOrder")
+    public JSONObject queryOrder(@RequestParam String shopId, @RequestParam String orderId) {
+        try {
+            NewOrderBean order = orderService.queryOrder(shopId, Long.valueOf(orderId));
+            return JsonFormatUtil.getSuccessJson(order);
+        } catch (Exception e) {
+            logger.error("queryOrder error!shopId={},orderId={}", shopId, orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }

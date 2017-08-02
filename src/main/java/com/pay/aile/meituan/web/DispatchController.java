@@ -116,10 +116,12 @@ public class DispatchController {
             @RequestParam Double shippingFee, @RequestParam Double tipAmount) {
         try {
             String result = dispatchService.zbDispatchPrepare(shopId, Long.valueOf(orderId), shippingFee, tipAmount);
-            if (Constants.OK.equals(result)) {
-                return JsonFormatUtil.getSuccessJson(result);
+            if (Constants.ok.equals(result)) {
+                return JsonFormatUtil.getSuccessJson(JSONObject.parseObject(result));
             } else {
-                return JsonFormatUtil.getFailureJson(result);
+                String m = JSONObject.parseObject(result).getJSONObject("error").getString("message");
+                JSONObject j = JSONObject.parseObject(m);
+                return JsonFormatUtil.getFailureJson(j);
             }
         } catch (Exception e) {
             logger.error("zbDispatchPrepare error!shopId={},orderId={}", shopId, orderId, e);

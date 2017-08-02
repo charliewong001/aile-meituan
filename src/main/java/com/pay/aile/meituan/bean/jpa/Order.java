@@ -10,10 +10,12 @@ public class Order implements Serializable {
      * @author chao.wang
      */
     private static final long serialVersionUID = -7297686304207471885L;
+    private Long id;
     // 店铺id
     private Shop shop;
     // 对应订单id
     private String orderId;
+
     // 顾客送餐地址
     private String address;
 
@@ -21,6 +23,7 @@ public class Order implements Serializable {
     private String orderCreateTime;
     // 配送费
     private BigDecimal deliverFee;
+
     // 预计送达时间
     private String deliverTime;
     // 忌口或备注
@@ -29,11 +32,11 @@ public class Order implements Serializable {
     private StatusEnum hasInvoiced;
     // 发票抬头
     private String invoiceTitle;
-
     // 是否在线支付
     private StatusEnum onlinePaid;
     // 电话号码可以多个
     private String phone;
+
     // 当日流水号
     private Long daySn;
     // 订单用户id
@@ -57,7 +60,6 @@ public class Order implements Serializable {
     private List<OrderItem> itemList;
     // 订单状态
     private OrderRefundStatusEnum RefundStatus;
-
     // 催单
     private ReminderOrder reminderOrder;
     // 退单
@@ -67,12 +69,19 @@ public class Order implements Serializable {
     private Distribution distribution;
     // 取消原因
     private String cancelReason;
+
     // 订单状态变更时间
     private Long updateTime;
 
     public Order() {
         super();
         // TODO Auto-generated constructor stub
+    }
+
+    public Order(Long id, String orderId, OrderStatusEnum status) {
+        this.id = id;
+        this.orderId = orderId;
+        this.status = status;
     }
 
     public Order(String orderId) {
@@ -114,6 +123,10 @@ public class Order implements Serializable {
 
     public StatusEnum getHasInvoiced() {
         return hasInvoiced;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public BigDecimal getIncome() {
@@ -228,6 +241,10 @@ public class Order implements Serializable {
         this.hasInvoiced = hasInvoiced;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setIncome(BigDecimal income) {
         this.income = income;
     }
@@ -307,7 +324,9 @@ public class Order implements Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Order [shop=");
+        builder.append("Order [id=");
+        builder.append(id);
+        builder.append(", shop=");
         builder.append(shop);
         builder.append(", orderId=");
         builder.append(orderId);

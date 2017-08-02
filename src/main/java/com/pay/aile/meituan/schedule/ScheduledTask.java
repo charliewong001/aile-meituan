@@ -22,6 +22,28 @@ public class ScheduledTask {
     @Resource
     private HeartbeatService heartbeatService;
 
+    /**
+     *
+     * @Description 异常订单处理
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void exceptionOrderProcess() {
+        logger.info("exceptionOrderProcess 异常订单处理 start...");
+        try {
+        } catch (Exception e) {
+            logger.error("exceptionOrderProcess 异常订单处理 error!", e);
+        }
+        logger.info("exceptionOrderProcess 异常订单处理  end...");
+    }
+
+    /**
+     *
+     * @Description 每24小时上报心跳数据
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
     @Scheduled(cron = "0 0 1 * * ?")
     public void reportToMeituanEvery24Hours() {
         logger.info("reportToMeituanEvery24Hours 24小时补充数据上报 start...");
