@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -62,26 +64,12 @@ import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderRefundRej
  */
 @Service
 public class OrderService {
+    private static final int poolSize = 5;
+    private static final ExecutorService exceptionOrderExecutors = Executors.newFixedThreadPool(poolSize);
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public static void main(String[] args) {
-        for (String s : new String[] { "a", "b", "c" }) {
-            System.out.println("1" + s);
-            do {
-                try {
-                    System.out.println("s" + s);
-                    if (s.equals("a")) {
-                        throw new RuntimeException();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    continue;
-                }
-            } while (true);
-        }
-    }
-
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private Logger logger = LoggerFactory.getLogger(getClass());
+
     /** jpa项目order接口 */
     @Resource
     private JpaClient jpaClient;
@@ -294,14 +282,36 @@ public class OrderService {
      * @author chao.wang
      */
     public void exceptionOrderSync() {
+        class Task implements Runnable {
+            private List<Shop> shops;
+
+            public Task(List<Shop> shops) {
+                this.shops = shops;
+            }
+
+            @Override
+            public void run() {
+                exceptionOrderSync(shops);
+            }
+
+        }
+
         Shop shop = new Shop();
         shop.setPlatform(Platform.getInstance());
-        List<Shop> shops = jpaClient.findList(JsonFormatUtil.toJSONString(shop));
-        if (shops == null || shops.isEmpty()) {
+        List<Shop> shopList = jpaClient.findList(JsonFormatUtil.toJSONString(shop));
+        if (shopList == null || shopList.isEmpty()) {
             logger.warn("exceptionOrderSync shops is empty or null");
             return;
         }
-        exceptionOrderSync(shops);
+        int end = 0;
+        for (int start = 0; start < shopList.size(); start += poolSize) {
+            if ((start + poolSize) > shopList.size()) {
+                end = shopList.size();
+            } else {
+                end = start + poolSize;
+            }
+            exceptionOrderExecutors.execute(new Task(shopList.subList(start, end)));
+        }
     }
 
     /**
@@ -423,7 +433,7 @@ public class OrderService {
         pushOrder.setConsignee(newOrderBean.getRecipientName());
         pushOrder.setOnlinePaid(PayTypeEnum.onlinePay(newOrderBean.getPayType()) ? StatusEnum.ENABLE.toString()
                 : StatusEnum.DISENABLE.toString());
-        pushOrder.setOrderCreateTime(sdf.format(new Date(newOrderBean.getCtime())));
+        pushOrder.setOrderCreateTime(sdf.format(new Date(newOrderBean.getCtime() * 1000)));
         pushOrder.setDeliverTime(newOrderBean.getDeliveryTime() == 0 ? "立即配送"
                 : sdf.format(new Date(newOrderBean.getDeliveryTime() * 1000)));
         pushOrder.setPhone(newOrderBean.getRecipientPhone());
@@ -472,12 +482,6 @@ public class OrderService {
         } catch (Exception e) {
             logger.error("queryOrder error!orderId={},result={}", orderId, result, e);
             throw new RuntimeException("调用美团查询订单详情失败!" + e.getMessage());
-        }
-        if (Constants.ok.equals(result)) {
-            logger.info("queryOrder success!orderId={}", orderId);
-        } else {
-            logger.info("queryOrder fail!orderId={},result={}", orderId, result);
-            throw new RuntimeException(String.format("调用美团查询订单详情失败!result={%s}", result));
         }
         return order;
     }
@@ -686,7 +690,7 @@ public class OrderService {
                     // 若本地与美团状态不一致,则更新本地状态
                     if (status.getCode().equals(OrderStatusEnum.unprocessed.getCode())) {
                         // 本地状态:未处理,平台状态若 != 商家已收到 ,那么状态不同步
-                        if (mtStatus != MTOrderStatusEnum.shopReceived.getCode()) {
+                        if (mtStatus != MTOrderStatusEnum.canPush.getCode()) {
                             updateOrders.add(new Order(id, orderId, mappingOrderStatus(mtStatus)));
                         }
                     }
@@ -708,11 +712,15 @@ public class OrderService {
                     logger.error("exceptionOrderSync error!order={}", order, e);
                 }
             });
-            try {
-                logger.info("exceptionOrderSync 修改订单状态,updateOrders={}", updateOrders);
-                jpaClient.bathUpdateOrderStatus(JsonFormatUtil.toJSONString(updateOrders));
-            } catch (Exception e) {
-                logger.error("exceptionOrderSync 修改订单状态失败！shopId={}", shopId, e);
+            if (!updateOrders.isEmpty()) {
+                try {
+                    logger.info("exceptionOrderSync 修改订单状态,updateOrders={}", updateOrders);
+                    jpaClient.bathUpdateOrderStatus(JsonFormatUtil.toJSONString(updateOrders));
+                } catch (Exception e) {
+                    logger.error("exceptionOrderSync 修改订单状态失败！shopId={}", shopId, e);
+                }
+            } else {
+                logger.info("exceptionOrderSync updateOrdes is empty,没有要同步状态的订单");
             }
         }
     }
@@ -758,7 +766,7 @@ public class OrderService {
         OrderStatusEnum status = null;
         switch (MTOrderStatusEnum.get(mtStatus)) {
         case cancel:
-            status = OrderStatusEnum.cancelled;
+            status = OrderStatusEnum.invalid;
             break;
         case complete:
             status = OrderStatusEnum.completed;

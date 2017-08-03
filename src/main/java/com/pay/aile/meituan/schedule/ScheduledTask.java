@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.pay.aile.meituan.service.HeartbeatService;
+import com.pay.aile.meituan.service.OrderService;
 
 /**
  *
@@ -21,6 +22,8 @@ public class ScheduledTask {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Resource
     private HeartbeatService heartbeatService;
+    @Resource
+    private OrderService orderService;
 
     /**
      *
@@ -28,10 +31,11 @@ public class ScheduledTask {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "0 0,30 * * * ?")
     public void exceptionOrderProcess() {
         logger.info("exceptionOrderProcess 异常订单处理 start...");
         try {
+            orderService.exceptionOrderSync();
         } catch (Exception e) {
             logger.error("exceptionOrderProcess 异常订单处理 error!", e);
         }
@@ -44,7 +48,7 @@ public class ScheduledTask {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @Scheduled(cron = "0 0 1 * * ?")
+    // @Scheduled(cron = "0 0 1 * * ?")
     public void reportToMeituanEvery24Hours() {
         logger.info("reportToMeituanEvery24Hours 24小时补充数据上报 start...");
         try {

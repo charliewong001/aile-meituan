@@ -13,10 +13,10 @@ public class JsonFormatUtil {
     public static final String MSG = "msg";
     public static final String DATA = "returnData";
 
-    public static final String CODE_OK = "0";
-    public static final String CODE_OK_MSG = "success";
-    public static final String CODE_ERROR = "99999";
-    public static final String CODE_ERROR_MSG = "系统错误";
+    public static final String CODE_OK = "0000";
+    public static final String CODE_OK_MSG = "操作成功";
+    public static final String CODE_ERROR = "0001";
+    public static final String CODE_ERROR_MSG = "操作失败";
 
     public static JSONObject getFailureJson() {
         JSONObject jsonObj = new JSONObject(true);

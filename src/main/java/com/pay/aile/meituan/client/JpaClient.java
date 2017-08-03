@@ -41,7 +41,7 @@ public interface JpaClient {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "/bathUpdateOrderStatus")
+    @RequestMapping(value = "/order/bathUpdateOrderStatus")
     public List<Order> bathUpdateOrderStatus(@RequestParam(value = "orderList", defaultValue = "{}") String orderList);
 
     /**
@@ -86,8 +86,9 @@ public interface JpaClient {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @RequestMapping(value = "/findValidList")
-    public List<Order> findValidList(@RequestParam String platformCode, @RequestParam String shopId);
+    @RequestMapping(value = "/order/findValidList")
+    public List<Order> findValidList(@RequestParam(value = "platformCode") String platformCode,
+            @RequestParam(value = "shopId") String shopId);
 
     /**
      *
