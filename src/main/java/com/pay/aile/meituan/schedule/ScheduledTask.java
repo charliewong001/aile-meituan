@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.pay.aile.meituan.service.HeartbeatService;
@@ -31,7 +30,7 @@ public class ScheduledTask {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    @Scheduled(cron = "0 0,30 * * * ?")
+    // @Scheduled(cron = "0 0,30 * * * ?")
     public void exceptionOrderProcess() {
         logger.info("exceptionOrderProcess 异常订单处理 start...");
         try {

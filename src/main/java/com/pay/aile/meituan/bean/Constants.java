@@ -23,5 +23,4 @@ public class Constants {
 
     /** 美团返回正确 */
     public static final String ok = "{\"data\":\"ok\"}";
-    public static final String OK = "{\"data\":\"OK\"}";
 }

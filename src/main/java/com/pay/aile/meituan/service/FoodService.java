@@ -138,7 +138,7 @@ public class FoodService {
             logger.error("mapFoodToDish 调用美团接口进行菜品映射失败!shopId={}", shopId, e);
             throw new RuntimeException("调用美团接口进行菜品映射失败,shopId=".concat(shopId));
         }
-        if (!Constants.OK.equals(result)) {
+        if (!Constants.ok.equalsIgnoreCase(result)) {
             logger.error("mapFoodToDish 调用美团接口进行菜品映射失败!shopId={},result={}", shopId, result);
             throw new RuntimeException("调用美团接口进行菜品映射失败,shopId=".concat(shopId).concat(",result=").concat(result));
         }
@@ -245,7 +245,7 @@ public class FoodService {
                     shopId, foodId, stockNum, dishes, e);
             throw new RuntimeException("调用美团估清菜品失败");
         }
-        if (!Constants.ok.equals(result)) {
+        if (!Constants.ok.equalsIgnoreCase(result)) {
             logger.error("updateFoodStock call meituan error! 调用美团更改菜品库存失败,shopId={},foodId={},stockNum={},result={}",
                     shopId, foodId, stockNum, result);
             throw new RuntimeException("调用美团更改菜品库存失败,result=".concat(result));

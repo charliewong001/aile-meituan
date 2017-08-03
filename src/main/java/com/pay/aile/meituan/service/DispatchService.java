@@ -29,6 +29,7 @@ import com.sankuai.sjst.platform.developer.domain.RequestSysParams;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderDeliveredRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderDeliveringRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderDispatchCancelRequest;
+import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderDispatchRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderZbDispatchConfirmRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderZbDispatchPrepareRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderZbDispatchTipUpdateRequest;
@@ -49,6 +50,62 @@ public class DispatchService {
     private JpaClient jpaClient;
     @Resource
     private TakeawayClient takeawayClient;
+
+    /**
+     *
+     * @Description 取消配送 此接口主要应用众包配送方式，送达之前都可以取消，其它美团配送方式，只能15分钟后无骑手接单情况下取消。
+     * @param shopId
+     * @param orderId
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    public void dispatchCancel(String shopId, Long orderId) {
+        CipCaterTakeoutOrderDispatchCancelRequest request = new CipCaterTakeoutOrderDispatchCancelRequest();
+        RequestSysParams sysParams = new RequestSysParams(MeituanConfig.getSignkey(),
+                MeituanConfig.getAppAuthToken(shopId));
+        request.setRequestSysParams(sysParams);
+        request.setOrderId(orderId);
+        String result = "";
+        try {
+            logger.info("zbDispatchCancel 取消配送,request={}", JsonFormatUtil.toJSONString(request));
+            result = request.doRequest();
+            logger.info("zbDispatchCancel 取消配送,result={}", result);
+        } catch (Exception e) {
+            logger.error("zbDispatchCancel 取消配送错误!orderId={}", orderId, e);
+            throw new RuntimeException("取消配送错误！orderId=".concat(orderId.toString()));
+        }
+        if (!Constants.ok.equalsIgnoreCase(result)) {
+            logger.info("zbDispatchCancel 取消配送错误 返回值错误!");
+            throw new RuntimeException("取消配送错误！orderId=".concat(orderId.toString()));
+        }
+    }
+
+    /**
+     *
+     * @Description 发送美团专送配送
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    public void dispatchShip(String shopId, Long orderId) {
+        CipCaterTakeoutOrderDispatchRequest request = new CipCaterTakeoutOrderDispatchRequest();
+        RequestSysParams sysParams = new RequestSysParams(MeituanConfig.getSignkey(),
+                MeituanConfig.getAppAuthToken(shopId));
+        request.setRequestSysParams(sysParams);
+        request.setOrderId(orderId);
+        String result = "";
+        try {
+            logger.info("dispatchShip 发送美团专送,request={}", JsonFormatUtil.toJSONString(request));
+            result = request.doRequest();
+            logger.info("dispatchShip 发送美团专送,result={}", result);
+        } catch (Exception e) {
+            logger.error("dispatchShip 发送美团专送错误!orderId={}", orderId, e);
+            throw new RuntimeException("发送美团专送错误！orderId=".concat(orderId.toString()));
+        }
+        if (!Constants.ok.equalsIgnoreCase(result)) {
+            logger.info("dispatchShip 发送美团专送错误 返回值错误!");
+            throw new RuntimeException("发送美团专送错误！orderId=".concat(orderId.toString()));
+        }
+    }
 
     /**
      *
@@ -151,7 +208,7 @@ public class DispatchService {
             logger.error("delivered 美团商家自配送错误!orderId={}", orderId, e);
             throw new RuntimeException("美团商家自配送错误！orderId=".concat(orderId.toString()));
         }
-        if (Constants.ok.equals(result)) {
+        if (Constants.ok.equalsIgnoreCase(result)) {
             logger.info("delivered 美团商家自配送成功，orderId={}", orderId);
             // 保存配送单
             Distribution distribution = new Distribution();
@@ -195,7 +252,7 @@ public class DispatchService {
             logger.error("delivering 美团商家自配送错误!orderId={}", orderId, e);
             throw new RuntimeException("美团商家自配送错误！orderId=".concat(orderId.toString()));
         }
-        if (Constants.ok.equals(result)) {
+        if (Constants.ok.equalsIgnoreCase(result)) {
             logger.info("delivering 美团商家自配送成功，orderId={}", orderId);
             // 保存配送单
             Distribution distribution = new Distribution();
@@ -216,35 +273,6 @@ public class DispatchService {
             }
         } else {
             logger.error("delivering 美团商家自配送失败，orderId={}", orderId);
-        }
-    }
-
-    /**
-     *
-     * @Description 取消众包配送
-     * @param shopId
-     * @param orderId
-     * @see 需要参考的类或方法
-     * @author chao.wang
-     */
-    public void zbDispatchCancel(String shopId, Long orderId) {
-        CipCaterTakeoutOrderDispatchCancelRequest request = new CipCaterTakeoutOrderDispatchCancelRequest();
-        RequestSysParams sysParams = new RequestSysParams(MeituanConfig.getSignkey(),
-                MeituanConfig.getAppAuthToken(shopId));
-        request.setRequestSysParams(sysParams);
-        request.setOrderId(orderId);
-        String result = "";
-        try {
-            logger.info("zbDispatchCancel 取消众包配送确认下单,request={}", JsonFormatUtil.toJSONString(request));
-            result = request.doRequest();
-            logger.info("zbDispatchCancel 取消众包配送确认下单,result={}", result);
-        } catch (Exception e) {
-            logger.error("zbDispatchCancel 取消众包配送确认下单错误!orderId={}", orderId, e);
-            throw new RuntimeException("取消众包配送确认下单错误！orderId=".concat(orderId.toString()));
-        }
-        if (!Constants.ok.equals(result)) {
-            logger.info("zbDispatchCancel 取消众包配送确认下单错误 返回值错误!");
-            throw new RuntimeException("取消众包配送确认下单错误！orderId=".concat(orderId.toString()));
         }
     }
 
@@ -274,7 +302,7 @@ public class DispatchService {
             logger.error("zbDispatchConfirm 众包配送确认下单错误!orderId={}", orderId, e);
             throw new RuntimeException("众包配送确认下单错误！orderId=".concat(orderId.toString()));
         }
-        if (!Constants.ok.equals(result)) {
+        if (!Constants.ok.equalsIgnoreCase(result)) {
             logger.info("zbDispatchConfirm 众包配送确认下单错误 返回值错误!");
             throw new RuntimeException("众包配送确认下单错误！orderId=".concat(orderId.toString()));
         }
@@ -337,7 +365,7 @@ public class DispatchService {
             logger.error("zbDispatchTipUpdate 众包配送加小费错误!orderId={}", orderId, e);
             throw new RuntimeException("众包配送加小费错误！orderId=".concat(orderId.toString()));
         }
-        if (!Constants.ok.equals(result)) {
+        if (!Constants.ok.equalsIgnoreCase(result)) {
             logger.info("zbDispatchTipUpdate 众包配送加小费错误 返回值错误!");
             throw new RuntimeException("众包配送加小费错误！orderId=".concat(orderId.toString()));
         }

@@ -34,6 +34,46 @@ public class DispatchController {
 
     /**
      *
+     * @Description 取消配送
+     * @param shopId
+     * @param orderId
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    @RequestMapping("/dispatchCancel")
+    public JSONObject dispatchCancel(@RequestParam String shopId, @RequestParam String orderId) {
+        try {
+            dispatchService.dispatchCancel(shopId, Long.valueOf(orderId));
+            return JsonFormatUtil.getSuccessJson();
+        } catch (Exception e) {
+            logger.error("zbDispatchCancel error!shopId={},orderId={}", shopId, orderId, e);
+            return JsonFormatUtil.getFailureJson();
+        }
+    }
+
+    /**
+     *
+     * @Description 发送美团配送
+     * @param shopId
+     * @param orderId
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    @RequestMapping("/dispatchShip")
+    public JSONObject dispatchShip(@RequestParam String shopId, @RequestParam String orderId) {
+        try {
+            dispatchService.dispatchShip(shopId, Long.valueOf(orderId));
+            return JsonFormatUtil.getSuccessJson();
+        } catch (Exception e) {
+            logger.error("dispatchShip error!shopId={},orderId={}", shopId, orderId, e);
+            return JsonFormatUtil.getFailureJson();
+        }
+    }
+
+    /**
+     *
      * @Description 自配送订单,订单已送达
      * @param shopId
      * @param orderId
@@ -73,26 +113,6 @@ public class DispatchController {
             return JsonFormatUtil.getSuccessJson();
         } catch (Exception e) {
             logger.error("selfDelivering error!shopId={},orderId={}", shopId, orderId, e);
-            return JsonFormatUtil.getFailureJson();
-        }
-    }
-
-    /**
-     *
-     * @Description 取消众包配送
-     * @param shopId
-     * @param orderId
-     * @return
-     * @see 需要参考的类或方法
-     * @author chao.wang
-     */
-    @RequestMapping("/zbDispatchCancel")
-    public JSONObject zbDispatchCancel(@RequestParam String shopId, @RequestParam String orderId) {
-        try {
-            dispatchService.zbDispatchCancel(shopId, Long.valueOf(orderId));
-            return JsonFormatUtil.getSuccessJson();
-        } catch (Exception e) {
-            logger.error("zbDispatchCancel error!shopId={},orderId={}", shopId, orderId, e);
             return JsonFormatUtil.getFailureJson();
         }
     }
