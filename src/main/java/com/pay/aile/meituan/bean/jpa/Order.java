@@ -67,11 +67,14 @@ public class Order implements Serializable {
 
     // 配送信息
     private Distribution distribution;
+
     // 取消原因
     private String cancelReason;
 
     // 订单状态变更时间
     private Long updateTime;
+    // 配送方式
+    private DistributionTypeEnum distributionType;
 
     public Order() {
         super();
@@ -119,6 +122,10 @@ public class Order implements Serializable {
 
     public Distribution getDistribution() {
         return distribution;
+    }
+
+    public DistributionTypeEnum getDistributionType() {
+        return distributionType;
     }
 
     public StatusEnum getHasInvoiced() {
@@ -235,6 +242,10 @@ public class Order implements Serializable {
 
     public void setDistribution(Distribution distribution) {
         this.distribution = distribution;
+    }
+
+    public void setDistributionType(DistributionTypeEnum distributionType) {
+        this.distributionType = distributionType;
     }
 
     public void setHasInvoiced(StatusEnum hasInvoiced) {
@@ -382,6 +393,8 @@ public class Order implements Serializable {
         builder.append(cancelReason);
         builder.append(", updateTime=");
         builder.append(updateTime);
+        builder.append(", distributionType=");
+        builder.append(distributionType);
         builder.append("]");
         return builder.toString();
     }

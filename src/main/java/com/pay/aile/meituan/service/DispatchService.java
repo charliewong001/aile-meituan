@@ -28,6 +28,7 @@ import com.pay.aile.meituan.util.JsonFormatUtil;
 import com.sankuai.sjst.platform.developer.domain.RequestSysParams;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderDeliveredRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderDeliveringRequest;
+import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderDispatchCancelRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderZbDispatchConfirmRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderZbDispatchPrepareRequest;
 import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutOrderZbDispatchTipUpdateRequest;
@@ -215,6 +216,35 @@ public class DispatchService {
             }
         } else {
             logger.error("delivering 美团商家自配送失败，orderId={}", orderId);
+        }
+    }
+
+    /**
+     *
+     * @Description 取消众包配送
+     * @param shopId
+     * @param orderId
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    public void zbDispatchCancel(String shopId, Long orderId) {
+        CipCaterTakeoutOrderDispatchCancelRequest request = new CipCaterTakeoutOrderDispatchCancelRequest();
+        RequestSysParams sysParams = new RequestSysParams(MeituanConfig.getSignkey(),
+                MeituanConfig.getAppAuthToken(shopId));
+        request.setRequestSysParams(sysParams);
+        request.setOrderId(orderId);
+        String result = "";
+        try {
+            logger.info("zbDispatchCancel 取消众包配送确认下单,request={}", JsonFormatUtil.toJSONString(request));
+            result = request.doRequest();
+            logger.info("zbDispatchCancel 取消众包配送确认下单,result={}", result);
+        } catch (Exception e) {
+            logger.error("zbDispatchCancel 取消众包配送确认下单错误!orderId={}", orderId, e);
+            throw new RuntimeException("取消众包配送确认下单错误！orderId=".concat(orderId.toString()));
+        }
+        if (!Constants.ok.equals(result)) {
+            logger.info("zbDispatchCancel 取消众包配送确认下单错误 返回值错误!");
+            throw new RuntimeException("取消众包配送确认下单错误！orderId=".concat(orderId.toString()));
         }
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -38,10 +39,12 @@ public class NewOrderBean implements Serializable {
     private String invoiceTitle;// string 发票抬头
     private Boolean isFavorites;// boolean 用户是否收藏此门店 true
     private Boolean isPoiFirstOrder;// boolean 用户是否第一次在此门店点餐 false
+    @NotNull(message = "isThirdShipping不能为空")
     private Integer isThirdShipping;// int 是否第三方配送 0 0-否，1-是
     private Double latitude;// double 订餐地址纬度
     private Double longitude;// double 订餐地址经度
-    private Integer logisticsCode;// int 配送方式码 1002 请查看《7.6补充相关字段说明》
+    @NotBlank(message = "logisticsCode不能为空")
+    private String logisticsCode;// int 配送方式码 1002 请查看《7.6补充相关字段说明》
     private Double originalPrice;// double 订单原价
     private Integer payType;// int 支付类型 1 1：货到付款；2：在线支付
     private String poiAddress;// string 门店地址
@@ -133,7 +136,7 @@ public class NewOrderBean implements Serializable {
         return latitude;
     }
 
-    public Integer getLogisticsCode() {
+    public String getLogisticsCode() {
         return logisticsCode;
     }
 
@@ -269,7 +272,7 @@ public class NewOrderBean implements Serializable {
         this.latitude = latitude;
     }
 
-    public void setLogisticsCode(Integer logisticsCode) {
+    public void setLogisticsCode(String logisticsCode) {
         this.logisticsCode = logisticsCode;
     }
 

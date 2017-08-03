@@ -79,6 +79,26 @@ public class DispatchController {
 
     /**
      *
+     * @Description 取消众包配送
+     * @param shopId
+     * @param orderId
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    @RequestMapping("/zbDispatchCancel")
+    public JSONObject zbDispatchCancel(@RequestParam String shopId, @RequestParam String orderId) {
+        try {
+            dispatchService.zbDispatchCancel(shopId, Long.valueOf(orderId));
+            return JsonFormatUtil.getSuccessJson();
+        } catch (Exception e) {
+            logger.error("zbDispatchCancel error!shopId={},orderId={}", shopId, orderId, e);
+            return JsonFormatUtil.getFailureJson();
+        }
+    }
+
+    /**
+     *
      * @Description 众包配送-确认下单(预下单失败后调用)
      * @param orderId
      * @param tipAmount
