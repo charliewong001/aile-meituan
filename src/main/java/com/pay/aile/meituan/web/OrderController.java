@@ -79,6 +79,7 @@ public class OrderController {
      * @see 需要参考的类或方法
      * @author chao.wang
      */
+    @RequestMapping(value = "/cancelOrder")
     public JSONObject cancelOrder(@RequestParam String shopId, @RequestParam String orderId,
             @RequestParam String reasonCode, @RequestParam(name = "reasonCode", required = false) String reason) {
         try {

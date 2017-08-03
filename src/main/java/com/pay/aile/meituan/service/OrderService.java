@@ -42,7 +42,6 @@ import com.pay.aile.meituan.bean.platform.PayTypeEnum;
 import com.pay.aile.meituan.bean.platform.QueryOrderBaseBean;
 import com.pay.aile.meituan.bean.platform.RefundNotifyTypeEnum;
 import com.pay.aile.meituan.bean.platform.RefundOrderBean;
-import com.pay.aile.meituan.bean.push.PushCancelOrder;
 import com.pay.aile.meituan.bean.push.PushNewOrder;
 import com.pay.aile.meituan.client.JpaClient;
 import com.pay.aile.meituan.client.TakeawayClient;
@@ -125,24 +124,20 @@ public class OrderService {
                 logger.error("cancelOrder修改订单状态失败!orderId={}", orderId, e);
                 throw new RuntimeException("美团取消订单成功,修改本地订单状态失败!" + e.getMessage());
             }
-            Long id = getPrimaryKeyFromOrder(saveResult);
+            getPrimaryKeyFromOrder(saveResult);
             // 向POS推送取消订单信息
-            PushCancelOrder pushCancelOrder = new PushCancelOrder(id);
-            pushCancelOrder.setOrderId(orderId.toString());
-            // pushCancelOrder.setReason(bean.getReason());
-            pushCancelOrder.setUpdateTime(updateTime);
+            saveResult.put("updateTime", updateTime);
             JSONObject pushResult = null;
             try {
-                logger.info("cancelOrderPush 推送的消息={}", pushCancelOrder);
                 pushResult = takeawayClient.pushOrderCancel(MeituanConfig.getRegistrationId(shopId),
-                        JsonFormatUtil.toJSONString(pushCancelOrder));
+                        JsonFormatUtil.toJSONString(saveResult));
                 logger.info("cancelOrderPush 推送结果={}", pushResult);
             } catch (Exception e) {
                 logger.error("cancelOrderPush 取消订单推送失败！orderId={}", orderId);
             }
             if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
                 logger.error("cancelOrderPush 取消订单推送失败!msg={},pushBean={}",
-                        pushResult == null ? "" : pushResult.getString("msg"), pushCancelOrder);
+                        pushResult == null ? "" : pushResult.getString("msg"), saveResult);
             }
         } else {
             logger.info("cancelOrder fail!orderId={},result={}", orderId, result);
