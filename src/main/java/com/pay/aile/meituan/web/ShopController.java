@@ -22,25 +22,6 @@ public class ShopController {
 
     /**
      *
-     * @Description 设置店铺为自动接单
-     * @param shopId
-     * @return
-     * @see 需要参考的类或方法
-     * @author chao.wang
-     */
-    @RequestMapping("/autoConfirm")
-    public JSONObject autoConfirm(@RequestParam String shopId) {
-        try {
-            shopService.autoConfirmOrder(shopId);
-            return JsonFormatUtil.getSuccessJson();
-        } catch (Exception e) {
-            logger.error("shop autoConfirm error!shopId={}", shopId, e);
-            return JsonFormatUtil.getFailureJson();
-        }
-    }
-
-    /**
-     *
      * @Description 设置门店休息
      * @param shopId
      * @return
@@ -77,22 +58,4 @@ public class ShopController {
         }
     }
 
-    /**
-     *
-     * @Description 设置店铺为不自动接单
-     * @param shopId
-     * @return
-     * @see 需要参考的类或方法
-     * @author chao.wang
-     */
-    @RequestMapping("/unAutoConfirm")
-    public JSONObject unAutoConfirm(@RequestParam String shopId) {
-        try {
-            shopService.unAutoConfirmOrder(shopId);
-            return JsonFormatUtil.getSuccessJson();
-        } catch (Exception e) {
-            logger.error("shop unAutoConfirm error!shopId={}", shopId, e);
-            return JsonFormatUtil.getFailureJson();
-        }
-    }
 }

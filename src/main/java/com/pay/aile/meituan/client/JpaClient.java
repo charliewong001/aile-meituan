@@ -42,7 +42,7 @@ public interface JpaClient {
      * @author chao.wang
      */
     @RequestMapping(value = "/order/bathUpdateOrderStatus")
-    public List<Order> bathUpdateOrderStatus(@RequestParam(value = "orderList", defaultValue = "{}") String orderList);
+    public JSONObject bathUpdateOrderStatus(@RequestParam(value = "orderList", defaultValue = "{}") String orderList);
 
     /**
      *

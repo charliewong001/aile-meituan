@@ -118,7 +118,6 @@ public class FoodService {
             dishMappings.add(dishMapping);
         });
         logger.info("mapFoodToDish foods = {}", JSON.toJSONString(foods));
-        batchSaveFoodInfo(shopId, foods);
         // 请求美团接口进行映射
         String appAuthToken = MeituanConfig.getAppAuthToken(shopId);
         CipCaterTakeoutDishMapRequest request = new CipCaterTakeoutDishMapRequest();
@@ -142,6 +141,8 @@ public class FoodService {
             logger.error("mapFoodToDish 调用美团接口进行菜品映射失败!shopId={},result={}", shopId, result);
             throw new RuntimeException("调用美团接口进行菜品映射失败,shopId=".concat(shopId).concat(",result=").concat(result));
         }
+        // 保存菜品
+        batchSaveFoodInfo(shopId, foods);
         logger.info("mapFoodToDish 菜品映射成功");
     }
 
@@ -261,7 +262,7 @@ public class FoodService {
                 saveResult = jpaClient.saveOrUpdate(JsonFormatUtil.toJSONString(food));
                 logger.info("updateFoodStock 修改菜品状态返回值={}", saveResult);
             } catch (Exception e) {
-                logger.error("updateFoodStock 修改菜品状态错误,foodId={},categoryId={}", foodId, categoryId);
+                logger.error("updateFoodStock 修改菜品状态错误,foodId={},categoryId={}", foodId, categoryId, e);
                 throw new RuntimeException("修改菜品状态错误");
             }
         }

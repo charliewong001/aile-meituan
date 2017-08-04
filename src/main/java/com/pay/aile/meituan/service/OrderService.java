@@ -133,7 +133,7 @@ public class OrderService {
                         JsonFormatUtil.toJSONString(saveResult));
                 logger.info("cancelOrderPush 推送结果={}", pushResult);
             } catch (Exception e) {
-                logger.error("cancelOrderPush 取消订单推送失败！orderId={}", orderId);
+                logger.error("cancelOrderPush 取消订单推送失败！orderId={}", orderId, e);
             }
             if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
                 logger.error("cancelOrderPush 取消订单推送失败!msg={},pushBean={}",
@@ -181,7 +181,7 @@ public class OrderService {
                     JsonFormatUtil.toJSONString(result));
             logger.info("cancelOrderPush 推送结果={}", pushResult);
         } catch (Exception e) {
-            logger.error("cancelOrderPush 处理美团推送的已取消订单失败！orderId={}", bean.getOrderId());
+            logger.error("cancelOrderPush 处理美团推送的已取消订单失败！orderId={}", bean.getOrderId(), e);
         }
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("cancelOrderPush 极光推送失败!msg={},pushBean={}",
@@ -255,7 +255,7 @@ public class OrderService {
                     JsonFormatUtil.toJSONString(result));
             logger.info("confirmOrderPush 推送结果={}", pushResult);
         } catch (Exception e) {
-            logger.error("confirmOrderPush 推送商家已确认订单失败！orderId={}", newOrderBean.getOrderId());
+            logger.error("confirmOrderPush 推送商家已确认订单失败！orderId={}", newOrderBean.getOrderId(), e);
         }
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("confirmOrderPush 极光推送失败!msg={},pushBean={}",
@@ -335,7 +335,7 @@ public class OrderService {
                     JsonFormatUtil.toJSONString(result));
             logger.info("finishOrderPush 推送结果={}", pushResult);
         } catch (Exception e) {
-            logger.error("finishOrderPush 推送已完成订单失败！orderId={}", bean.getOrderId());
+            logger.error("finishOrderPush 推送已完成订单失败！orderId={}", bean.getOrderId(), e);
         }
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("finishOrderPush 极光推送失败!msg={},pushBean={}",
@@ -443,7 +443,7 @@ public class OrderService {
             pushResult = takeawayClient.pushNewOrder(registrationId, pushOrderJson);
             logger.info("newOrderPush 推送返回：{}", pushResult);
         } catch (Exception e) {
-            logger.error("pushSaveNewOrder 极光推送失败!pushOrder={}", pushOrder);
+            logger.error("pushSaveNewOrder 极光推送失败!pushOrder={}", pushOrder, e);
         }
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("pushSaveNewOrder 极光推送失败!msg={},pushOrder={}",
@@ -591,7 +591,7 @@ public class OrderService {
                     JsonFormatUtil.toJSONString(result));
             logger.info("refundOrderPush 推送返回结果 ={}", pushResult);
         } catch (Exception e) {
-            logger.error("refundOrderPush 极光推送失败!pushOrder={}", result);
+            logger.error("refundOrderPush 极光推送失败!pushOrder={}", result, e);
         }
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("refundOrderPush 极光推送失败!msg={},pushOrder={}",

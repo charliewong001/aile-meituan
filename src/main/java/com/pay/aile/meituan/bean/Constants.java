@@ -11,16 +11,12 @@ public class Constants {
 
     /** 美团门店authToken redis缓存前缀 */
     public static final String mtRedisAuthTokenPrefix = "aile-meituan-authToken-";
-
-    /** 美团商家设备号 redis缓存前缀 */
-    public static final String mtRedisDeviceNoPrefix = "aile-meituan-deviceNo-";
-
-    /** 美团店铺自动接单 redis缓存前缀 */
-    public static final String mtRedisAutoConfirmOrderPrefix = "aile-meituan-autoConfirmOrder-";
-
     /** 极光推送注册号 redis缓存前缀 */
-    public static final String mtRedisRegistrationidPrefix = "aile-meituan-registrationId-";
+    public static final String mtRedisRegistrationidPrefix = "wm_shop_mt_";
 
+    public static final String mtRedisAuthPhonePrefix = "aile-meituan-authPhone-";
+
+    public static final String mtRedisAuthChannelPrefix = "aile-meituan-authChannel-";
     /** 美团返回正确 */
     public static final String ok = "{\"data\":\"ok\"}";
 }

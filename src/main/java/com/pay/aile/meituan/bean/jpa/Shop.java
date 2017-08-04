@@ -56,6 +56,10 @@ public class Shop implements Serializable {
     // 极光推送id
     private String registrationId;
 
+    private User user;
+
+    private String channel;
+
     public Shop() {
     }
 
@@ -82,6 +86,10 @@ public class Shop implements Serializable {
 
     public String getBusinessHours() {
         return businessHours;
+    }
+
+    public String getChannel() {
+        return channel;
     }
 
     public String getCustomerNo() {
@@ -152,6 +160,10 @@ public class Shop implements Serializable {
         return shopName;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
@@ -166,6 +178,10 @@ public class Shop implements Serializable {
 
     public void setBusinessHours(String businessHours) {
         this.businessHours = businessHours;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
     public void setCustomerNo(String customerNo) {
@@ -236,6 +252,10 @@ public class Shop implements Serializable {
         this.shopName = shopName;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -281,6 +301,10 @@ public class Shop implements Serializable {
         builder.append(automaticStatus);
         builder.append(", registrationId=");
         builder.append(registrationId);
+        builder.append(", user=");
+        builder.append(user);
+        builder.append(", channel=");
+        builder.append(channel);
         builder.append("]");
         return builder.toString();
     }

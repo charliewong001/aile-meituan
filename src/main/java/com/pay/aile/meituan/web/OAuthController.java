@@ -1,6 +1,7 @@
 package com.pay.aile.meituan.web;
 
 import java.net.URLEncoder;
+import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -12,8 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pay.aile.meituan.bean.Constants;
+import com.pay.aile.meituan.bean.jpa.Platform;
+import com.pay.aile.meituan.bean.jpa.Shop;
+import com.pay.aile.meituan.bean.jpa.User;
+import com.pay.aile.meituan.client.TakeawayClient;
 import com.pay.aile.meituan.sdk.MeituanConfig;
 import com.pay.aile.meituan.service.FoodService;
+import com.pay.aile.meituan.util.JsonFormatUtil;
 
 /**
  *
@@ -41,6 +47,8 @@ public class OAuthController {
     @Resource
     private FoodService foodService;
 
+    @Resource
+    private TakeawayClient takeawayClient;
     private final String ret_success = "{data:\"success\"}";// 美团回调返回
 
     /**
@@ -58,6 +66,22 @@ public class OAuthController {
     public String authCallback(@RequestParam String ePoiId, @RequestParam String appAuthToken) {
         // 将appAuthToken存入redis
         MeituanConfig.setAppAuthToken(Constants.mtRedisAuthTokenPrefix.concat(ePoiId), appAuthToken);
+        try {
+            Shop shop = new Shop(ePoiId, Platform.getInstance());
+            User user = new User();
+            user.setPhone(MeituanConfig.getPhone(ePoiId));
+            user.setRegistrationId(MeituanConfig.getRegistrationId(ePoiId));
+            user.setLastUpdateTime(new Date());
+            shop.setUser(user);
+            shop.setRegistrationId(user.getRegistrationId());
+            shop.setChannel(MeituanConfig.getChannel(ePoiId));
+            takeawayClient.pushAuthorization(JsonFormatUtil.toJSONString(shop));
+        } catch (Exception e) {
+            logger.error("authCallback->pushAuthrization error!授权回调后进行用户店铺信息推送失败!");
+        } finally {
+            MeituanConfig.removeChannel(ePoiId);
+            MeituanConfig.removePhone(ePoiId);
+        }
         // 进行菜品映射
         try {
             foodService.mapFoodToDish(ePoiId);
@@ -78,10 +102,11 @@ public class OAuthController {
      */
     @RequestMapping("/getAuthUrl")
     public String getAuthUrl(@RequestParam String shopId, @RequestParam String deviceNo,
-            @RequestParam String customerNo, @RequestParam String registrationId) {
-        // 将deviceNo存入缓存,或者在其他地方进行授权之前就存入缓存
-        MeituanConfig.setDeviceNo(shopId, deviceNo);
+            @RequestParam String customerNo, @RequestParam String registrationId, @RequestParam String phone,
+            @RequestParam String channel) {
         MeituanConfig.setRegistrationId(shopId, registrationId);// 将极光推送注册号保存到缓存
+        MeituanConfig.setPhone(shopId, phone);
+        MeituanConfig.setChannel(shopId, channel);
         String developerId = MeituanConfig.getDeveloperId();
         String signKey = MeituanConfig.getSignkey();
         String callbackUrl = "";
@@ -133,8 +158,6 @@ public class OAuthController {
             return "{data:\"developerId not correct!\"}";
         }
         MeituanConfig.removeAppAuthToken(epoiId);// 删除appAuthToken
-        MeituanConfig.removeDeviceNo(epoiId);// 删除deviceNo
-        MeituanConfig.removeAutoConfirmOrder(epoiId);// 删除自动接单的配置
         MeituanConfig.removeRegistrationId(epoiId);// 删除极光推送注册号
         return ret_success;
 

@@ -28,6 +28,17 @@ public class FoodController {
     @Resource
     private FoodService foodService;
 
+    @RequestMapping("/foodMap")
+    public JSONObject foodMap(@RequestParam("shopId") String shopId) {
+        try {
+            foodService.mapFoodToDish(shopId);
+            return JsonFormatUtil.getSuccessJson();
+        } catch (Exception e) {
+            logger.error("foodMap error!,shopId={}", shopId, e);
+            return JsonFormatUtil.getFailureJson();
+        }
+    }
+
     /**
      *
      * @Description 估清菜品

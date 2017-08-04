@@ -20,7 +20,6 @@ import com.pay.aile.meituan.bean.platform.ShippingOrderBean;
 import com.pay.aile.meituan.bean.platform.ShippingStatusEnum;
 import com.pay.aile.meituan.bean.platform.ZbShippingFeeBaseBean;
 import com.pay.aile.meituan.bean.platform.ZbShippingFeeBean;
-import com.pay.aile.meituan.bean.push.PushOrderShipping;
 import com.pay.aile.meituan.client.JpaClient;
 import com.pay.aile.meituan.client.TakeawayClient;
 import com.pay.aile.meituan.sdk.MeituanConfig;
@@ -118,12 +117,6 @@ public class DispatchService {
     public void dispatchStatusPush(String shopId, @Valid ShippingOrderBean bean) {
 
         long updateTime = System.currentTimeMillis();
-        // 推送bean
-        PushOrderShipping pushShipping = new PushOrderShipping();
-        pushShipping.setName(bean.getDispatcherName());
-        pushShipping.setPhone(bean.getDispatcherMobile());
-        pushShipping.setOrderId(bean.getOrderId().toString());
-        pushShipping.setUpdateTime(updateTime);
 
         // 配送信息bean
         Distribution distribution = new Distribution();
@@ -134,23 +127,18 @@ public class DispatchService {
         distribution.setUpdateAt(updateTime);
         switch (ShippingStatusEnum.get(bean.getShippingStatus())) {
         case sended:// 配送单发往配送
-            pushShipping.setDistributionStatus(DistributionStatusEnum.tobeAssigned.getCode());
             distribution.setStatus(DistributionStatusEnum.tobeAssigned);
             break;
         case shipperConfirm:// 配送单已确认(骑手接单)
-            pushShipping.setDistributionStatus(DistributionStatusEnum.tobeFetched.getCode());
             distribution.setStatus(DistributionStatusEnum.tobeFetched);
             break;
         case shipperGet:// 骑手已取餐
-            pushShipping.setDistributionStatus(DistributionStatusEnum.arrived.getCode());
             distribution.setStatus(DistributionStatusEnum.arrived);
             break;
         case shipperArrive:// 骑手已送达
-            pushShipping.setDistributionStatus(DistributionStatusEnum.completed.getCode());
             distribution.setStatus(DistributionStatusEnum.completed);
             break;
         case cancel:// 配送单已取消
-            pushShipping.setDistributionStatus(DistributionStatusEnum.cancelled.getCode());
             distribution.setStatus(DistributionStatusEnum.cancelled);
             break;
         default:
@@ -169,18 +157,18 @@ public class DispatchService {
         }
 
         // 推送消息
+        result.put("updateTime", updateTime);
         JSONObject pushResult = null;
         try {
-            logger.info("dispatchStatusPush 推送的消息={}", pushShipping);
             pushResult = takeawayClient.pushDistribution(MeituanConfig.getRegistrationId(shopId),
-                    JsonFormatUtil.toJSONString(pushShipping));
+                    JsonFormatUtil.toJSONString(result));
             logger.info("dispatchStatusPush 推送结果={}", pushResult);
         } catch (Exception e) {
-            logger.error("dispatchStatusPush 处理美团推送的配送单状态变更失败！orderId={}", bean.getOrderId());
+            logger.error("dispatchStatusPush 处理美团推送的配送单状态变更失败！orderId={}", bean.getOrderId(), e);
         }
         if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
             logger.error("dispatchStatusPush 极光推送失败!msg={},pushBean={}",
-                    pushResult == null ? "" : pushResult.getString("msg"), bean);
+                    pushResult == null ? "" : pushResult.getString("msg"), result);
         }
 
     }
@@ -201,15 +189,15 @@ public class DispatchService {
         request.setRequestSysParams(sysParams);
         String result = "";
         try {
-            logger.info("delivered 美团商家自配送,request={}", JsonFormatUtil.toJSONString(request));
+            logger.info("selfDelivered 美团商家自配送,request={}", JsonFormatUtil.toJSONString(request));
             result = request.doRequest();
-            logger.info("delivered 美团商家自配送,result={}", result);
+            logger.info("selfDelivered 美团商家自配送,result={}", result);
         } catch (Exception e) {
-            logger.error("delivered 美团商家自配送错误!orderId={}", orderId, e);
+            logger.error("selfDelivered 美团商家自配送错误!orderId={}", orderId, e);
             throw new RuntimeException("美团商家自配送错误！orderId=".concat(orderId.toString()));
         }
         if (Constants.ok.equalsIgnoreCase(result)) {
-            logger.info("delivered 美团商家自配送成功，orderId={}", orderId);
+            logger.info("selfDelivered 美团商家自配送成功，orderId={}", orderId);
             // 保存配送单
             Distribution distribution = new Distribution();
             distribution.setUpdateAt(System.currentTimeMillis());
@@ -218,15 +206,15 @@ public class DispatchService {
             distribution.setShop(new Shop(shopId, Platform.getInstance()));
             JSONObject saveResult = null;
             try {
-                logger.info("delivered 保存配送信息 bean={}", distribution);
+                logger.info("selfDelivered 保存配送信息 bean={}", distribution);
                 saveResult = jpaClient.saveOrUpdateDistribution(JsonFormatUtil.toJSONString(distribution));
-                logger.info("delivered 保存配送信息  返回结果={}", saveResult);
+                logger.info("selfDelivered 保存配送信息  返回结果={}", saveResult);
             } catch (Exception e) {
-                logger.error("delivered 保存配送单失败!orderId={}", orderId, e);
+                logger.error("selfDelivered 保存配送单失败!orderId={}", orderId, e);
                 throw new RuntimeException("保存配送单失败!");
             }
         } else {
-            logger.error("delivering 美团商家自配送失败，orderId={}", orderId);
+            logger.error("selfDelivered 美团商家自配送失败，orderId={}", orderId);
         }
     }
 
@@ -245,15 +233,15 @@ public class DispatchService {
         request.setRequestSysParams(sysParams);
         String result = "";
         try {
-            logger.info("delivering 美团商家自配送,request={}", JsonFormatUtil.toJSONString(request));
+            logger.info("selfDelivering 美团商家自配送,request={}", JsonFormatUtil.toJSONString(request));
             result = request.doRequest();
-            logger.info("delivering 美团商家自配送,result={}", result);
+            logger.info("selfDelivering 美团商家自配送,result={}", result);
         } catch (Exception e) {
-            logger.error("delivering 美团商家自配送错误!orderId={}", orderId, e);
+            logger.error("selfDelivering 美团商家自配送错误!orderId={}", orderId, e);
             throw new RuntimeException("美团商家自配送错误！orderId=".concat(orderId.toString()));
         }
         if (Constants.ok.equalsIgnoreCase(result)) {
-            logger.info("delivering 美团商家自配送成功，orderId={}", orderId);
+            logger.info("selfDelivering 美团商家自配送成功，orderId={}", orderId);
             // 保存配送单
             Distribution distribution = new Distribution();
             distribution.setDistributionName(name);
@@ -264,15 +252,15 @@ public class DispatchService {
             distribution.setShop(new Shop(shopId, Platform.getInstance()));
             JSONObject saveResult = null;
             try {
-                logger.info("delivering 保存配送信息 bean={}", distribution);
+                logger.info("selfdelivering 保存配送信息 bean={}", distribution);
                 saveResult = jpaClient.saveOrUpdateDistribution(JsonFormatUtil.toJSONString(distribution));
-                logger.info("delivering 保存配送信息  返回结果={}", saveResult);
+                logger.info("selfdelivering 保存配送信息  返回结果={}", saveResult);
             } catch (Exception e) {
-                logger.error("delivering 保存配送单失败!orderId={}", orderId, e);
+                logger.error("selfdelivering 保存配送单失败!orderId={}", orderId, e);
                 throw new RuntimeException("保存配送单失败!");
             }
         } else {
-            logger.error("delivering 美团商家自配送失败，orderId={}", orderId);
+            logger.error("selfdelivering 美团商家自配送失败，orderId={}", orderId);
         }
     }
 
@@ -397,7 +385,7 @@ public class DispatchService {
         try {
             fees = JSONObject.parseObject(result, ZbShippingFeeBaseBean.class).getData();
         } catch (Exception e) {
-            logger.error("zbShippingFeeQuery 查询众包配送返回值错误,orderId={}", orderId);
+            logger.error("zbShippingFeeQuery 查询众包配送返回值错误,orderId={}", orderId, e);
             throw new RuntimeException("查询众包配送返回值错误");
         }
         return fees;

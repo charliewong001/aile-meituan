@@ -3,17 +3,22 @@ package com.pay.aile.meituan.sdk;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.springframework.util.StringUtils;
+
+import com.pay.aile.meituan.bean.Constants;
+import com.pay.aile.meituan.util.JedisClusterUtils;
+
 public class MeituanConfig {
 
     private static final String developerId;// 平台ID
 
     private static final String signKey;// 进行SHA1加签的key
+    private static final int oneDaySec = 24 * 60 * 60;
 
     static {
         Properties properties = new Properties();
         try {
-            InputStream in = MeituanConfig.class
-                    .getResourceAsStream("/application.properties");
+            InputStream in = MeituanConfig.class.getResourceAsStream("/application.properties");
             properties.load(in);
             developerId = properties.getProperty("meituan_developerId");
             signKey = properties.getProperty("meituan_signKey");
@@ -31,13 +36,23 @@ public class MeituanConfig {
      * @author chao.wang
      */
     public static String getAppAuthToken(String shopId) {
-        //        String appAuthToken = RedisUtil
-        //                .get(Constants.mtRedisAuthTokenPrefix.concat(shopId));
-        //        if (!StringUtils.hasText(appAuthToken)) {
-        //            throw new IllegalArgumentException("门店授权码为空,请确认是否已绑定");
-        //        }
-        //        return appAuthToken;
-        return "b95fd49fdf0fd424821a5ba39c707b895c1d5150ab9f1866f01d9d69f02638da";
+        String appAuthToken = JedisClusterUtils.getString(Constants.mtRedisAuthTokenPrefix.concat(shopId));
+        if (!StringUtils.hasText(appAuthToken)) {
+            throw new IllegalArgumentException("门店授权码为空,请确认是否已绑定");
+        }
+        return appAuthToken;
+    }
+
+    /**
+     *
+     * @Description 获取channel
+     * @param shopId
+     * @return
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    public static String getChannel(String shopId) {
+        return JedisClusterUtils.getString(Constants.mtRedisAuthChannelPrefix.concat(shopId));
     }
 
     public static String getDeveloperId() {
@@ -46,15 +61,14 @@ public class MeituanConfig {
 
     /**
      *
-     * @Description 获取设备号
+     * @Description 获取电话号码
      * @param shopId
      * @return
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public static String getDeviceNo(String shopId) {
-        //        return RedisUtil.get(Constants.mtRedisDeviceNoPrefix.concat(shopId));
-        return "device-meituan";
+    public static String getPhone(String shopId) {
+        return JedisClusterUtils.getString(Constants.mtRedisAuthPhonePrefix.concat(shopId));
     }
 
     /**
@@ -66,27 +80,15 @@ public class MeituanConfig {
      * @author chao.wang
      */
     public static String getRegistrationId(String shopId) {
-        //        return RedisUtil
-        //                .get(Constants.mtRedisRegistrationidPrefix.concat(shopId));
-        return "1104a897929dbc625f5";
+        Object o = JedisClusterUtils.hashGet(Constants.mtRedisRegistrationidPrefix, shopId);
+        if (o == null) {
+            return "";
+        }
+        return o.toString();
     }
 
     public static String getSignkey() {
         return signKey;
-    }
-
-    /**
-     *
-     * @Description 判断是否设置了自动接单
-     * @param shopId
-     * @return
-     * @see 需要参考的类或方法
-     * @author chao.wang
-     */
-    public static boolean isAutoConfirmOrder(String shopId) {
-        //        return StringUtils.hasText(RedisUtil
-        //                .get(Constants.mtRedisAutoConfirmOrderPrefix.concat(shopId)));
-        return false;
     }
 
     /**
@@ -97,30 +99,29 @@ public class MeituanConfig {
      * @author chao.wang
      */
     public static void removeAppAuthToken(String shopId) {
-        //        RedisUtil.remove(Constants.mtRedisAuthTokenPrefix.concat(shopId));
+        JedisClusterUtils.delKey(Constants.mtRedisAuthTokenPrefix.concat(shopId));
     }
 
     /**
      *
-     * @Description 删除美团店铺自动接单的设置
+     * @Description 删除channel
      * @param shopId
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public static void removeAutoConfirmOrder(String shopId) {
-        //        RedisUtil
-        //                .remove(Constants.mtRedisAutoConfirmOrderPrefix.concat(shopId));
+    public static void removeChannel(String shopId) {
+        JedisClusterUtils.delKey(Constants.mtRedisAuthChannelPrefix.concat(shopId));
     }
 
     /**
      *
-     * @Description 删除deviceNo
+     * @Description 删除phone
      * @param shopId
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public static void removeDeviceNo(String shopId) {
-        //        RedisUtil.remove(Constants.mtRedisDeviceNoPrefix.concat(shopId));
+    public static void removePhone(String shopId) {
+        JedisClusterUtils.delKey(Constants.mtRedisAuthPhonePrefix.concat(shopId));
     }
 
     /**
@@ -131,7 +132,7 @@ public class MeituanConfig {
      * @author chao.wang
      */
     public static void removeRegistrationId(String shopId) {
-        //        RedisUtil.remove(Constants.mtRedisRegistrationidPrefix.concat(shopId));
+        JedisClusterUtils.hashDel(Constants.mtRedisRegistrationidPrefix, shopId);
     }
 
     /**
@@ -143,25 +144,31 @@ public class MeituanConfig {
      * @author chao.wang
      */
     public static void setAppAuthToken(String shopId, String appAuthToken) {
-        //        RedisUtil.set(Constants.mtRedisAuthTokenPrefix.concat(shopId),
-        //                appAuthToken);
-    }
-
-    public static void setAutoConfirmOrder(String shopId) {
-        //        RedisUtil.set(Constants.mtRedisAutoConfirmOrderPrefix.concat(shopId),
-        //                "true");
+        JedisClusterUtils.saveString(Constants.mtRedisAuthTokenPrefix.concat(shopId), appAuthToken);
     }
 
     /**
      *
-     * @Description 保存设备号
+     * @Description 设置channel
      * @param shopId
-     * @param deviceNo
+     * @param phone
      * @see 需要参考的类或方法
      * @author chao.wang
      */
-    public static void setDeviceNo(String shopId, String deviceNo) {
-        //        RedisUtil.set(Constants.mtRedisDeviceNoPrefix.concat(shopId), deviceNo);
+    public static void setChannel(String shopId, String channel) {
+        JedisClusterUtils.saveString(Constants.mtRedisAuthChannelPrefix.concat(shopId), channel, oneDaySec);
+    }
+
+    /**
+     *
+     * @Description 设置电话号码
+     * @param shopId
+     * @param phone
+     * @see 需要参考的类或方法
+     * @author chao.wang
+     */
+    public static void setPhone(String shopId, String phone) {
+        JedisClusterUtils.saveString(Constants.mtRedisAuthPhonePrefix.concat(shopId), phone, oneDaySec);
     }
 
     /**
@@ -173,10 +180,6 @@ public class MeituanConfig {
      * @author chao.wang
      */
     public static void setRegistrationId(String shopId, String registrationId) {
-        //        RedisUtil.set(Constants.mtRedisRegistrationidPrefix.concat(shopId),
-        //                registrationId);
-    }
-
-    private MeituanConfig() {
+        JedisClusterUtils.hashSet(Constants.mtRedisRegistrationidPrefix, shopId, registrationId);
     }
 }

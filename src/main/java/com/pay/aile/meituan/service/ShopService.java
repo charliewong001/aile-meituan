@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.pay.aile.meituan.bean.Constants;
 import com.pay.aile.meituan.bean.jpa.Platform;
 import com.pay.aile.meituan.bean.jpa.Shop;
-import com.pay.aile.meituan.bean.jpa.StatusEnum;
 import com.pay.aile.meituan.client.JpaClient;
 import com.pay.aile.meituan.sdk.MeituanConfig;
 import com.pay.aile.meituan.util.JsonFormatUtil;
@@ -24,20 +23,6 @@ public class ShopService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Resource
     private JpaClient jpaClient;
-
-    /**
-     *
-     * @Description 设置店铺为自动接单
-     * @param shopId
-     * @see 需要参考的类或方法
-     * @author chao.wang
-     */
-    public void autoConfirmOrder(String shopId) {
-        MeituanConfig.setAutoConfirmOrder(shopId);
-        Shop shop = new Shop(shopId);
-        shop.setAutomaticStatus(StatusEnum.ENABLE);
-        jpaClient.saveOrUpdateShop(JsonFormatUtil.toJSONString(shop));
-    }
 
     /**
      *
@@ -122,20 +107,6 @@ public class ShopService {
             logger.error("close 美团设置门店为休息失败,返回值错误,shopId={}", shopId);
             throw new RuntimeException("设置门店为休息失败");
         }
-    }
-
-    /**
-     *
-     * @Description 设置店铺为不自动接单
-     * @param shopId
-     * @see 需要参考的类或方法
-     * @author chao.wang
-     */
-    public void unAutoConfirmOrder(String shopId) {
-        MeituanConfig.removeAutoConfirmOrder(shopId);
-        Shop shop = new Shop(shopId);
-        shop.setAutomaticStatus(StatusEnum.DISENABLE);
-        jpaClient.saveOrUpdateShop(JsonFormatUtil.toJSONString(shop));
     }
 
 }

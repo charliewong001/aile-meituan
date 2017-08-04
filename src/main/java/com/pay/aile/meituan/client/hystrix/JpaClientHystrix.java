@@ -20,7 +20,7 @@ public class JpaClientHystrix implements JpaClient {
     }
 
     @Override
-    public List<Order> bathUpdateOrderStatus(String orderList) {
+    public JSONObject bathUpdateOrderStatus(String orderList) {
         // TODO Auto-generated method stub
         return null;
     }
