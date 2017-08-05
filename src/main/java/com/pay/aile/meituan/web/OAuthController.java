@@ -1,9 +1,12 @@
 package com.pay.aile.meituan.web;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pay.aile.meituan.bean.Constants;
+import com.alibaba.fastjson.JSONObject;
 import com.pay.aile.meituan.bean.jpa.Platform;
 import com.pay.aile.meituan.bean.jpa.Shop;
 import com.pay.aile.meituan.bean.jpa.User;
+import com.pay.aile.meituan.bean.platform.ShopInfoBean;
+import com.pay.aile.meituan.bean.platform.ShopInfoBean.ShopInfo;
+import com.pay.aile.meituan.client.JpaClient;
 import com.pay.aile.meituan.client.TakeawayClient;
 import com.pay.aile.meituan.sdk.MeituanConfig;
 import com.pay.aile.meituan.service.FoodService;
 import com.pay.aile.meituan.util.JsonFormatUtil;
+import com.sankuai.sjst.platform.developer.domain.RequestSysParams;
+import com.sankuai.sjst.platform.developer.request.CipCaterTakeoutPoiInfoQueryRequest;
 
 /**
  *
@@ -49,6 +57,9 @@ public class OAuthController {
 
     @Resource
     private TakeawayClient takeawayClient;
+
+    @Resource
+    private JpaClient jpaClient;
     private final String ret_success = "{data:\"success\"}";// 美团回调返回
 
     /**
@@ -65,9 +76,9 @@ public class OAuthController {
     @RequestMapping("/authCallback")
     public String authCallback(@RequestParam String ePoiId, @RequestParam String appAuthToken) {
         // 将appAuthToken存入redis
-        MeituanConfig.setAppAuthToken(Constants.mtRedisAuthTokenPrefix.concat(ePoiId), appAuthToken);
+        MeituanConfig.setAppAuthToken(ePoiId, appAuthToken);
+        Shop shop = new Shop(ePoiId, Platform.getInstance());
         try {
-            Shop shop = new Shop(ePoiId, Platform.getInstance());
             User user = new User();
             user.setPhone(MeituanConfig.getPhone(ePoiId));
             user.setRegistrationId(MeituanConfig.getRegistrationId(ePoiId));
@@ -75,12 +86,52 @@ public class OAuthController {
             shop.setUser(user);
             shop.setRegistrationId(user.getRegistrationId());
             shop.setChannel(MeituanConfig.getChannel(ePoiId));
-            takeawayClient.pushAuthorization(JsonFormatUtil.toJSONString(shop));
+            logger.info("pushAuthorization bean = {}", shop);
+            JSONObject pushResult = takeawayClient.pushAuthorization(JsonFormatUtil.toJSONString(shop));
+            logger.info("pushAuthorization result={}", pushResult);
         } catch (Exception e) {
-            logger.error("authCallback->pushAuthrization error!授权回调后进行用户店铺信息推送失败!");
+            logger.error("authCallback->pushAuthrization error!授权回调后进行用户店铺信息推送失败!", e);
         } finally {
             MeituanConfig.removeChannel(ePoiId);
             MeituanConfig.removePhone(ePoiId);
+        }
+        // 查询店铺信息
+        ShopInfoBean shopInfoBean = null;
+        String result = "";
+        try {
+            CipCaterTakeoutPoiInfoQueryRequest request = new CipCaterTakeoutPoiInfoQueryRequest();
+            RequestSysParams sysParams = new RequestSysParams();
+            sysParams.setAppAuthToken(appAuthToken);
+            sysParams.setSecret(MeituanConfig.getSignkey());
+            request.setEPoiIds(ePoiId);
+            request.setRequestSysParams(sysParams);
+            logger.info("authCallback 查询店铺信息,request={}", JsonFormatUtil.toJSONString(request));
+            result = request.doRequest();
+            shopInfoBean = JSONObject.parseObject(result, ShopInfo.class);
+        } catch (Exception e) {
+            logger.error("authCallback 查询店铺信息错误!", e);
+        } finally {
+            logger.info("authCallback 查询店铺信息,result={}", result);
+        }
+        JSONObject saveResult = null;
+        try {
+            ShopInfo shopInfo = shopInfoBean.getData().get(0);
+            shop.setShopName(shopInfo.getName());
+            shop.setAddress(shopInfo.getAddress());
+            shop.setIsOnline(shopInfo.getIsOnline().toString());
+            shop.setInvoiceSupport(shopInfo.getInvoiceSupport().toString());
+            shop.setLatitude(shopInfo.getLatitude());
+            shop.setLongitude(shopInfo.getLongitude());
+            shop.setShippingFee(new BigDecimal(shopInfo.getShippingFee().toString()));
+            shop.setOpenLevel(shopInfo.getIsOpen().toString());
+            shop.setInvoiceMinAmount(new BigDecimal(shopInfo.getInvoiceMinPrice()));
+            shop.setBusinessHours(shopInfo.getOpenTime());
+            logger.info("authCallback 保存店铺信息,bean={}", shop);
+            saveResult = jpaClient.saveOrUpdateShop(JsonFormatUtil.toJSONString(shop));
+        } catch (Exception e) {
+            logger.error("authCallback 保存店铺信息失败", e);
+        } finally {
+            logger.info("authCallback 保存店铺信息,result={}", saveResult);
         }
         // 进行菜品映射
         try {
@@ -101,9 +152,9 @@ public class OAuthController {
      * @author chao.wang
      */
     @RequestMapping("/getAuthUrl")
-    public String getAuthUrl(@RequestParam String shopId, @RequestParam String deviceNo,
-            @RequestParam String customerNo, @RequestParam String registrationId, @RequestParam String phone,
-            @RequestParam String channel) {
+    public void getAuthUrl(@RequestParam String shopId, @RequestParam String deviceNo, @RequestParam String customerNo,
+            @RequestParam String registrationId, @RequestParam String phone, @RequestParam String channel,
+            HttpServletResponse response) {
         MeituanConfig.setRegistrationId(shopId, registrationId);// 将极光推送注册号保存到缓存
         MeituanConfig.setPhone(shopId, phone);
         MeituanConfig.setChannel(shopId, channel);
@@ -117,7 +168,11 @@ public class OAuthController {
         }
         String url = authUrl + "?developerId=" + developerId + "&businessId=2&ePoiId=" + shopId + "&signKey=" + signKey
                 + "&callbackUrl=" + callbackUrl;
-        return url;
+        try {
+            response.sendRedirect(url);
+        } catch (IOException e) {
+            logger.error("getAuthUrl sendRedirect error!");
+        }
     }
 
     /**
@@ -132,7 +187,7 @@ public class OAuthController {
     public String getUnbindUrl(@RequestParam String shopId) {
         String appAuthToken = MeituanConfig.getAppAuthToken(shopId);
         String signKey = MeituanConfig.getSignkey();
-        String url = unbindUrl + "?signKey=" + signKey + "&businessId=1&appAuthToken=" + appAuthToken;
+        String url = unbindUrl + "?signKey=" + signKey + "&businessId=2&appAuthToken=" + appAuthToken;
         return url;
     }
 

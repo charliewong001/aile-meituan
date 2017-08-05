@@ -33,6 +33,7 @@ public class RedisConfig {
         if (!StringUtils.isEmpty(redisProperties.getPassword())) {
             jedisConnectionFactory.setPassword(redisProperties.getPassword());
         }
+        jedisConnectionFactory.setHostName(redisProperties.getHost());
         return jedisConnectionFactory;
     }
 

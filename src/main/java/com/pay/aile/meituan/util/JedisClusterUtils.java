@@ -245,8 +245,6 @@ public class JedisClusterUtils {
      * @return 数据
      */
     public static String getString(String key) {
-        cacheUtils.redisTemplate.opsForValue().get(key);
-
         return cacheUtils.redisTemplate.opsForValue().get(key);
     }
 
@@ -259,7 +257,6 @@ public class JedisClusterUtils {
      * @return 判断是否缓存了
      */
     public static boolean hashCached(String hName, String key) {
-
         return cacheUtils.redisTemplate.execute((RedisCallback<Boolean>) connection -> {
             return connection.hExists(key.getBytes(), key.getBytes());
         });
