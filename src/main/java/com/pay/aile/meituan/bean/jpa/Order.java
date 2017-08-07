@@ -30,17 +30,21 @@ public class Order implements Serializable {
     private String description;
     // 是否开发票
     private StatusEnum hasInvoiced;
+    // 税号
+    private String taxpayerId;
     // 发票抬头
     private String invoiceTitle;
+
     // 是否在线支付
     private StatusEnum onlinePaid;
+
     // 电话号码可以多个
     private String phone;
-
     // 当日流水号
     private Long daySn;
     // 订单用户id
     private String userId;
+
     // 总价
     private BigDecimal totalPrice;
     // 订单原始价格
@@ -64,15 +68,14 @@ public class Order implements Serializable {
     private ReminderOrder reminderOrder;
     // 退单
     private RefundOrder refundOrder;
-
     // 配送信息
     private Distribution distribution;
-
     // 取消原因
     private String cancelReason;
 
     // 订单状态变更时间
     private Long updateTime;
+
     // 配送方式
     private DistributionTypeEnum distributionType;
 
@@ -200,6 +203,10 @@ public class Order implements Serializable {
         return status;
     }
 
+    public String getTaxpayerId() {
+        return taxpayerId;
+    }
+
     public BigDecimal getTotalPrice() {
         return totalPrice;
     }
@@ -320,6 +327,10 @@ public class Order implements Serializable {
         this.status = status;
     }
 
+    public void setTaxpayerId(String taxpayerId) {
+        this.taxpayerId = taxpayerId;
+    }
+
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
@@ -353,6 +364,8 @@ public class Order implements Serializable {
         builder.append(description);
         builder.append(", hasInvoiced=");
         builder.append(hasInvoiced);
+        builder.append(", taxpayerId=");
+        builder.append(taxpayerId);
         builder.append(", invoiceTitle=");
         builder.append(invoiceTitle);
         builder.append(", onlinePaid=");

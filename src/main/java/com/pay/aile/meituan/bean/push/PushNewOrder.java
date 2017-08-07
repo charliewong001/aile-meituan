@@ -28,7 +28,9 @@ public class PushNewOrder extends PushBaseBean implements Serializable {
     private String phone;
     private String orderId;
     private String orderCreateTime;
+
     private Long updateTime;
+
     private String shopId;
 
     public PushNewOrder() {
@@ -142,10 +144,6 @@ public class PushNewOrder extends PushBaseBean implements Serializable {
         builder.append(updateTime);
         builder.append(", shopId=");
         builder.append(shopId);
-        builder.append(", id=");
-        builder.append(id);
-        builder.append(", status=");
-        builder.append(status);
         builder.append("]");
         return builder.toString();
     }

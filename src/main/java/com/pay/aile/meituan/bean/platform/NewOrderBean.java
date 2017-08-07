@@ -36,9 +36,12 @@ public class NewOrderBean implements Serializable {
     private String ePoiId;// string 三方的门店Id 最大长度100
     @NotNull(message = "hasInvoiced不能为空")
     private Integer hasInvoiced;// int 是否需要发票 0 0-不需要， 1-需要
-    private String invoiceTitle;// string 发票抬头
+    private String invoiceTitle;// string 发票抬头4
+    private String taxpayerId;// 税号
     private Boolean isFavorites;// boolean 用户是否收藏此门店 true
+
     private Boolean isPoiFirstOrder;// boolean 用户是否第一次在此门店点餐 false
+
     @NotNull(message = "isThirdShipping不能为空")
     private Integer isThirdShipping;// int 是否第三方配送 0 0-否，1-是
     private Double latitude;// double 订餐地址纬度
@@ -65,11 +68,10 @@ public class NewOrderBean implements Serializable {
     @NotEmpty(message = "菜品不能为空")
     private List<NewOrderDetailBean> detailList;// string 参考【7.3.1
     // 根据订单Id查询订单】中的detail
-
     private List<NewOrderExtraBean> extrasList;// string 参考【7.3.1
     // 根据订单Id查询订单】中的extras字段
-
     private String detail;
+
     private String extras;
 
     public String getCaution() {
@@ -198,6 +200,10 @@ public class NewOrderBean implements Serializable {
 
     public Integer getStatus() {
         return status;
+    }
+
+    public String getTaxpayerId() {
+        return taxpayerId;
     }
 
     public Double getTotal() {
@@ -336,6 +342,10 @@ public class NewOrderBean implements Serializable {
         this.status = status;
     }
 
+    public void setTaxpayerId(String taxpayerId) {
+        this.taxpayerId = taxpayerId;
+    }
+
     public void setTotal(Double total) {
         this.total = total;
     }
@@ -369,6 +379,8 @@ public class NewOrderBean implements Serializable {
         builder.append(hasInvoiced);
         builder.append(", invoiceTitle=");
         builder.append(invoiceTitle);
+        builder.append(", taxpayerId=");
+        builder.append(taxpayerId);
         builder.append(", isFavorites=");
         builder.append(isFavorites);
         builder.append(", isPoiFirstOrder=");

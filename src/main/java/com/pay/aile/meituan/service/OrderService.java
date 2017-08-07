@@ -385,6 +385,7 @@ public class OrderService {
         order.setStatus(OrderStatusEnum.unprocessed);
         order.setTotalPrice(BigDecimal.valueOf(newOrderBean.getTotal()));
         order.setUpdateTime(time);
+        order.setTaxpayerId(newOrderBean.getTaxpayerId());
         if (newOrderBean.getIsThirdShipping() == Integer.valueOf(DeliverTypeEnum.thridShipping.getCode())) {
             // 第三方配送(众包配送)
             order.setDistributionType(DistributionTypeEnum.other);

@@ -43,7 +43,7 @@ public class ScheduledTask {
 
     /**
      *
-     * @Description 每24小时上报心跳数据
+     * @Description 每24小时上报心跳数据,美团必接接口中已去除此接口
      * @see 需要参考的类或方法
      * @author chao.wang
      */
