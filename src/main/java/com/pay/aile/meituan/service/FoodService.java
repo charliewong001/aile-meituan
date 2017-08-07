@@ -69,7 +69,7 @@ public class FoodService {
             logger.error("调用jpa接口批量新增菜品失败,shopId={},foods={}", shopId, foods, e);
             throw new RuntimeException("批量新增菜品失败");
         }
-        if (result == null || !"0".equals(result.getString("code"))) {
+        if (result == null || !Constants.OK.equals(result.getString("code"))) {
             String msg = result == null ? "" : result.getString("msg");
             logger.error("调用jpa接口批量新增菜品失败!msg={}", msg);
             throw new RuntimeException("批量新增菜品失败,".concat(msg));
@@ -137,7 +137,7 @@ public class FoodService {
             logger.error("mapFoodToDish 调用美团接口进行菜品映射失败!shopId={}", shopId, e);
             throw new RuntimeException("调用美团接口进行菜品映射失败,shopId=".concat(shopId));
         }
-        if (!Constants.ok.equalsIgnoreCase(result)) {
+        if (!Constants.mtOk.equalsIgnoreCase(result)) {
             logger.error("mapFoodToDish 调用美团接口进行菜品映射失败!shopId={},result={}", shopId, result);
             throw new RuntimeException("调用美团接口进行菜品映射失败,shopId=".concat(shopId).concat(",result=").concat(result));
         }
@@ -246,7 +246,7 @@ public class FoodService {
                     shopId, foodId, stockNum, dishes, e);
             throw new RuntimeException("调用美团估清菜品失败");
         }
-        if (!Constants.ok.equalsIgnoreCase(result)) {
+        if (!Constants.mtOk.equalsIgnoreCase(result)) {
             logger.error("updateFoodStock call meituan error! 调用美团更改菜品库存失败,shopId={},foodId={},stockNum={},result={}",
                     shopId, foodId, stockNum, result);
             throw new RuntimeException("调用美团更改菜品库存失败,result=".concat(result));

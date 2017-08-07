@@ -73,7 +73,7 @@ public class DispatchService {
             logger.error("zbDispatchCancel 取消配送错误!orderId={}", orderId, e);
             throw new RuntimeException("取消配送错误！orderId=".concat(orderId.toString()));
         }
-        if (!Constants.ok.equalsIgnoreCase(result)) {
+        if (!Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("zbDispatchCancel 取消配送错误 返回值错误!");
             throw new RuntimeException("取消配送错误！orderId=".concat(orderId.toString()));
         }
@@ -100,7 +100,7 @@ public class DispatchService {
             logger.error("dispatchShip 发送美团专送错误!orderId={}", orderId, e);
             throw new RuntimeException("发送美团专送错误！orderId=".concat(orderId.toString()));
         }
-        if (!Constants.ok.equalsIgnoreCase(result)) {
+        if (!Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("dispatchShip 发送美团专送错误 返回值错误!");
             throw new RuntimeException("发送美团专送错误！orderId=".concat(orderId.toString()));
         }
@@ -166,7 +166,7 @@ public class DispatchService {
         } catch (Exception e) {
             logger.error("dispatchStatusPush 处理美团推送的配送单状态变更失败！orderId={}", bean.getOrderId(), e);
         }
-        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.OK.equals(pushResult.getString("code"))) {
             logger.error("dispatchStatusPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), result);
         }
@@ -196,7 +196,7 @@ public class DispatchService {
             logger.error("selfDelivered 美团商家自配送错误!orderId={}", orderId, e);
             throw new RuntimeException("美团商家自配送错误！orderId=".concat(orderId.toString()));
         }
-        if (Constants.ok.equalsIgnoreCase(result)) {
+        if (Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("selfDelivered 美团商家自配送成功，orderId={}", orderId);
             // 保存配送单
             Distribution distribution = new Distribution();
@@ -240,7 +240,7 @@ public class DispatchService {
             logger.error("selfDelivering 美团商家自配送错误!orderId={}", orderId, e);
             throw new RuntimeException("美团商家自配送错误！orderId=".concat(orderId.toString()));
         }
-        if (Constants.ok.equalsIgnoreCase(result)) {
+        if (Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("selfDelivering 美团商家自配送成功，orderId={}", orderId);
             // 保存配送单
             Distribution distribution = new Distribution();
@@ -290,7 +290,7 @@ public class DispatchService {
             logger.error("zbDispatchConfirm 众包配送确认下单错误!orderId={}", orderId, e);
             throw new RuntimeException("众包配送确认下单错误！orderId=".concat(orderId.toString()));
         }
-        if (!Constants.ok.equalsIgnoreCase(result)) {
+        if (!Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("zbDispatchConfirm 众包配送确认下单错误 返回值错误!");
             throw new RuntimeException("众包配送确认下单错误！orderId=".concat(orderId.toString()));
         }
@@ -353,7 +353,7 @@ public class DispatchService {
             logger.error("zbDispatchTipUpdate 众包配送加小费错误!orderId={}", orderId, e);
             throw new RuntimeException("众包配送加小费错误！orderId=".concat(orderId.toString()));
         }
-        if (!Constants.ok.equalsIgnoreCase(result)) {
+        if (!Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("zbDispatchTipUpdate 众包配送加小费错误 返回值错误!");
             throw new RuntimeException("众包配送加小费错误！orderId=".concat(orderId.toString()));
         }

@@ -106,7 +106,7 @@ public class OrderService {
             logger.error("cancelOrder error!orderId={},result={}", orderId, result, e);
             throw new RuntimeException("调用美团取消订单失败!" + e.getMessage());
         }
-        if (Constants.ok.equalsIgnoreCase(result)) {
+        if (Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("cancelOrder success!orderId={}", orderId);
             long updateTime = System.currentTimeMillis();
             JSONObject saveResult = null;
@@ -169,7 +169,7 @@ public class OrderService {
         } catch (Exception e) {
             logger.error("cancelOrderPush 处理美团推送的已取消订单失败！orderId={}", bean.getOrderId(), e);
         }
-        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.OK.equals(pushResult.getString("code"))) {
             logger.error("cancelOrderPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), result);
         }
@@ -197,7 +197,7 @@ public class OrderService {
             logger.error("confirmOrder error!orderId={},result={}", orderId, result, e);
             throw new RuntimeException("调用美团确认订单失败!" + e.getMessage());
         }
-        if (Constants.ok.equalsIgnoreCase(result)) {
+        if (Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("confirmOrder success!orderId={}", orderId);
         } else {
             logger.info("confirmOrder fail!orderId={},result={}", orderId, result);
@@ -244,7 +244,7 @@ public class OrderService {
         } catch (Exception e) {
             logger.error("confirmOrderPush 推送商家已确认订单失败！orderId={}", newOrderBean.getOrderId(), e);
         }
-        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.OK.equals(pushResult.getString("code"))) {
             logger.error("confirmOrderPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), result);
         }
@@ -324,7 +324,7 @@ public class OrderService {
         } catch (Exception e) {
             logger.error("finishOrderPush 推送已完成订单失败！orderId={}", bean.getOrderId(), e);
         }
-        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.OK.equals(pushResult.getString("code"))) {
             logger.error("finishOrderPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), result);
         }
@@ -433,7 +433,7 @@ public class OrderService {
         } catch (Exception e) {
             logger.error("pushSaveNewOrder 极光推送失败!pushOrder={}", pushOrder, e);
         }
-        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.OK.equals(pushResult.getString("code"))) {
             logger.error("pushSaveNewOrder 极光推送失败!msg={},pushOrder={}",
                     pushResult == null ? "" : pushResult.getString("msg"), pushOrder);
         }
@@ -495,7 +495,7 @@ public class OrderService {
             logger.error("refundOrderConfirm error!orderId={},result={}", orderId, result, e);
             throw new RuntimeException("调用美团确认退款失败!" + e.getMessage());
         }
-        if (Constants.ok.equalsIgnoreCase(result)) {
+        if (Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("refundOrderConfirm success!orderId={}", orderId);
         } else {
             logger.info("refundOrderConfirm fail!orderId={},result={}", orderId, result);
@@ -585,7 +585,7 @@ public class OrderService {
             } catch (Exception e) {
                 logger.error("refundOrderPush 极光推送失败!pushOrder={}", result, e);
             }
-            if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
+            if (pushResult == null || !Constants.OK.equals(pushResult.getString("code"))) {
                 logger.error("refundOrderPush 极光推送失败!msg={},pushOrder={}",
                         pushResult == null ? "" : pushResult.getString("msg"), result);
             }
@@ -618,7 +618,7 @@ public class OrderService {
             logger.error("refundOrderRefuse error!orderId={},result={}", orderId, result, e);
             throw new RuntimeException("调用美团拒绝退款失败!" + e.getMessage());
         }
-        if (Constants.ok.equalsIgnoreCase(result)) {
+        if (Constants.mtOk.equalsIgnoreCase(result)) {
             logger.info("refundOrderRefuse success!orderId={}", orderId);
         } else {
             logger.info("refundOrderRefuse fail!orderId={},result={}", orderId, result);

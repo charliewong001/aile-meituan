@@ -18,7 +18,7 @@ public class Constants {
 
     public static final String mtRedisAuthChannelPrefix = "aile-meituan-authChannel-";
     /** 美团返回正确 */
-    public static final String ok = "{\"data\":\"ok\"}";
-    /** 极光推送返回成功码 */
-    public static final String pushOK = "0000";
+    public static final String mtOk = "{\"data\":\"ok\"}";
+    /** 内网调用返回成功 */
+    public static final String OK = "0000";
 }

@@ -48,7 +48,7 @@ public class ShopService {
             logger.error("meituan shop close error!,shopId={},result={}", shopId, result, e);
             throw new RuntimeException("close error!" + e.getMessage());
         }
-        if (Constants.ok.equals(result)) {
+        if (Constants.mtOk.equalsIgnoreCase(result)) {
             Shop shop = new Shop(shopId, Platform.getInstance());
             shop.setOpenLevel("0");
             JSONObject saveResult = null;
@@ -91,7 +91,7 @@ public class ShopService {
             logger.error("meituan shop open error!,shopId={},result={}", shopId, result, e);
             throw new RuntimeException("设置门店为营业!" + e.getMessage());
         }
-        if (Constants.ok.equals(result)) {
+        if (Constants.mtOk.equalsIgnoreCase(result)) {
             Shop shop = new Shop(shopId, Platform.getInstance());
             shop.setOpenLevel("1");
             JSONObject saveResult = null;

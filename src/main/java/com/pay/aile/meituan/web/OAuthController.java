@@ -204,10 +204,10 @@ public class OAuthController {
      * @author chao.wang
      */
     @RequestMapping("/unbindCallback")
-    public String unbindCallback(@RequestParam String bussinessId, @RequestParam String developerId,
+    public String unbindCallback(@RequestParam String businessId, @RequestParam String developerId,
             @RequestParam String epoiId, @RequestParam String timestamp) {
         String localDeveloperId = MeituanConfig.getDeveloperId();
-        if (!"2".equals(bussinessId)) {
+        if (!"2".equals(businessId)) {
             return "{data:\"bussinessId not correct!\"}";
         }
         if (!localDeveloperId.equals(developerId)) {

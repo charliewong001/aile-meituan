@@ -156,7 +156,7 @@ public class DispatchController {
             @RequestParam Double shippingFee, @RequestParam Double tipAmount) {
         try {
             String result = dispatchService.zbDispatchPrepare(shopId, Long.valueOf(orderId), shippingFee, tipAmount);
-            if (Constants.ok.equals(result)) {
+            if (Constants.mtOk.equalsIgnoreCase(result)) {
                 return JsonFormatUtil.getSuccessJson(JSONObject.parseObject(result));
             } else {
                 String m = JSONObject.parseObject(result).getJSONObject("error").getString("message");
