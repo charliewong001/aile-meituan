@@ -86,6 +86,7 @@ public class OAuthController {
             shop.setUser(user);
             shop.setRegistrationId(user.getRegistrationId());
             shop.setChannel(MeituanConfig.getChannel(ePoiId));
+            shop.setPhone(user.getPhone());
             logger.info("pushAuthorization bean = {}", shop);
             JSONObject pushResult = takeawayClient.pushAuthorization(JsonFormatUtil.toJSONString(shop));
             logger.info("pushAuthorization result={}", pushResult);
@@ -107,7 +108,7 @@ public class OAuthController {
             request.setRequestSysParams(sysParams);
             logger.info("authCallback 查询店铺信息,request={}", JsonFormatUtil.toJSONString(request));
             result = request.doRequest();
-            shopInfoBean = JSONObject.parseObject(result, ShopInfo.class);
+            shopInfoBean = JSONObject.parseObject(result, ShopInfoBean.class);
         } catch (Exception e) {
             logger.error("authCallback 查询店铺信息错误!", e);
         } finally {

@@ -125,20 +125,6 @@ public class OrderService {
                 throw new RuntimeException("美团取消订单成功,修改本地订单状态失败!" + e.getMessage());
             }
             getPrimaryKeyFromOrder(saveResult);
-            // 向POS推送取消订单信息
-            saveResult.put("updateTime", updateTime);
-            JSONObject pushResult = null;
-            try {
-                pushResult = takeawayClient.pushOrderCancel(MeituanConfig.getRegistrationId(shopId),
-                        JsonFormatUtil.toJSONString(saveResult));
-                logger.info("cancelOrderPush 推送结果={}", pushResult);
-            } catch (Exception e) {
-                logger.error("cancelOrderPush 取消订单推送失败！orderId={}", orderId, e);
-            }
-            if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
-                logger.error("cancelOrderPush 取消订单推送失败!msg={},pushBean={}",
-                        pushResult == null ? "" : pushResult.getString("msg"), saveResult);
-            }
         } else {
             logger.info("cancelOrder fail!orderId={},result={}", orderId, result);
             throw new RuntimeException(String.format("调用美团取消订单失败!result={%s}", result));
@@ -183,7 +169,7 @@ public class OrderService {
         } catch (Exception e) {
             logger.error("cancelOrderPush 处理美团推送的已取消订单失败！orderId={}", bean.getOrderId(), e);
         }
-        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
             logger.error("cancelOrderPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), result);
         }
@@ -251,13 +237,14 @@ public class OrderService {
         result.put("updateTime", updateTime);
         JSONObject pushResult = null;
         try {
+            logger.info("confirmOrderPush 推送信息");
             pushResult = takeawayClient.pushOrderChange(MeituanConfig.getRegistrationId(shopId),
                     JsonFormatUtil.toJSONString(result));
             logger.info("confirmOrderPush 推送结果={}", pushResult);
         } catch (Exception e) {
             logger.error("confirmOrderPush 推送商家已确认订单失败！orderId={}", newOrderBean.getOrderId(), e);
         }
-        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
             logger.error("confirmOrderPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), result);
         }
@@ -337,7 +324,7 @@ public class OrderService {
         } catch (Exception e) {
             logger.error("finishOrderPush 推送已完成订单失败！orderId={}", bean.getOrderId(), e);
         }
-        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
             logger.error("finishOrderPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), result);
         }
@@ -445,7 +432,7 @@ public class OrderService {
         } catch (Exception e) {
             logger.error("pushSaveNewOrder 极光推送失败!pushOrder={}", pushOrder, e);
         }
-        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
             logger.error("pushSaveNewOrder 极光推送失败!msg={},pushOrder={}",
                     pushResult == null ? "" : pushResult.getString("msg"), pushOrder);
         }
@@ -523,6 +510,7 @@ public class OrderService {
      * @author chao.wang
      */
     public void refundOrderPush(String shopId, @Valid RefundOrderBean bean) {
+        boolean isPush = true;
         long updateTime = System.currentTimeMillis();
         // 订单bean
         Order order = new Order(bean.getOrderId().toString());
@@ -541,6 +529,7 @@ public class OrderService {
             refund.setRefundStatus(OrderRefundStatusEnum.applied);
             break;
         case agree:// 商家同意退款
+            isPush = false;
             order.setStatus(OrderStatusEnum.refunded);
             refund.setRefundStatus(OrderRefundStatusEnum.successful);
             break;
@@ -553,7 +542,8 @@ public class OrderService {
             refund.setRefundStatus(OrderRefundStatusEnum.failed);
             break;
         case reject:// 商家驳回退款
-            order.setStatus(OrderStatusEnum.valid);
+            isPush = false;
+            order.setStatus(OrderStatusEnum.refunding);
             refund.setRefundStatus(OrderRefundStatusEnum.rejected);
             break;
         default:
@@ -585,17 +575,19 @@ public class OrderService {
 
         result.put("updateTime", updateTime);
         // 推送
-        JSONObject pushResult = null;
-        try {
-            pushResult = takeawayClient.pushRefundOrder(MeituanConfig.getRegistrationId(shopId),
-                    JsonFormatUtil.toJSONString(result));
-            logger.info("refundOrderPush 推送返回结果 ={}", pushResult);
-        } catch (Exception e) {
-            logger.error("refundOrderPush 极光推送失败!pushOrder={}", result, e);
-        }
-        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
-            logger.error("refundOrderPush 极光推送失败!msg={},pushOrder={}",
-                    pushResult == null ? "" : pushResult.getString("msg"), result);
+        if (isPush) {
+            JSONObject pushResult = null;
+            try {
+                pushResult = takeawayClient.pushRefundOrder(MeituanConfig.getRegistrationId(shopId),
+                        JsonFormatUtil.toJSONString(result));
+                logger.info("refundOrderPush 推送返回结果 ={}", pushResult);
+            } catch (Exception e) {
+                logger.error("refundOrderPush 极光推送失败!pushOrder={}", result, e);
+            }
+            if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
+                logger.error("refundOrderPush 极光推送失败!msg={},pushOrder={}",
+                        pushResult == null ? "" : pushResult.getString("msg"), result);
+            }
         }
     }
 

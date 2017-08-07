@@ -166,7 +166,7 @@ public class DispatchService {
         } catch (Exception e) {
             logger.error("dispatchStatusPush 处理美团推送的配送单状态变更失败！orderId={}", bean.getOrderId(), e);
         }
-        if (pushResult == null || !"0".equals(pushResult.getString("code"))) {
+        if (pushResult == null || !Constants.pushOK.equals(pushResult.getString("code"))) {
             logger.error("dispatchStatusPush 极光推送失败!msg={},pushBean={}",
                     pushResult == null ? "" : pushResult.getString("msg"), result);
         }

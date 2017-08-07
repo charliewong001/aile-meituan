@@ -28,8 +28,7 @@ public class RedisConfig {
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(
-                jedisPoolConfig());
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(jedisPoolConfig());
         if (!StringUtils.isEmpty(redisProperties.getPassword())) {
             jedisConnectionFactory.setPassword(redisProperties.getPassword());
         }
